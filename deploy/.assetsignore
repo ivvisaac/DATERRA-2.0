@@ -1,0 +1,9 @@
+.git
+.gitignore
+.env
+.env.*
+*.toml
+*.py
+*.md
+.wrangler
+node_modules

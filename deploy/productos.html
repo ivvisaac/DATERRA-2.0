@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COEZA · Productos Inmobiliarios por AGEB</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'IBM Plex Mono',monospace,sans-serif;background:#060f18;color:#cce8e6;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap');
+  header{background:#071a26;border-bottom:1px solid rgba(0,226,224,.15);padding:11px 18px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+  .logo{font-size:13px;font-weight:700;color:#00e2e0;letter-spacing:1.5px;white-space:nowrap}
+  .logo span{color:#aed8d6;font-weight:400}
+  header h1{font-size:12px;color:#7ab8b4;letter-spacing:.4px}
+  .layout{display:flex;flex:1;overflow:hidden}
+  #panel{width:290px;flex-shrink:0;background:#071a26;border-right:1px solid rgba(0,226,224,.1);overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:13px}
+  #map{flex:1}
+  .s-title{font-size:9px;font-weight:700;letter-spacing:1.8px;color:#4a8a86;text-transform:uppercase;margin-bottom:7px}
+  .zm-toggle{display:flex;gap:6px}
+  .zm-btn{flex:1;padding:7px 0;border-radius:6px;border:1px solid rgba(0,226,224,.2);background:transparent;color:#7ab8b4;font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.6px;cursor:pointer;transition:all .15s}
+  .zm-btn.active{background:rgba(0,226,224,.12);border-color:#00e2e0;color:#00e2e0}
+  .prod-card{border-radius:8px;border:1px solid rgba(0,226,224,.08);background:rgba(255,255,255,.02);padding:11px;cursor:pointer;transition:all .18s}
+  .prod-card.active{border-color:var(--c);background:rgba(var(--cr),.07)}
+  .prod-card[data-p="1"]{--c:#00e2e0;--cr:0,226,224}
+  .prod-card[data-p="2"]{--c:#f0b840;--cr:240,184,64}
+  .prod-card[data-p="3"]{--c:#4ade80;--cr:74,222,128}
+  .prod-header{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+  .prod-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .prod-card[data-p="1"] .prod-dot{background:#00e2e0}
+  .prod-card[data-p="2"] .prod-dot{background:#f0b840}
+  .prod-card[data-p="3"] .prod-dot{background:#4ade80}
+  .prod-name{font-size:11px;font-weight:700;color:#cce8e6}
+  .prod-sub{font-size:9px;color:#4a8a86;line-height:1.5}
+  .prod-count{font-size:9px;font-weight:700;margin-top:7px;padding:3px 7px;border-radius:4px;display:inline-block;background:rgba(0,0,0,.2)}
+  .prod-card[data-p="1"] .prod-count{color:#00e2e0}
+  .prod-card[data-p="2"] .prod-count{color:#f0b840}
+  .prod-card[data-p="3"] .prod-count{color:#4ade80}
+  .all-btn{width:100%;padding:8px;border-radius:6px;border:1px solid rgba(0,226,224,.15);background:rgba(0,226,224,.04);color:#7ab8b4;font-family:inherit;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .15s}
+  .all-btn.active{border-color:rgba(255,255,255,.3);color:#fff;background:rgba(255,255,255,.06)}
+  .legend-block{border-top:1px solid rgba(0,226,224,.07);padding-top:11px}
+  .leg-row{display:flex;align-items:center;gap:8px;margin-bottom:5px;font-size:10px;color:#7ab8b4}
+  .leg-sq{width:13px;height:13px;border-radius:3px;flex-shrink:0}
+  .tt{background:#071a26;border:1px solid rgba(0,226,224,.2);border-radius:8px;padding:10px 12px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:#cce8e6;min-width:200px;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.5);position:fixed;display:none;z-index:9000}
+  .tt-mun{font-size:9px;color:#4a8a86;margin-bottom:3px}
+  .tt-prods{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap}
+  .tt-badge{font-size:8px;font-weight:700;padding:2px 5px;border-radius:3px}
+  .tt-row{display:flex;justify-content:space-between;gap:12px;margin-bottom:3px}
+  .tt-lbl{color:#7ab8b4}
+  .tt-val{font-weight:700;color:#cce8e6;text-align:right}
+  .divider{border-top:1px solid rgba(0,226,224,.1);margin:7px 0 5px}
+  .loader{position:fixed;inset:0;background:rgba(6,15,24,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:8000}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .spinner{width:38px;height:38px;border:3px solid rgba(0,226,224,.15);border-top-color:#00e2e0;border-radius:50%;animation:spin 1s linear infinite}
+  .loader-txt{font-size:11px;font-weight:700;color:#00e2e0;letter-spacing:.8px}
+  .leaflet-container{background:#0a1a24}
+  .leaflet-control-zoom a{background:#071a26!important;color:#00e2e0!important;border-color:rgba(0,226,224,.2)!important}
+  .leaflet-control-attribution{background:rgba(7,26,38,.8)!important;color:#3a6a66!important;font-size:9px!important}
+  @media(max-width:680px){
+    .layout{flex-direction:column-reverse}
+    #panel{width:100%;height:210px;border-right:none;border-top:1px solid rgba(0,226,224,.1);flex-direction:row;flex-wrap:wrap;gap:8px;padding:10px}
+    #map{flex:1;min-height:0}
+    .s-title{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">COEZA<span> · microdata</span></div>
+  <h1>Mapa de Productos Inmobiliarios · Por AGEB</h1>
+</header>
+
+<div class="layout">
+  <div id="panel">
+    <div>
+      <div class="s-title">Zona Metropolitana</div>
+      <div class="zm-toggle">
+        <button class="zm-btn active" id="btn-mty" onclick="setZM('mty')">Monterrey</button>
+        <button class="zm-btn" id="btn-trn" onclick="setZM('trn')">Torreón</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="s-title">Producto</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <button class="all-btn active" id="btn-all" onclick="setMode('all')">◉ Ver los 3 productos</button>
+
+        <div class="prod-card" data-p="1" id="card-1" onclick="setMode('1')">
+          <div class="prod-header"><input type="radio" name="p" id="r1"><div class="prod-dot"></div><label class="prod-name" for="r1">Nido Vacío</label></div>
+          <div class="prod-sub">Pareja 50-65 · sin hijos en casa<br>Vivienda grande → busca liquidez<br><strong style="color:#7ab8b4">NSE C+/A/B · maduros · casa grande</strong></div>
+          <div class="prod-count" id="cnt-1">…</div>
+        </div>
+
+        <div class="prod-card" data-p="2" id="card-2" onclick="setMode('2')">
+          <div class="prod-header"><input type="radio" name="p" id="r2"><div class="prod-dot"></div><label class="prod-name" for="r2">Retiro Libre</label></div>
+          <div class="prod-sub">Adulto 65+ · independiente<br>Monetiza vivienda para financiar retiro<br><strong style="color:#7ab8b4">NSE C+/A/B · senior · escolaridad</strong></div>
+          <div class="prod-count" id="cnt-2">…</div>
+        </div>
+
+        <div class="prod-card" data-p="3" id="card-3" onclick="setMode('3')">
+          <div class="prod-header"><input type="radio" name="p" id="r3"><div class="prod-dot"></div><label class="prod-name" for="r3">Nuevo Hogar</label></div>
+          <div class="prod-sub">Familia 28-45 · ya tiene prop.<br>Quiere mejorar + seguir creciendo<br><strong style="color:#7ab8b4">NSE C+/A/B · PEA alta · crecimiento</strong></div>
+          <div class="prod-count" id="cnt-3">…</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-block">
+      <div class="s-title">Leyenda</div>
+      <div id="leg-items"></div>
+      <div class="leg-row" style="margin-top:5px">
+        <div class="leg-sq" style="background:rgba(100,120,130,.18);border:1px solid rgba(100,120,130,.3)"></div>
+        <span>Sin calificación</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="map"></div>
+</div>
+
+<div class="loader" id="loader">
+  <div class="spinner"></div>
+  <div class="loader-txt" id="loader-txt">Cargando datos…</div>
+</div>
+
+<div class="tt" id="tt"></div>
+
+<script>
+var PRODS = {
+  '1': {key:'prod_nido_vacio',   color:'#00e2e0', label:'Nido Vacío'},
+  '2': {key:'prod_retiro_libre', color:'#f0b840', label:'Retiro Libre'},
+  '3': {key:'prod_nuevo_hogar',  color:'#4ade80', label:'Nuevo Hogar'},
+};
+var ZM_CFG = {
+  mty: {file:'data/zm_monterrey_productos.geojson', center:[25.67,-100.31], zoom:11},
+  trn: {file:'data/zm_torreon_productos.geojson',   center:[25.54,-103.43], zoom:12},
+};
+
+var currentZM   = 'mty';
+var currentMode = 'all';
+var cache       = {};
+var geoLayer    = null;
+
+// ── Mapa ──────────────────────────────────────────────────────────────────────
+var map = L.map('map');
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  attribution:'&copy; <a href="https://carto.com">CARTO</a> &copy; OpenStreetMap',
+  subdomains:'abcd', maxZoom:19
+}).addTo(map);
+
+// ── Tooltip ───────────────────────────────────────────────────────────────────
+var ttEl = document.getElementById('tt');
+document.addEventListener('mousemove', function(e){
+  if(ttEl.style.display==='block'){
+    ttEl.style.left = (e.clientX+14)+'px';
+    ttEl.style.top  = (e.clientY-10)+'px';
+  }
+});
+
+function showTT(p){
+  var badges = '';
+  if(p.prod_nido_vacio   === 1) badges += '<span class="tt-badge" style="background:rgba(0,226,224,.15);color:#00e2e0">Nido Vacío</span>';
+  if(p.prod_retiro_libre === 1) badges += '<span class="tt-badge" style="background:rgba(240,184,64,.15);color:#f0b840">Retiro Libre</span>';
+  if(p.prod_nuevo_hogar  === 1) badges += '<span class="tt-badge" style="background:rgba(74,222,128,.15);color:#4ade80">Nuevo Hogar</span>';
+  if(!badges) badges = '<span class="tt-badge" style="background:rgba(100,120,130,.15);color:#4a8a86">Sin calificación</span>';
+  function row(l,v){ return '<div class="tt-row"><span class="tt-lbl">'+l+'</span><span class="tt-val">'+v+'</span></div>'; }
+  ttEl.innerHTML =
+    '<div class="tt-mun">'+p.municipio+' · AGEB '+p.ageb+'</div>'+
+    '<div class="tt-prods">'+badges+'</div>'+
+    '<div class="divider"></div>'+
+    row('NSE C+/A/B', (p.pct_nse_alto||0).toFixed(1)+'%')+
+    row('60+ años',   (p.pct_60mas||0).toFixed(1)+'%')+
+    row('0-14 años',  (p.pct_0_14||0).toFixed(1)+'%')+
+    row('PEA',        (p.pct_pea||0).toFixed(1)+'%')+
+    row('Viv. 3+ cuartos', (p.pct_vph3||0).toFixed(1)+'%')+
+    row('Escolaridad', (p.escolaridad||0).toFixed(1)+' años')+
+    row('Crec. hogares', ((p.crec_pct_hog||0)>0?'+':'')+(p.crec_pct_hog||0).toFixed(1)+'%');
+  ttEl.style.display = 'block';
+}
+
+// ── Color ─────────────────────────────────────────────────────────────────────
+function getColor(props){
+  if(currentMode === 'all'){
+    if(props.prod_nido_vacio   === 1) return '#00e2e0';
+    if(props.prod_retiro_libre === 1) return '#f0b840';
+    if(props.prod_nuevo_hogar  === 1) return '#4ade80';
+    return null;
+  }
+  return props[PRODS[currentMode].key] === 1 ? PRODS[currentMode].color : null;
+}
+
+// ── Render ────────────────────────────────────────────────────────────────────
+function render(data){
+  if(geoLayer){ map.removeLayer(geoLayer); geoLayer = null; }
+  geoLayer = L.geoJSON(data, {
+    style: function(ft){
+      var c = getColor(ft.properties);
+      return c
+        ? {fillColor:c, fillOpacity:.62, color:c, weight:.6, opacity:.8}
+        : {fillColor:'#1a3040', fillOpacity:.18, color:'rgba(80,120,130,.22)', weight:.4, opacity:.4};
+    },
+    onEachFeature: function(ft, lyr){
+      lyr.on('mouseover', function(){ showTT(ft.properties); });
+      lyr.on('mouseout',  function(){ ttEl.style.display='none'; });
+      lyr.on('click',     function(){ showTT(ft.properties); });
+    }
+  }).addTo(map);
+  updateCounts(data);
+  document.getElementById('loader').style.display = 'none';
+}
+
+function updateCounts(data){
+  var c={1:0,2:0,3:0}, n=data.features.length;
+  data.features.forEach(function(ft){
+    var p=ft.properties;
+    if(p.prod_nido_vacio   === 1) c[1]++;
+    if(p.prod_retiro_libre === 1) c[2]++;
+    if(p.prod_nuevo_hogar  === 1) c[3]++;
+  });
+  [1,2,3].forEach(function(i){
+    document.getElementById('cnt-'+i).textContent =
+      c[i]+' / '+n+' AGEBs ('+(c[i]/n*100).toFixed(1)+'%)';
+  });
+}
+
+function refreshLeg(){
+  var el=document.getElementById('leg-items'), html='';
+  if(currentMode === 'all'){
+    [1,2,3].forEach(function(i){
+      html += '<div class="leg-row"><div class="leg-sq" style="background:'+PRODS[i].color+';opacity:.7"></div><span>'+PRODS[i].label+'</span></div>';
+    });
+  } else {
+    html = '<div class="leg-row"><div class="leg-sq" style="background:'+PRODS[currentMode].color+';opacity:.7"></div><span>'+PRODS[currentMode].label+'</span></div>';
+  }
+  el.innerHTML = html;
+}
+
+// ── Carga de datos ────────────────────────────────────────────────────────────
+function loadAndRender(){
+  var zm = currentZM;
+  if(cache[zm]){ render(cache[zm]); return; }
+  document.getElementById('loader').style.display = 'flex';
+  document.getElementById('loader-txt').textContent = 'Cargando ' + (zm==='mty'?'Monterrey':'Torreón') + '…';
+  fetch(ZM_CFG[zm].file)
+    .then(function(r){ return r.json(); })
+    .then(function(d){ cache[zm]=d; render(d); })
+    .catch(function(){ document.getElementById('loader-txt').textContent='Error al cargar datos'; });
+}
+
+// ── Controles ─────────────────────────────────────────────────────────────────
+function setZM(zm){
+  currentZM = zm;
+  document.getElementById('btn-mty').classList.toggle('active', zm==='mty');
+  document.getElementById('btn-trn').classList.toggle('active', zm==='trn');
+  var cfg = ZM_CFG[zm];
+  map.setView(cfg.center, cfg.zoom);
+  loadAndRender();
+}
+
+function setMode(m){
+  currentMode = m;
+  [1,2,3].forEach(function(i){
+    document.getElementById('card-'+i).classList.toggle('active', m===String(i));
+    document.getElementById('r'+i).checked = (m===String(i));
+  });
+  document.getElementById('btn-all').classList.toggle('active', m==='all');
+  refreshLeg();
+  if(cache[currentZM]) render(cache[currentZM]);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+map.setView(ZM_CFG.mty.center, ZM_CFG.mty.zoom);
+refreshLeg();
+loadAndRender();
+map.on('click', function(){ ttEl.style.display='none'; });
+</script>
+</body>
+</html>

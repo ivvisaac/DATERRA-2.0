@@ -1,0 +1,194 @@
+[
+  {
+    "cve_ent": "01",
+    "estado": "Aguascalientes",
+    "agebs": 479,
+    "archivo": "01_aguascalientes.json"
+  },
+  {
+    "cve_ent": "02",
+    "estado": "Baja California",
+    "agebs": 1776,
+    "archivo": "02_baja_california.json"
+  },
+  {
+    "cve_ent": "03",
+    "estado": "Baja California Sur",
+    "agebs": 939,
+    "archivo": "03_baja_california_sur.json"
+  },
+  {
+    "cve_ent": "04",
+    "estado": "Campeche",
+    "agebs": 472,
+    "archivo": "04_campeche.json"
+  },
+  {
+    "cve_ent": "07",
+    "estado": "Chiapas",
+    "agebs": 1901,
+    "archivo": "07_chiapas.json"
+  },
+  {
+    "cve_ent": "08",
+    "estado": "Chihuahua",
+    "agebs": 2887,
+    "archivo": "08_chihuahua.json"
+  },
+  {
+    "cve_ent": "09",
+    "estado": "Ciudad de México",
+    "agebs": 2431,
+    "archivo": "09_ciudad_de_mexico.json"
+  },
+  {
+    "cve_ent": "05",
+    "estado": "Coahuila de Zaragoza",
+    "agebs": 1882,
+    "archivo": "05_coahuila_de_zaragoza.json"
+  },
+  {
+    "cve_ent": "06",
+    "estado": "Colima",
+    "agebs": 547,
+    "archivo": "06_colima.json"
+  },
+  {
+    "cve_ent": "10",
+    "estado": "Durango",
+    "agebs": 1889,
+    "archivo": "10_durango.json"
+  },
+  {
+    "cve_ent": "11",
+    "estado": "Guanajuato",
+    "agebs": 3714,
+    "archivo": "11_guanajuato.json"
+  },
+  {
+    "cve_ent": "12",
+    "estado": "Guerrero",
+    "agebs": 2400,
+    "archivo": "12_guerrero.json"
+  },
+  {
+    "cve_ent": "13",
+    "estado": "Hidalgo",
+    "agebs": 1436,
+    "archivo": "13_hidalgo.json"
+  },
+  {
+    "cve_ent": "14",
+    "estado": "Jalisco",
+    "agebs": 4892,
+    "archivo": "14_jalisco.json"
+  },
+  {
+    "cve_ent": "16",
+    "estado": "Michoacán de Ocampo",
+    "agebs": 2825,
+    "archivo": "16_michoacan_de_ocampo.json"
+  },
+  {
+    "cve_ent": "17",
+    "estado": "Morelos",
+    "agebs": 1013,
+    "archivo": "17_morelos.json"
+  },
+  {
+    "cve_ent": "15",
+    "estado": "México",
+    "agebs": 4320,
+    "archivo": "15_mexico.json"
+  },
+  {
+    "cve_ent": "18",
+    "estado": "Nayarit",
+    "agebs": 827,
+    "archivo": "18_nayarit.json"
+  },
+  {
+    "cve_ent": "19",
+    "estado": "Nuevo León",
+    "agebs": 2765,
+    "archivo": "19_nuevo_leon.json"
+  },
+  {
+    "cve_ent": "20",
+    "estado": "Oaxaca",
+    "agebs": 2658,
+    "archivo": "20_oaxaca.json"
+  },
+  {
+    "cve_ent": "21",
+    "estado": "Puebla",
+    "agebs": 2496,
+    "archivo": "21_puebla.json"
+  },
+  {
+    "cve_ent": "22",
+    "estado": "Querétaro",
+    "agebs": 889,
+    "archivo": "22_queretaro.json"
+  },
+  {
+    "cve_ent": "23",
+    "estado": "Quintana Roo",
+    "agebs": 1035,
+    "archivo": "23_quintana_roo.json"
+  },
+  {
+    "cve_ent": "24",
+    "estado": "San Luis Potosí",
+    "agebs": 1573,
+    "archivo": "24_san_luis_potosi.json"
+  },
+  {
+    "cve_ent": "25",
+    "estado": "Sinaloa",
+    "agebs": 2127,
+    "archivo": "25_sinaloa.json"
+  },
+  {
+    "cve_ent": "26",
+    "estado": "Sonora",
+    "agebs": 3206,
+    "archivo": "26_sonora.json"
+  },
+  {
+    "cve_ent": "27",
+    "estado": "Tabasco",
+    "agebs": 564,
+    "archivo": "27_tabasco.json"
+  },
+  {
+    "cve_ent": "28",
+    "estado": "Tamaulipas",
+    "agebs": 2440,
+    "archivo": "28_tamaulipas.json"
+  },
+  {
+    "cve_ent": "29",
+    "estado": "Tlaxcala",
+    "agebs": 668,
+    "archivo": "29_tlaxcala.json"
+  },
+  {
+    "cve_ent": "30",
+    "estado": "Veracruz de Ignacio de la Llave",
+    "agebs": 3335,
+    "archivo": "30_veracruz_de_ignacio_de_la_llave.json"
+  },
+  {
+    "cve_ent": "31",
+    "estado": "Yucatán",
+    "agebs": 1532,
+    "archivo": "31_yucatan.json"
+  },
+  {
+    "cve_ent": "32",
+    "estado": "Zacatecas",
+    "agebs": 2064,
+    "archivo": "32_zacatecas.json"
+  }
+]
