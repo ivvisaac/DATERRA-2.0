@@ -1,3 +1,4 @@
 .DS_Store
 deploy/index_backup_*.html
 .wrangler/
+.claude/
