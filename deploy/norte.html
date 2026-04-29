@@ -131,6 +131,35 @@ select option{background:var(--s2)}
 .tbtn[data-tip]:hover::after{opacity:1}
 #topbar .tbtn{color:rgba(210,240,240,0.88)!important}
 #topbar .tbtn:hover:not(:disabled){background:rgba(9,44,59,0.4)!important;color:#fff!important}
+#topbar .tbtn.ind-act{background:rgba(0,226,224,0.18)!important;color:#00e2e0!important;border-color:rgba(0,226,224,0.45)!important}
+#topbar .tbtn.ind-act-r{background:rgba(74,222,128,0.18)!important;color:#4ade80!important;border-color:rgba(74,222,128,0.45)!important}
+#topbar .tbtn.ind-act-v{background:rgba(240,184,64,0.18)!important;color:#f0b840!important;border-color:rgba(240,184,64,0.45)!important}
+#ind-panel{border-top:1px solid var(--bd);padding:11px 13px;flex-shrink:0;background:rgba(0,226,224,0.02)}
+#ind-panel .ind-hdr{display:flex;align-items:center;gap:7px;margin-bottom:8px}
+#ind-panel .ind-hdr-ico{font-size:14px}
+#ind-panel .ind-hdr-ttl{font-family:var(--mono);font-size:10px;font-weight:700;color:rgba(0,226,224,0.85);text-transform:uppercase;letter-spacing:.8px}
+#ind-panel .ind-ks{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:9px}
+#ind-panel .ind-k{background:rgba(255,255,255,0.04);border-radius:6px;padding:5px 4px;text-align:center}
+#ind-panel .ind-kv{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--txt)}
+#ind-panel .ind-kl{font-size:8px;color:var(--m1);margin-top:1px;line-height:1.2}
+#ind-panel .ind-tgls{display:flex;gap:5px;margin-bottom:8px}
+#ind-panel .ind-tgl{flex:1;padding:5px 0;border-radius:6px;border:1px solid var(--bd2);background:transparent;font-family:var(--mono);font-size:9px;font-weight:600;cursor:pointer;color:var(--m1);transition:all .15s;text-align:center}
+#ind-panel .ind-tgl:hover{background:var(--s3)}
+#ind-panel .ind-tgl.on-p{background:rgba(0,226,224,0.15);border-color:rgba(0,226,224,0.5);color:#00e2e0}
+#ind-panel .ind-tgl.on-r{background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.5);color:#4ade80}
+#ind-panel .ind-tgl.on-v{background:rgba(240,184,64,0.15);border-color:rgba(240,184,64,0.5);color:#f0b840}
+#ind-zona{margin-top:6px;padding-top:7px;border-top:1px solid var(--bd)}
+#ind-zona .ind-zona-ttl{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--m1);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+#ind-zona .ind-bod-row{display:flex;align-items:center;gap:5px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:9.5px}
+#ind-zona .ind-bod-row:last-child{border-bottom:none}
+#ind-zona .ind-cls{font-family:var(--mono);font-weight:700;font-size:9px;width:20px;flex-shrink:0}
+#ind-zona .ind-m2{color:var(--txt);flex:1;font-family:var(--mono)}
+#ind-zona .ind-rp{font-weight:600;color:#4ade80;flex-shrink:0}
+#ind-zona .ind-km{color:var(--m1);font-size:8.5px;flex-shrink:0;width:34px;text-align:right}
+/* Popup dark para marcadores industriales */
+.ind-popup .leaflet-popup-content-wrapper{background:#0d1a24;border:1px solid rgba(0,226,224,0.25);border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,.65);color:#e4eaf5}
+.ind-popup .leaflet-popup-tip{background:#0d1a24}
+.ind-popup .leaflet-popup-content{margin:12px 14px}
 @media (min-width: 769px) {
   .topbar-spacer { flex: 1; min-width: 8px; }
   #topbar .ctrl:has(.tgroup) { margin-left: 0; }
@@ -1154,6 +1183,13 @@ body.mob-ui #help-card{max-height:85vh!important}
     </div>
     <button class="tbtn" id="btn-heat" onclick="toggleHeat()" data-tip="Activa o desactiva el mapa de calor. Sin calor, los AGEBs se muestran solo con contorno punteado para facilitar el dibujo de zonas." style="font-size:11px">&#9632; Calor</button>
     <div style="width:1px;height:22px;background:rgba(255,255,255,0.15);flex-shrink:0"></div>
+    <span style="font-family:var(--mono);font-size:10px;font-weight:600;color:rgba(0,226,224,0.6);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;flex-shrink:0">Mapa</span>
+    <div class="tgroup">
+      <button class="tbtn" id="btn-ind-parques" onclick="toggleIndLayer('parques')" title="Mostrar/ocultar parques industriales">&#127981; Parques</button>
+      <button class="tbtn" id="btn-ind-renta" onclick="toggleIndLayer('renta')" title="Mostrar/ocultar bodegas en renta">&#11044; Renta</button>
+      <button class="tbtn" id="btn-ind-venta" onclick="toggleIndLayer('venta')" title="Mostrar/ocultar bodegas en venta">&#11044; Venta</button>
+    </div>
+    <div style="width:1px;height:22px;background:rgba(255,255,255,0.15);flex-shrink:0"></div>
     <button id="export-btn" onclick="abrirPDF()" title="Exportar reporte de zona" disabled>
       &#11015; Exportar análisis
     </button>
@@ -1212,6 +1248,10 @@ body.mob-ui #help-card{max-height:85vh!important}
   <button class="mob-tool-btn" onclick="activarHerramienta('draw');cerrarMobTools()">&#9999; Polígono</button>
   <button class="mob-tool-btn" onclick="activarHerramienta('radio');cerrarMobTools()">&#9678; Radio</button>
   <button class="mob-tool-btn" onclick="activarHerramienta('iso');cerrarMobTools()">&#9685; Isocrona</button>
+  <div style="height:1px;background:rgba(255,255,255,0.1);margin:2px 0"></div>
+  <button class="mob-tool-btn" id="mob-ind-parques" onclick="toggleIndLayer('parques')">&#127981; Parques</button>
+  <button class="mob-tool-btn" id="mob-ind-renta" onclick="toggleIndLayer('renta')" style="color:#4ade80">&#11044; Renta</button>
+  <button class="mob-tool-btn" id="mob-ind-venta" onclick="toggleIndLayer('venta')" style="color:#f0b840">&#11044; Venta</button>
 </div>
 
 <!-- ── BARRA INFERIOR MÓVIL ── -->
@@ -1660,6 +1700,23 @@ body.mob-ui #help-card{max-height:85vh!important}
         <div class="sc"><div class="scv" id="st-max">—</div><div class="scl">Maximo</div></div>
         <div class="sc"><div class="scv" id="st-min">—</div><div class="scl">Minimo</div></div>
       </div>
+    </div>
+    <div id="ind-panel">
+      <div class="ind-hdr">
+        <span class="ind-hdr-ico">&#127981;</span>
+        <span class="ind-hdr-ttl">Industrial ZM Laguna</span>
+      </div>
+      <div class="ind-ks" id="ind-ks">
+        <div class="ind-k"><div class="ind-kv" id="ind-k-bod">120</div><div class="ind-kl">bodegas</div></div>
+        <div class="ind-k"><div class="ind-kv" id="ind-k-parq">30</div><div class="ind-kl">parques</div></div>
+        <div class="ind-k"><div class="ind-kv" id="ind-k-med">$65/m²</div><div class="ind-kl">renta med.</div></div>
+      </div>
+      <div class="ind-tgls">
+        <button class="ind-tgl" id="sb-ind-parques" onclick="toggleIndLayer('parques')" title="Parques industriales">&#127981; Parques</button>
+        <button class="ind-tgl" id="sb-ind-renta" onclick="toggleIndLayer('renta')" title="Bodegas en renta">&#11044; Renta</button>
+        <button class="ind-tgl" id="sb-ind-venta" onclick="toggleIndLayer('venta')" title="Bodegas en venta">&#11044; Venta</button>
+      </div>
+      <div id="ind-zona" style="display:none"></div>
     </div>
     <div id="zpanel">
       <div class="tcont">
@@ -6036,6 +6093,228 @@ document.getElementById('map').addEventListener('click',function(){
   document.getElementById('mob-cfg-btn').classList.remove('active');
   cerrarMobTools();
 });
+
+// ── INDUSTRIAL MAP OVERLAYS ──────────────────────────────────────────────────
+// 3 capas Leaflet: parques · bodegas en renta · bodegas en venta
+// Toggle desde topbar y desde panel lateral
+
+var _indL = { parques: null, renta: null, venta: null };
+var _indVis = { parques: false, renta: false, venta: false };
+
+// Jitter: distribuye marcadores en círculo pequeño cuando comparten lat/lon
+function _jitter(lat, lon, idx, total) {
+  if (total <= 1) return [lat, lon];
+  var r = 0.0005, ang = (2 * Math.PI * idx) / total;
+  return [lat + r * Math.sin(ang), lon + r * Math.cos(ang)];
+}
+
+function _buildIndLayers() {
+  // ── Parques ──
+  _indL.parques = L.layerGroup();
+  INDUSTRIAL.parques.forEach(function(p) {
+    if (!p.lat || !p.lon) return;
+    var icon = L.divIcon({
+      className: '',
+      html: '<div style="width:28px;height:28px;border-radius:7px;background:#0a2c3a;border:2px solid #00e2e0;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 10px rgba(0,0,0,.55);cursor:pointer">&#127981;</div>',
+      iconSize: [28,28], iconAnchor: [14,14]
+    });
+    var clsColor = p.cls === 'A' ? '#6d28d9' : p.cls === 'A/B' ? '#1d4ed8' : p.cls === 'B+' ? '#0891b2' : '#16a34a';
+    var popup = '<div style="font-family:IBM Plex Mono,monospace;min-width:210px;font-size:11px;color:#e4eaf5;line-height:1.5">'
+      + '<div style="font-weight:700;font-size:12.5px;color:#00e2e0;margin-bottom:5px">'+p.nom+'</div>'
+      + '<div style="display:flex;gap:6px;margin-bottom:4px"><span style="background:'+clsColor+';border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;color:#fff">Clase '+p.cls+'</span><span style="color:#8a96a8">'+p.tipo+'</span></div>'
+      + '<div>📍 <strong>'+p.mun+'</strong> · '+p.ha+' ha</div>'
+      + (p.rent_mxn ? '<div>Renta: <strong style="color:#4ade80">'+p.rent_mxn+' MXN</strong> ('+p.rent_usd+' USD)</div>' : '')
+      + (p.ocp_pub ? '<div style="color:#8a96a8;font-size:10px">Ocup.: '+p.ocp_pub+'</div>' : '')
+      + (p.ocup ? '<div style="color:#8a96a8;font-size:9.5px;margin-top:3px;border-top:1px solid rgba(255,255,255,0.08);padding-top:3px">'+p.ocup+'</div>' : '')
+      + '</div>';
+    L.marker([p.lat, p.lon], {icon: icon, zIndexOffset: 200})
+      .bindPopup(popup, {maxWidth: 280, className: 'ind-popup'})
+      .addTo(_indL.parques);
+  });
+
+  // ── Bodegas en Renta ── (agrupar por coordenada para jitter)
+  _indL.renta = L.layerGroup();
+  var rGrp = {};
+  INDUSTRIAL.bodegas.filter(function(b){ return b.op === 'Renta' && b.lat && b.lon; })
+    .forEach(function(b) { var k = b.lat+','+b.lon; if (!rGrp[k]) rGrp[k]=[]; rGrp[k].push(b); });
+  Object.keys(rGrp).forEach(function(k) {
+    var grp = rGrp[k];
+    grp.forEach(function(b, i) {
+      var pos = _jitter(b.lat, b.lon, i, grp.length);
+      var clsC = b.cls === 'A' ? '#6d28d9' : b.cls === 'B+' ? '#0891b2' : b.cls === 'B' ? '#16a34a' : '#8a96a8';
+      var icon = L.divIcon({
+        className: '',
+        html: '<div style="width:22px;height:22px;border-radius:50%;background:#16a34a;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700;color:#fff;font-family:monospace;box-shadow:0 2px 7px rgba(0,0,0,.45);cursor:pointer">R</div>',
+        iconSize: [22,22], iconAnchor: [11,11]
+      });
+      var popup = '<div style="font-family:IBM Plex Mono,monospace;min-width:200px;font-size:11px;color:#e4eaf5;line-height:1.5">'
+        + '<div style="font-weight:700;font-size:12px;color:#4ade80;margin-bottom:4px">Bodega en Renta</div>'
+        + '<div style="display:flex;gap:6px;align-items:center;margin-bottom:4px"><span style="background:'+clsC+';border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;color:#fff">Clase '+b.cls+'</span><span style="color:#8a96a8">'+b.zona+'</span></div>'
+        + '<div>Superficie: <strong>'+b.m2.toLocaleString('es-MX')+' m²</strong></div>'
+        + '<div>Renta: <strong style="color:#4ade80">$'+b.rent_m2+'/m²/mes</strong>'+(b.rent_usd?' <span style="color:#8a96a8">($'+b.rent_usd+' USD)</span>':'')+'</div>'
+        + (b.alt ? '<div>Alt. libre: <strong>'+b.alt+' m</strong> · Andenes: <strong>'+b.andenes+'</strong></div>' : '')
+        + (b.car ? '<div style="color:#8a96a8;font-size:9.5px;margin-top:3px;border-top:1px solid rgba(255,255,255,0.08);padding-top:3px">'+b.car+'</div>' : '')
+        + '</div>';
+      L.marker(pos, {icon: icon, zIndexOffset: 100})
+        .bindPopup(popup, {maxWidth: 270, className: 'ind-popup'})
+        .addTo(_indL.renta);
+    });
+  });
+
+  // ── Bodegas en Venta ──
+  _indL.venta = L.layerGroup();
+  var vGrp = {};
+  INDUSTRIAL.bodegas.filter(function(b){ return b.op === 'Venta' && b.lat && b.lon; })
+    .forEach(function(b) { var k = b.lat+','+b.lon; if (!vGrp[k]) vGrp[k]=[]; vGrp[k].push(b); });
+  Object.keys(vGrp).forEach(function(k) {
+    var grp = vGrp[k];
+    grp.forEach(function(b, i) {
+      var pos = _jitter(b.lat, b.lon, i, grp.length);
+      var icon = L.divIcon({
+        className: '',
+        html: '<div style="width:22px;height:22px;border-radius:50%;background:#ca8a04;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700;color:#fff;font-family:monospace;box-shadow:0 2px 7px rgba(0,0,0,.45);cursor:pointer">V</div>',
+        iconSize: [22,22], iconAnchor: [11,11]
+      });
+      var popup = '<div style="font-family:IBM Plex Mono,monospace;min-width:200px;font-size:11px;color:#e4eaf5;line-height:1.5">'
+        + '<div style="font-weight:700;font-size:12px;color:#f0b840;margin-bottom:4px">Bodega en Venta</div>'
+        + '<div style="color:#8a96a8;margin-bottom:4px">'+b.zona+'</div>'
+        + '<div>Superficie: <strong>'+b.m2.toLocaleString('es-MX')+' m²</strong></div>'
+        + (b.vta_m2 ? '<div>Precio: <strong style="color:#f0b840">$'+b.vta_m2.toLocaleString('es-MX')+'/m²</strong></div>' : '')
+        + (b.alt ? '<div>Alt. libre: <strong>'+b.alt+' m</strong> · Andenes: <strong>'+b.andenes+'</strong></div>' : '')
+        + (b.car ? '<div style="color:#8a96a8;font-size:9.5px;margin-top:3px;border-top:1px solid rgba(255,255,255,0.08);padding-top:3px">'+b.car+'</div>' : '')
+        + '</div>';
+      L.marker(pos, {icon: icon, zIndexOffset: 100})
+        .bindPopup(popup, {maxWidth: 270, className: 'ind-popup'})
+        .addTo(_indL.venta);
+    });
+  });
+}
+
+// Actualiza estado activo de TODOS los botones del tipo dado
+function _syncIndBtns(tipo) {
+  var on = _indVis[tipo];
+  // topbar
+  var tb = document.getElementById('btn-ind-'+tipo);
+  if (tb) {
+    if (tipo === 'parques') { tb.classList.toggle('ind-act', on); }
+    else if (tipo === 'renta') { tb.classList.toggle('ind-act-r', on); }
+    else { tb.classList.toggle('ind-act-v', on); }
+  }
+  // sidebar
+  var sb2 = document.getElementById('sb-ind-'+tipo);
+  if (sb2) {
+    sb2.classList.toggle('on-p', tipo==='parques' && on);
+    sb2.classList.toggle('on-r', tipo==='renta' && on);
+    sb2.classList.toggle('on-v', tipo==='venta' && on);
+  }
+}
+
+function toggleIndLayer(tipo) {
+  if (!_indVis.hasOwnProperty(tipo)) return;
+  if (!_indL[tipo]) _buildIndLayers();
+  _indVis[tipo] = !_indVis[tipo];
+  if (_indVis[tipo]) { _indL[tipo].addTo(map); }
+  else { try { map.removeLayer(_indL[tipo]); } catch(e){} }
+  _syncIndBtns(tipo);
+}
+
+// ── PANEL LATERAL INDUSTRIAL ──────────────────────────────────
+// Muestra bodegas cercanas a la zona analizada (cuando hay zonaAgebs activos)
+
+function _hav2(la1,lo1,la2,lo2){var R=6371,dL=(la2-la1)*Math.PI/180,dO=(lo2-lo1)*Math.PI/180,a=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)*Math.sin(dO/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+
+function refreshIndPanel() {
+  var zona = document.getElementById('ind-zona');
+  if (!zona) return;
+
+  // Si no hay zona activa, ocultar
+  if (!zonaAgebs || !zonaAgebs.length) {
+    zona.style.display = 'none';
+    return;
+  }
+
+  // Centroide de la zona
+  var lats = [], lons = [];
+  zonaAgebs.forEach(function(f) {
+    var c = f._poly ? f._poly.getBounds().getCenter() : null;
+    if (c) { lats.push(c.lat); lons.push(c.lng); }
+  });
+  if (!lats.length) { zona.style.display = 'none'; return; }
+  var cLat = lats.reduce(function(a,b){return a+b;},0)/lats.length;
+  var cLon = lons.reduce(function(a,b){return a+b;},0)/lons.length;
+
+  // Bodegas en renta ordenadas por distancia al centroide
+  var rentaCerca = INDUSTRIAL.bodegas
+    .filter(function(b){ return b.op==='Renta' && b.rent_m2>0 && b.lat && b.lon; })
+    .map(function(b){ return Object.assign({}, b, {_d: _hav2(cLat,cLon,b.lat,b.lon)}); })
+    .sort(function(a,b){ return a._d - b._d; })
+    .slice(0, 6);
+
+  // Parque más cercano
+  var pqCerca = INDUSTRIAL.parques
+    .filter(function(p){ return p.lat && p.lon; })
+    .map(function(p){ return Object.assign({}, p, {_d: _hav2(cLat,cLon,p.lat,p.lon)}); })
+    .sort(function(a,b){ return a._d - b._d; })[0];
+
+  var h = '';
+
+  if (pqCerca) {
+    h += '<div style="margin-bottom:6px;padding:5px 7px;background:rgba(0,226,224,0.07);border-radius:6px;border:1px solid rgba(0,226,224,0.15)">'
+      + '<div style="font-family:var(--mono);font-size:8.5px;font-weight:700;color:#00e2e0;margin-bottom:2px">&#9733; Parque más cercano</div>'
+      + '<div style="font-size:9px;color:var(--txt)">'+pqCerca.nom+'</div>'
+      + '<div style="font-size:8.5px;color:var(--m1)">'+pqCerca.mun+' · '+pqCerca._d.toFixed(1)+' km · Clase '+pqCerca.cls+'</div>'
+      + (pqCerca.rent_mxn ? '<div style="font-size:8.5px;color:#4ade80">'+pqCerca.rent_mxn+' MXN</div>' : '')
+      + '</div>';
+  }
+
+  if (rentaCerca.length) {
+    h += '<div class="ind-zona-ttl">Bodegas en renta cercanas</div>';
+    rentaCerca.forEach(function(b) {
+      h += '<div class="ind-bod-row">'
+        + '<span class="ind-cls">'+b.cls+'</span>'
+        + '<span class="ind-m2">'+Math.round(b.m2/100)*100+' m²</span>'
+        + '<span class="ind-rp">$'+b.rent_m2+'</span>'
+        + '<span class="ind-km">'+b._d.toFixed(1)+' km</span>'
+        + '</div>';
+    });
+  } else {
+    h += '<div style="font-size:9.5px;color:var(--m1);text-align:center;padding:8px 0">Sin bodegas en renta en ZM</div>';
+  }
+
+  zona.innerHTML = h;
+  zona.style.display = 'block';
+}
+
+// Actualizar panel al cambiar zona
+var _origActResZona = typeof actualizarResumenZona !== 'undefined' ? actualizarResumenZona : null;
+actualizarResumenZona = (function(_orig){
+  return function(){
+    if (_orig) _orig.apply(this, arguments);
+    setTimeout(refreshIndPanel, 80);
+  };
+})(typeof actualizarResumenZona !== 'undefined' ? actualizarResumenZona : null);
+
+// También al limpiar zona
+var _origLimpInd = limpiarTodo;
+limpiarTodo = function(){
+  _origLimpInd.apply(this, arguments);
+  refreshIndPanel();
+};
+
+// Inicializar contadores sidebar con datos reales
+(function(){
+  var nBod = INDUSTRIAL.bodegas.length;
+  var nPaq = INDUSTRIAL.parques.length;
+  var rents = INDUSTRIAL.bodegas.filter(function(b){return b.op==='Renta'&&b.rent_m2>0;}).map(function(b){return b.rent_m2;});
+  rents.sort(function(a,b){return a-b;});
+  var medRent = rents.length ? rents[Math.floor(rents.length/2)] : 65;
+  var kBod = document.getElementById('ind-k-bod');
+  var kPaq = document.getElementById('ind-k-parq');
+  var kMed = document.getElementById('ind-k-med');
+  if (kBod) kBod.textContent = nBod;
+  if (kPaq) kPaq.textContent = nPaq;
+  if (kMed) kMed.textContent = '$'+Math.round(medRent)+'/m²';
+})();
 
 // Cargar Coahuila por defecto
 cargarEstado('05');
