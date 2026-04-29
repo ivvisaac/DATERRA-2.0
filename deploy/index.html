@@ -1634,12 +1634,18 @@ body.mob-ui #help-card{max-height:85vh!important}
         <div class="op-ttl" style="color:var(--radio)">⊙ CONFIGURAR RADIO</div>
         <div class="op-row">
           <span class="op-lbl">Radio</span>
-          <input type="range" class="radio-range" id="radio-km" min="0.5" max="20" step="0.5" value="3" oninput="updateRadioPreview()">
-          <span class="op-val" id="radio-km-val" style="color:var(--radio)">3.0 km</span>
+          <input type="range" class="radio-range" id="radio-km" min="0.5" max="20" step="0.5" value="1" oninput="updateRadioPreview()">
+          <span class="op-val" id="radio-km-val" style="color:var(--radio)">1.0 km</span>
+        </div>
+        <div style="display:flex;gap:4px;margin-bottom:4px">
+          <button onclick="setRadioPreset(0.5)" style="flex:1;padding:3px 0;font-size:10px;font-family:var(--mono);background:rgba(52,211,153,.1);color:var(--radio);border:1px solid rgba(52,211,153,.25);border-radius:4px;cursor:pointer">500m</button>
+          <button onclick="setRadioPreset(1)" style="flex:1;padding:3px 0;font-size:10px;font-family:var(--mono);background:rgba(52,211,153,.22);color:var(--radio);border:1px solid rgba(52,211,153,.4);border-radius:4px;cursor:pointer;font-weight:700">1 km</button>
+          <button onclick="setRadioPreset(2)" style="flex:1;padding:3px 0;font-size:10px;font-family:var(--mono);background:rgba(52,211,153,.1);color:var(--radio);border:1px solid rgba(52,211,153,.25);border-radius:4px;cursor:pointer">2 km</button>
+          <button onclick="setRadioPreset(5)" style="flex:1;padding:3px 0;font-size:10px;font-family:var(--mono);background:rgba(52,211,153,.1);color:var(--radio);border:1px solid rgba(52,211,153,.25);border-radius:4px;cursor:pointer">5 km</button>
         </div>
         <div class="op-row" style="margin-bottom:0">
           <span class="op-lbl">Area</span>
-          <span style="font-family:var(--mono);font-size:11px;color:var(--m1)" id="radio-area">28.3 km²</span>
+          <span style="font-family:var(--mono);font-size:11px;color:var(--m1)" id="radio-area">3.1 km²</span>
         </div>
         <button class="op-btn radio-btn" style="margin-top:12px" onclick="confirmarRadio()">Aplicar y ver AGEBs</button>
       </div>
@@ -2397,6 +2403,11 @@ function onDrawDbl(e){
 // ════════════════════════════════════════════════════════════════════
 
 // ── HERRAMIENTA RADIO ─────────────────────────────────────────
+function setRadioPreset(km){
+  var el=document.getElementById('radio-km');
+  el.value=km;
+  updateRadioPreview();
+}
 function updateRadioPreview(){
   var km=parseFloat(document.getElementById('radio-km').value);
   document.getElementById('radio-km-val').textContent=km.toFixed(1)+' km';
@@ -3866,12 +3877,6 @@ function generarReporte(){
     } else if(pctPea<munPctPea-3){
       ins.push(insight('La <strong>tasa de PEA ('+P1(pctPea)+')</strong> está '+Math.abs(+difPea)+'pp por debajo del municipio ('+P1(munPctPea)+'). Mayor proporción de población inactiva (pensionados, estudiantes, desocupados). Evaluar el segmento específico: si son adultos mayores, el mercado de renta puede ser estable; si hay desempleo estructural, el riesgo de impago hipotecario es mayor.','warn'));
     }
-    // Hogares por vivienda como proxy de hacinamiento/demanda
-    if(avgHpV>3.8){
-      ins.push(insight('Promedio de <strong>'+N(avgHpV,2)+' habitantes por vivienda</strong> (municipio: '+N(munAvgHpV,2)+'). El hacinamiento relativo indica demanda habitacional reprimida: hay más necesidad de vivienda de la que el parque actual puede absorber. Contexto favorable para nueva oferta, especialmente vivienda asequible.','warn'));
-    } else if(avgHpV<2.8){
-      ins.push(insight('Bajo promedio de <strong>'+N(avgHpV,2)+' habitantes por vivienda</strong> (municipio: '+N(munAvgHpV,2)+'). Puede reflejar hogares unipersonales o parejas sin hijos — segmento con menor demanda de espacio pero mayor exigencia en calidad de acabados y ubicación. Departamentos compactos o estudios pueden tener buena absorción.','neutral'));
-    }
     return ins.join('');
   }
 
@@ -3963,7 +3968,7 @@ function generarReporte(){
     p1+='<div class="rpt-kpi-delta"><span style="color:'+sPea.color+'">'+sPea.icon+' '+sPea.label+'</span></div></div>';
     p1+='</div></div>';
 
-    p1+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 1 / 13</span><span>'+fecha+'</span></div>';
+    p1+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 1 / 14</span><span>'+fecha+'</span></div>';
     p1+='</div>';
 
     // ────────── PÁGINA EJECUTIVA: Resumen para decisores ──────────
@@ -3971,20 +3976,29 @@ function generarReporte(){
     var _esc1=crecPobPct>3?'pos':crecPobPct>0?'mod':'neg';
     var _esc2=crecVivPct>3?'pos':crecVivPct>0?'mod':'neg';
     var _esc3=pctVivDes<8?'pos':pctVivDes<12?'mod':'neg';
-    var _esc4=avgEsc>=munAvgEsc+0.5?'pos':avgEsc>=munAvgEsc-0.5?'mod':'neg';
+    // NSE vs municipio para el score (_esc4)
+    var _munNseAbExec=0,_munNseCmasExec=0,_munNseTotExec=0;
+    munFeatsAll.forEach(function(f){_munNseAbExec+=(+(f.properties.nse_ab)||0);_munNseCmasExec+=(+(f.properties.nse_cmas)||0);_munNseTotExec+=(+(f.properties.nse_viviendas)||0);});
+    var _munNseAltoExec=_munNseTotExec>0?(_munNseAbExec+_munNseCmasExec)/_munNseTotExec*100:0;
+    // _esc4: NSE (AB+C+) vs municipio — con fallback a escolaridad si no hay datos NSE
+    var _esc4=nseTotal>0
+      ?(pNseAlto>_munNseAltoExec+5?'pos':pNseAlto>=_munNseAltoExec-5?'mod':'neg')
+      :(avgEsc>=munAvgEsc+0.5?'pos':avgEsc>=munAvgEsc-0.5?'mod':'neg');
     var _esc5=pctPea>=munPctPea+2?'pos':pctPea>=munPctPea-2?'mod':'neg';
     var _exRestoAgebs=Math.max(munNAgebs-n,1);
     var _exRestoCrec=(munTotCrecHogAll||0)-crecHogAbs;
     var _exZonaAvgCrec=n>0?crecHogAbs/n:0;
     var _exRestoAvgCrec=_exRestoCrec/_exRestoAgebs;
     var _esc6=_exZonaAvgCrec>=_exRestoAvgCrec*1.15?'pos':_exZonaAvgCrec>=_exRestoAvgCrec*0.85?'mod':'neg';
-    var _escV=function(s){return s==='pos'?1:s==='mod'?0.5:0;};
-    var _execScore=_escV(_esc1)+_escV(_esc2)+_escV(_esc3)+_escV(_esc4)+_escV(_esc5)+_escV(_esc6);
-    var _execScoreDisp=Math.round(_execScore*2)/2;
-    var _execColor=_execScore>=4.5?'#16a34a':_execScore>=2.5?'#d97706':'#dc2626';
-    var _execBg=_execScore>=4.5?'rgba(22,163,74,0.08)':_execScore>=2.5?'rgba(217,119,6,0.08)':'rgba(220,38,38,0.08)';
-    var _execBorder=_execScore>=4.5?'rgba(22,163,74,0.3)':_execScore>=2.5?'rgba(217,119,6,0.3)':'rgba(220,38,38,0.3)';
-    var _execLbl=_execScore>=4.5?'FAVORABLE':_execScore>=2.5?'MODERADO':'DESFAVORABLE';
+    // Score base 10: 5 variables × 2pts (pos=2, mod=1, neg=0). Sin decimales.
+    var _escV=function(s){return s==='pos'?2:s==='mod'?1:0;};
+    var _execScore=_escV(_esc1)+_escV(_esc2)+_escV(_esc3)+_escV(_esc4)+_escV(_esc5);
+    var _execScoreDisp=_execScore;
+    // Sin rojo: peor color = naranja (#ea580c). Label "CON OPORTUNIDAD" en vez de "DESFAVORABLE".
+    var _execColor=_execScore>=7?'#16a34a':_execScore>=4?'#d97706':'#ea580c';
+    var _execBg=_execScore>=7?'rgba(22,163,74,0.08)':_execScore>=4?'rgba(217,119,6,0.08)':'rgba(234,88,12,0.08)';
+    var _execBorder=_execScore>=7?'rgba(22,163,74,0.3)':_execScore>=4?'rgba(217,119,6,0.3)':'rgba(234,88,12,0.3)';
+    var _execLbl=_execScore>=7?'FAVORABLE':_execScore>=4?'MODERADO':'CON OPORTUNIDAD';
 
     // NSE y segmento de producto (sin precio — orientación cualitativa)
     var _nse=avgEsc>=14?'Medio-Alto / Alto (C+, AB)':avgEsc>=11?'Medio (C, C-)':avgEsc>=9?'Medio-Bajo (D+)':'Bajo (D, E)';
@@ -4092,6 +4106,14 @@ function generarReporte(){
         +'<br><span style="color:'+c+';font-style:italic;font-size:6.5pt">'+desc+'</span></div></div>';
     }
 
+    // Conclusión ejecutiva — calculada aquí para poder renderizarla antes de los KPIs
+    var _nseResumen=nseTotal>0?'NSE predominante <strong>'+nsePredZona+'</strong> ('+_nseMap[nsePredZona].toFixed(0)+'% de hogares). ':'';
+    var _execConclusionText=_execScore>=7
+      ?_nseResumen+'Los indicadores arrojan una lectura <strong>favorable ('+_execScoreDisp+'/10)</strong> para el desarrollo inmobiliario: crecimiento activo, vacancia controlada y demanda alineada con el perfil <strong>'+_execSegLabel+'</strong>. Existe una ventana real de oportunidad. Para aprovecharla al máximo, un estudio de mercado profesional permite confirmar la demanda efectiva, evitar sobreestimar la absorción y definir el precio óptimo. <strong>COEZA Consulting</strong> puede ayudarte a dar ese paso.'
+      :_execScore>=4
+      ?_nseResumen+'La zona presenta <strong>señales mixtas ('+_execScoreDisp+'/10)</strong>: algunos indicadores apuntan a oportunidad para el perfil <strong>'+_execSegLabel+'</strong>, mientras otros — como vacancia o ritmo de crecimiento — merecen atención antes de comprometer capital. La buena noticia: con el producto correcto y el precio adecuado, los mercados moderados suelen tener menos competencia. Un análisis profesional permite identificar esa ventana. <strong>COEZA Consulting</strong> tiene soluciones diseñadas para eso.'
+      :_nseResumen+'La zona muestra <strong>indicadores que invitan a evaluar con cuidado ('+_execScoreDisp+'/10)</strong>, pero esto no descarta la oportunidad — en zonas con menor presión competitiva suelen existir nichos reales para rehabilitación, renta o productos de bajo ticket bien ubicados. La clave está en identificar cuál es esa oportunidad específica y en qué condiciones. <strong>COEZA Consulting</strong> puede hacer ese análisis por ti.';
+
     var pExec='<div class="report-page">';
     pExec+='<div class="rpt-header">'+RPT_LOGO+'</div>';
 
@@ -4102,9 +4124,14 @@ function generarReporte(){
     pExec+='<div style="font-size:7pt;color:rgba(200,220,240,0.7);margin-top:.5mm">'+n+' AGEBs analizados · '+fecha+'</div></div>';
     pExec+='<div style="text-align:center;background:'+_execBg+';border:1.5px solid '+_execBorder+';border-radius:6px;padding:2mm 4mm;flex-shrink:0">';
     pExec+='<div style="font-size:6pt;font-family:IBM Plex Mono,monospace;color:'+_execColor+';letter-spacing:1px;margin-bottom:1mm">ENTORNO DE MERCADO</div>';
-    pExec+='<div style="font-size:20pt;font-weight:700;color:'+_execColor+';font-family:IBM Plex Mono,monospace;line-height:1">'+_execScoreDisp+'<span style="font-size:8pt;opacity:.7">/6</span></div>';
+    pExec+='<div style="font-size:20pt;font-weight:700;color:'+_execColor+';font-family:IBM Plex Mono,monospace;line-height:1">'+_execScoreDisp+'<span style="font-size:8pt;opacity:.7">/10</span></div>';
     pExec+='<div style="font-size:8pt;font-weight:700;color:'+_execColor+';margin-top:1.5mm;letter-spacing:.5px">'+_execLbl+'</div></div>';
     pExec+='</div>';
+
+    // Conclusión ejecutiva — aparece ANTES de los KPIs para lectura inmediata
+    pExec+='<div style="background:linear-gradient(135deg,'+_execBg+',rgba(248,250,252,0.5));border:1.5px solid '+_execBorder+';border-radius:6px;padding:2.5mm 4mm;margin-bottom:2mm">';
+    pExec+='<div style="font-size:6pt;font-weight:700;color:'+_execColor+';text-transform:uppercase;letter-spacing:1px;margin-bottom:1mm">Conclusión · Entorno '+_execLbl+'</div>';
+    pExec+='<div style="font-size:7pt;color:#1e293b;line-height:1.5">'+_execConclusionText+'</div></div>';
 
     // KPIs hero — 5 métricas críticas en una fila
     pExec+='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2mm;margin-bottom:2mm">';
@@ -4126,13 +4153,23 @@ function generarReporte(){
 
     // Col 1: Entorno de mercado scorecard
     pExec+='<div>';
-    pExec+='<div style="font-size:7pt;font-weight:700;color:#092c3b;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid '+_execColor+';padding-bottom:1.5mm;margin-bottom:3mm">Entorno · '+_execScoreDisp+'/6 pts</div>';
+    pExec+='<div style="font-size:7pt;font-weight:700;color:#092c3b;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid '+_execColor+';padding-bottom:1.5mm;margin-bottom:3mm">Entorno · '+_execScoreDisp+'/10 pts</div>';
     pExec+=_scRow2(_esc1,'Crecimiento pob.',Pct(crecPobPct),_esc1==='pos'?'Expansión activa de demanda':_esc1==='mod'?'Crecimiento moderado':'Posible migración o cambio uso');
     pExec+=_scRow2(_esc2,'Crecimiento viv.',Pct(crecVivPct),_esc2==='pos'?'Oferta habitacional en expansión':_esc2==='mod'?'Expansión lenta, equilibrada':'Mercado estancado o contracción');
     pExec+=_scRow2(_esc3,'Vacancia',P1(pctVivDes),_esc3==='pos'?'Absorción activa, sin sobreoferta':_esc3==='mod'?'Vacancia normal, monitorear':'Sobreoferta, evaluar antes de invertir');
-    pExec+=_scRow2(_esc4,'Escolaridad',N(avgEsc,1)+'a / mun. '+N(munAvgEsc,1)+'a',_esc4==='pos'?'NSE igual o superior al municipio':_esc4==='mod'?'Comparable al municipio':'NSE por debajo del municipio');
+    pExec+=_scRow2(_esc4,'NSE / Perfil socioecon.',nseTotal>0?(nsePredZona+' · '+P1(pNseAlto)+' AB+C+'):(N(avgEsc,1)+'a / mun. '+N(munAvgEsc,1)+'a'),_esc4==='pos'?'NSE superior al municipio':_esc4==='mod'?'NSE comparable al municipio':'NSE por debajo del municipio');
     pExec+=_scRow2(_esc5,'PEA activa',P1(pctPea)+' / mun. '+P1(munPctPea),_esc5==='pos'?'Demanda hipotecaria sólida':_esc5==='mod'?'Capacidad similar al municipio':'Mayor riesgo de morosidad');
-    pExec+=_scRow2(_esc6,'Ritmo hogares/AGEB',N(_exZonaAvgCrec,1)+' / mun. '+N(_exRestoAvgCrec,1),_esc6==='pos'?'Mayor absorción que la media':_esc6==='mod'?'Ritmo similar al municipio':'Por debajo del municipio');
+    // Ritmo hogares — referencial, no suma al score
+    pExec+='<div style="display:flex;align-items:flex-start;gap:2mm;padding:1.5mm 2mm;border-radius:3px;background:#f8fafc;border:1px solid #e2e8f0;margin-bottom:1.5mm"><span style="font-size:8pt;flex-shrink:0;line-height:1.3;color:#94a3b8">◎</span><div style="font-size:7pt;line-height:1.3"><span style="font-weight:600;color:#64748b">Ritmo hogares/AGEB</span> <span style="color:#94a3b8;font-family:IBM Plex Mono,monospace;font-size:6.5pt">'+N(_exZonaAvgCrec,1)+' / mun. '+N(_exRestoAvgCrec,1)+'</span><br><span style="color:#94a3b8;font-style:italic;font-size:6.5pt">Referencial · no suma al score</span></div></div>';
+    // NSE bloque
+    if(nseTotal>0){
+      var _nseC1Color=NSE_COLORS[nsePredZona]||'#64748b';
+      pExec+='<div style="margin-top:2mm;padding:1.5mm 2mm;border-radius:3px;background:'+_nseC1Color+'18;border:1px solid '+_nseC1Color+'44">';
+      pExec+='<div style="font-size:5.5pt;font-weight:700;color:'+_nseC1Color+';text-transform:uppercase;letter-spacing:.6px;margin-bottom:1mm">NSE predominante</div>';
+      pExec+='<div style="font-size:8pt;font-weight:700;color:'+_nseC1Color+';font-family:IBM Plex Mono,monospace">'+nsePredZona+' · '+_nseMap[nsePredZona].toFixed(0)+'%</div>';
+      pExec+='<div style="font-size:6pt;color:#475569;margin-top:.5mm">'+(NSE_LABELS[nsePredZona]||nsePredZona)+' · Alto (AB+C+): '+P1(pNseAlto)+'</div>';
+      pExec+='</div>';
+    }
     pExec+='</div>';
 
     // Col 2: Señales clave
@@ -4185,17 +4222,6 @@ function generarReporte(){
 
     pExec+='</div>'; // cierra grid 3 col
 
-    // Conclusión ejecutiva — siempre recomienda estudio de mercado completo
-    var _execConclusionText=_execScore>=4.5
-      ?'Los indicadores de esta zona arrojan una lectura <strong>favorable para el desarrollo inmobiliario</strong>: crecimiento activo, vacancia controlada y demanda alineada con el perfil <strong>'+_execSegLabel+'</strong>. Existe una ventana real de oportunidad. Dicho esto, la diferencia entre un proyecto bien posicionado y uno que llega tarde siempre está en los datos de campo — contar con un análisis de mercado profesional antes de arrancar puede definir la rentabilidad del proyecto. En <strong>COEZA Consulting</strong> podemos ayudarte a confirmarlo.'
-      :_execScore>=2.5
-      ?'La zona presenta <strong>señales mixtas</strong> ('+_execScoreDisp+'/6): hay indicadores que apuntan a oportunidad para el perfil <strong>'+_execSegLabel+'</strong>, pero otros que merecen atención antes de comprometer capital. En mercados así, el éxito depende de llegar con el producto correcto al precio correcto — y eso no se improvisa. Un análisis de mercado profesional permite distinguir la demanda real de la aparente. <strong>COEZA Consulting</strong> tiene soluciones diseñadas exactamente para eso.'
-      :'La zona muestra <strong>rezagos en varios indicadores clave</strong> ('+_execScoreDisp+'/6) que invitan a la cautela. Esto no descarta la posibilidad de éxito, pero sí reduce el margen de error: la demanda es más acotada y la absorción más lenta de lo deseable. Antes de tomar cualquier decisión de inversión aquí, es fundamental entender qué oportunidades reales existen y en qué condiciones. <strong>COEZA Consulting</strong> puede hacer ese análisis por ti.';
-
-    pExec+='<div style="background:linear-gradient(135deg,'+_execBg+',rgba(248,250,252,0.5));border:1.5px solid '+_execBorder+';border-radius:6px;padding:2mm 4mm">';
-    pExec+='<div style="font-size:6.5pt;font-weight:700;color:'+_execColor+';text-transform:uppercase;letter-spacing:1px;margin-bottom:1mm">Conclusión · Entorno '+_execLbl+'</div>';
-    pExec+='<div style="font-size:7pt;color:#1e293b;line-height:1.5">'+_execConclusionText+'</div></div>';
-
     // Banner COEZA completo + grid de soluciones en resumen ejecutivo
     pExec+='<div style="background:linear-gradient(135deg,#092c3b 0%,#074e4b 65%,#00a89e 100%);border-radius:6px;padding:2mm 3mm;margin-top:1.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
     pExec+='<div style="display:flex;align-items:center;justify-content:space-between;gap:3mm">';
@@ -4236,7 +4262,7 @@ function generarReporte(){
     });
     pExec+='</div></div>';
 
-    pExec+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Análisis Ejecutivo · COEZA Consulting</span><span>Pag. 2 / 13</span><span>'+fecha+'</span></div>';
+    pExec+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Análisis Ejecutivo · COEZA Consulting</span><span>Pag. 3 / 14</span><span>'+fecha+'</span></div>';
     pExec+='</div>';
 
     // ────────── PÁGINA 2 (ahora 3): Análisis Dinámica Territorial ──────────
@@ -4268,7 +4294,7 @@ function generarReporte(){
         p2+=insight(tempDecInsight,'neutral');
       }
     }
-    p2+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 4 / 13</span><span>'+fecha+'</span></div>';
+    p2+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 5 / 14</span><span>'+fecha+'</span></div>';
     p2+='</div>';
 
     // ────────── PÁGINA 3: Crecimiento Comparativo ──────────
@@ -4290,7 +4316,7 @@ function generarReporte(){
     p3+=barra3('% PEA (Pob. Economicamente Activa)',pctPea,munPctPea,estPctPea,'#a78bfa','%',1,true);
     p3+='</div></div></div>';
     p3+=DISC;
-    p3+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 3 / 13</span><span>'+fecha+'</span></div>';
+    p3+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 4 / 14</span><span>'+fecha+'</span></div>';
     p3+='</div>';
 
     // ────────── PÁGINA 4: Estructura de Edad ──────────
@@ -4326,9 +4352,30 @@ function generarReporte(){
       p4+='</div>';
     });
     p4+='</div></div>';
+    // Pirámide de edades — distribución estimada M/F
+    var _pyMax4=Math.max(pct014,pct1524,pct2559,pct60,0.1);
+    var _pyMasF=totPob>0?totMas/totPob:0.49, _pyFemF=totPob>0?totFem/totPob:0.51;
+    p4+='<div style="margin-top:3mm;padding:2.5mm 4mm;background:#f8fafc;border-radius:5px;border:1px solid #e2e8f0">';
+    p4+='<div style="font-size:6.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1.5mm;text-align:center">Pirámide de Edad · Zona analizada</div>';
+    p4+='<div style="display:grid;grid-template-columns:1fr 36px 1fr;margin-bottom:1mm">';
+    p4+='<div style="text-align:right;font-size:5.5pt;color:#94a3b8;font-family:IBM Plex Mono,monospace">Masculino (est. '+P1(_pyMasF*100)+')</div>';
+    p4+='<div></div>';
+    p4+='<div style="font-size:5.5pt;color:#94a3b8;font-family:IBM Plex Mono,monospace">Femenino (est. '+P1(_pyFemF*100)+')</div>';
+    p4+='</div>';
+    [['60+','#f0b840',pct60],['25–59','#a78bfa',pct2559],['15–24','#5ddba8',pct1524],['0–14','#3eb8f0',pct014]].forEach(function(g){
+      var masV=Math.min(46,g[2]*_pyMasF/_pyMax4*46);
+      var femV=Math.min(46,g[2]*_pyFemF/_pyMax4*46);
+      p4+='<div style="display:grid;grid-template-columns:1fr 36px 1fr;align-items:center;gap:0;margin-bottom:1.5mm">';
+      p4+='<div style="display:flex;justify-content:flex-end"><div style="height:9px;width:'+masV+'%;background:'+g[1]+';opacity:.8;border-radius:2px 0 0 2px"></div></div>';
+      p4+='<div style="text-align:center;font-size:5.5pt;color:#334155;font-family:IBM Plex Mono,monospace;line-height:1">'+g[0]+'</div>';
+      p4+='<div><div style="height:9px;width:'+femV+'%;background:'+g[1]+';opacity:.95;border-radius:0 2px 2px 0"></div></div>';
+      p4+='</div>';
+    });
+    p4+='<div style="font-size:5pt;color:#94a3b8;text-align:center;margin-top:1mm;font-style:italic">Distribución M/F estimada en base a proporción total de la zona · INEGI Censo 2020</div>';
+    p4+='</div>';
     p4+=analisisEdad();
     p4+=DISC;
-    p4+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 5 / 13</span><span>'+fecha+'</span></div>';
+    p4+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 6 / 14</span><span>'+fecha+'</span></div>';
     p4+='</div>';
 
     // ────────── PÁGINA 5: Composición del Parque Habitacional ──────────
@@ -4357,11 +4404,19 @@ function generarReporte(){
     var vivInsight=pctVivDes>14?insight('Vacancia del <strong>'+P1(pctVivDes)+'</strong>: por encima del umbral saludable (~12%). Antes de agregar nueva oferta, evaluar ritmo de absorción y precio de mercado actual.','warn'):pctVivDes<7?insight('Vacancia baja (<strong>'+P1(pctVivDes)+'</strong>): alta absorción. Mercado con capacidad de recibir nueva oferta sin saturarse.','pos'):insight('Vacancia en rango normal (<strong>'+P1(pctVivDes)+'</strong>). '+(pctVph2>74?'El '+P1(pctVph2)+' de viviendas con 2+ dorm. confirma mercado familiar.':'Parque habitacional de tipología mixta; diferenciación de producto clave.'),'neutral');
     p5+=vivInsight;
     if(tempInsight) p5+=tempInsight;
+    // Insight densidad / habitantes por vivienda (movido de Actividad Económica)
+    if(avgHpV>3.8){
+      p5+=insight('Promedio de <strong>'+N(avgHpV,2)+' hab./vivienda</strong> — por encima del municipio ('+N(munAvgHpV,2)+'). El hacinamiento relativo indica demanda habitacional reprimida: hay más necesidad de vivienda de la que el parque puede satisfacer. Contexto favorable para nueva oferta de precio accesible.','warn');
+    } else if(avgHpV<2.8){
+      p5+=insight('Bajo promedio de <strong>'+N(avgHpV,2)+' hab./vivienda</strong> (municipio: '+N(munAvgHpV,2)+'). Hogares unipersonales o parejas sin hijos — menor demanda de espacio pero mayor exigencia de calidad y ubicación. Departamentos compactos o estudios tienen buena absorción potencial.','neutral');
+    } else {
+      p5+=insight('Ocupación media de <strong>'+N(avgHpV,2)+' hab./vivienda</strong> — alineada con el municipio ('+N(munAvgHpV,2)+'). Densidad habitacional estándar sin presión extrema; demanda equilibrada entre tipologías de producto.','neutral');
+    }
     p5+='<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:4px;padding:3mm 4mm;margin-top:3mm">';
     p5+='<div style="font-size:7pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.4px;margin-bottom:1.5mm">&#9432; Vivienda vs Hogar · Definición INEGI</div>';
     p5+='<div style="font-size:7.5pt;color:#334155;line-height:1.6"><strong>Vivienda:</strong> espacio físico con acceso independiente para habitar (puede estar deshabitado o ser de uso temporal). <strong>Hogar:</strong> grupo de personas que comparten gastos de alimentación y residen en la misma vivienda. Una vivienda puede tener uno o más hogares — el número de hogares siempre es ≤ al de viviendas habitadas.</div>';
     p5+='</div></div></div>';
-    p5+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 6 / 13</span><span>'+fecha+'</span></div>';
+    p5+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 7 / 14</span><span>'+fecha+'</span></div>';
     p5+='</div>';
 
     // ────────── PÁGINA 6: Actividad Económica ──────────
@@ -4403,7 +4458,7 @@ function generarReporte(){
       else nseInsight+='Predominancia de NSE popular (D+, D, E: <strong>'+pNsePopular.toFixed(1)+'%</strong>). Mercado de interés social con alta dependencia de subsidio y crédito accesible.';
       p6+=insight(nseInsight,pNseAlto>30?'pos':pNseMedio>40?'neutral':'warn');
     }
-    p6+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 7 / 13</span><span>'+fecha+'</span></div>';
+    p6+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 8 / 14</span><span>'+fecha+'</span></div>';
     p6+='</div>';
 
     // ────────── PÁGINA 7: Estructura Familiar y Fertilidad ──────────
@@ -4439,7 +4494,7 @@ function generarReporte(){
     else hnvInsight=insight('Fertilidad comparable al promedio municipal ('+N(avgHnvLocal,2)+' hijos nacidos vivos por mujer). Demanda equilibrada de tipologias.');
     p7+=hnvInsight+'</div></div>';
     p7+='</div>';
-    p7+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 8 / 13</span><span>'+fecha+'</span></div>';
+    p7+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 9 / 14</span><span>'+fecha+'</span></div>';
     p7+='</div>';
 
     // ── PÁGINA 8: Mapa de calor — Hogares Totales ────────────
@@ -4461,7 +4516,7 @@ function generarReporte(){
       p8+=insight('La zona concentra <strong>'+pctZonaMun+'% del total de hogares del municipio</strong> en '+n+' AGEBs. Con <strong>'+N(zonaAvgHogPorAgeb,0)+' hogares/AGEB promedio</strong> (municipio: '+N(munAvgHogPorAgeb,0)+'), la densidad es comparable a la media municipal. Zona consolidada sin alta diferenciación en concentración — la oportunidad de inversión depende de la tendencia de crecimiento (ver página siguiente).','neutral');
     }
     p8+=insight('El mapa de color permite identificar los AGEBs más densos del municipio (azul intenso) frente a zonas de baja ocupación (amarillo). <strong>La zona analizada aparece delimitada en naranja</strong>. Las AGEBs adyacentes de alta densidad representan oportunidades de expansión o de captura de demanda desbordada.','neutral');
-    p8+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pag. 9 / 13</span><span>'+fecha+'</span></div>';
+    p8+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pag. 10 / 14</span><span>'+fecha+'</span></div>';
     p8+='</div>';
 
     // ── PÁGINA 9: Mapa de calor — Crecimiento de Hogares ─────
@@ -4493,7 +4548,7 @@ function generarReporte(){
     p9+=insight('El mapa de crecimiento revela qué zonas del municipio ganaron o perdieron hogares. <strong>AGEBs azul intenso</strong> = expansión activa (oportunidad de nueva oferta). <strong>AGEBs rojos</strong> = contracción (evaluar causas antes de invertir). Los patrones espaciales adyacentes a la zona analizada indican hacia dónde se desplaza la demanda habitacional.','neutral');
     p9+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:3mm 4mm;font-size:7pt;color:#64748b;line-height:1.6;margin-top:3mm">';
     p9+='<strong style="color:#475569">Fuente:</strong> INEGI · Censo de Población y Vivienda 2010 y 2020. Incluye únicamente AGEBs urbanos con datos disponibles en ambos censos. No incluye localidades rurales.</div>';
-    p9+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pag. 10 / 13</span><span>'+fecha+'</span></div>';
+    p9+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pag. 11 / 14</span><span>'+fecha+'</span></div>';
     p9+='</div>';
 
     // ── PÁGINA 11: Mapa de calor NSE (AMAI) ────────────────────
@@ -4553,7 +4608,7 @@ function generarReporte(){
       else nseMapInsight='La distribución NSE de la zona es comparable al municipio (NSE pred. zona: <strong>'+nsePredZona+'</strong>). El producto óptimo sigue el perfil '+NSE_LABELS[nsePredZona]+'.';
       p_nse+=insight(nseMapInsight,pNseAlto>munAlto?'pos':'neutral');
     }
-    p_nse+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · AMAI 2018 · Censo INEGI 2020</span><span>Pag. 11 / 13</span><span>'+fecha+'</span></div>';
+    p_nse+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · AMAI 2018 · Censo INEGI 2020</span><span>Pag. 12 / 14</span><span>'+fecha+'</span></div>';
     p_nse+='</div>';
 
     // ── PÁGINA 12: Conclusiones ────────────────────────────────
@@ -4564,22 +4619,26 @@ function generarReporte(){
     var sc1=crecPobPct>3?'pos':crecPobPct>0?'mod':'neg';
     var sc2=crecVivPct>3?'pos':crecVivPct>0?'mod':'neg';
     var sc3=pctVivDes<8?'pos':pctVivDes<12?'mod':'neg';
-    var sc4=avgEsc>=munAvgEsc+0.5?'pos':avgEsc>=munAvgEsc-0.5?'mod':'neg';
+    // _esc4 p10: usa NSE real si hay datos (igual que en exec)
+    var sc4=nseTotal>0
+      ?(pNseAlto>_munNseAltoExec+5?'pos':pNseAlto>=_munNseAltoExec-5?'mod':'neg')
+      :(avgEsc>=munAvgEsc+0.5?'pos':avgEsc>=munAvgEsc-0.5?'mod':'neg');
     var sc5=pctPea>=munPctPea+2?'pos':pctPea>=munPctPea-2?'mod':'neg';
     var sc6=zonaAvgCrec>=restoAvgCrec*1.15?'pos':zonaAvgCrec>=restoAvgCrec*0.85?'mod':'neg';
-    var _scVal=function(s){return s==='pos'?1:s==='mod'?0.5:0;};
-    var scorePos=_scVal(sc1)+_scVal(sc2)+_scVal(sc3)+_scVal(sc4)+_scVal(sc5)+_scVal(sc6);
-    var scoreColor=scorePos>=4.5?'#16a34a':scorePos>=2.5?'#d97706':'#dc2626';
-    var scoreLbl=scorePos>=4.5?'FAVORABLE':scorePos>=2.5?'MODERADO':'DESFAVORABLE';
-    var scoreDisp=Math.round(scorePos*2)/2;
+    var _scVal=function(s){return s==='pos'?2:s==='mod'?1:0;};
+    var scorePos=_scVal(sc1)+_scVal(sc2)+_scVal(sc3)+_scVal(sc4)+_scVal(sc5);
+    // Sin rojo: naranja como peor caso; "CON OPORTUNIDAD" en vez de "DESFAVORABLE"
+    var scoreColor=scorePos>=7?'#16a34a':scorePos>=4?'#d97706':'#ea580c';
+    var scoreLbl=scorePos>=7?'FAVORABLE':scorePos>=4?'MODERADO':'CON OPORTUNIDAD';
+    var scoreDisp=scorePos;
     p10+='<div style="background:'+scoreColor+';color:#fff;border-radius:6px;padding:3mm 5mm;margin-bottom:3mm;display:flex;align-items:center;gap:4mm">';
-    p10+='<span style="font-size:24pt;font-weight:700;line-height:1;font-family:IBM Plex Mono,monospace">'+scoreDisp+'<span style="font-size:9pt;opacity:.8">/6</span></span>';
+    p10+='<span style="font-size:24pt;font-weight:700;line-height:1;font-family:IBM Plex Mono,monospace">'+scoreDisp+'<span style="font-size:9pt;opacity:.8">/10</span></span>';
     p10+='<div><div style="font-size:10.5pt;font-weight:700;letter-spacing:.5px">Entorno de Mercado · '+scoreLbl+'</div>';
-    p10+='<div style="font-size:7.5pt;opacity:.85;margin-top:0.5mm">'+n+' AGEBs analizados · <span style="opacity:.7">≥4.5=Favorable · 2.5-4=Moderado · &lt;2.5=Desfavorable · moderado=0.5pts</span></div></div></div>';
+    p10+='<div style="font-size:7.5pt;opacity:.85;margin-top:0.5mm">'+n+' AGEBs analizados · <span style="opacity:.7">≥7=Favorable · 4–6=Moderado · &lt;4=Con Oportunidad · moderado=1pt</span></div></div></div>';
     function scRow(status,label,val,bench,posDesc,modDesc,negDesc){
-      var c=status==='pos'?'#16a34a':status==='mod'?'#d97706':'#dc2626';
-      var bg=status==='pos'?'#f0fdf4':status==='mod'?'#fffbeb':'#fff5f5';
-      var bd=status==='pos'?'#bbf7d0':status==='mod'?'#fde68a':'#fecaca';
+      var c=status==='pos'?'#16a34a':status==='mod'?'#d97706':'#ea580c';
+      var bg=status==='pos'?'#f0fdf4':status==='mod'?'#fffbeb':'#fff8f5';
+      var bd=status==='pos'?'#bbf7d0':status==='mod'?'#fde68a':'#fed7aa';
       var ic=status==='pos'?'✓':status==='mod'?'◑':'✗';
       var desc=status==='pos'?posDesc:status==='mod'?modDesc:negDesc;
       return '<div style="display:flex;align-items:flex-start;gap:2mm;padding:2mm 2.5mm;border-radius:3px;background:'+bg+';border:1px solid '+bd+'">'
@@ -4595,13 +4654,13 @@ function generarReporte(){
       'Oferta habitacional en expansión','Expansión lenta, absorción equilibrada','Mercado estancado o contracción');
     p10+=scRow(sc3,'Vacancia habitacional',P1(pctVivDes),'< 8% bueno · 8-12% mod.',
       'Absorción activa, sin sobreoferta','Vacancia normal, monitorear tendencia','Sobreoferta — evaluar antes de invertir');
-    p10+=scRow(sc4,'Escolaridad promedio',N(avgEsc,1)+' años','ref mun: '+N(munAvgEsc,1)+' años',
-      'NSE igual o superior al municipio','Escolaridad comparable al municipio','NSE por debajo del promedio municipal');
+    p10+=scRow(sc4,'NSE / Perfil socioecon.',nseTotal>0?(nsePredZona+' · '+P1(pNseAlto)+' AB+C+'):(N(avgEsc,1)+' a / mun. '+N(munAvgEsc,1)+' a'),'ref mun AB+C+: '+P1(_munNseAltoExec),
+      'NSE superior al municipio','NSE comparable al municipio','NSE por debajo del municipio');
     p10+=scRow(sc5,'Participación económica (PEA)',P1(pctPea),'ref mun: '+P1(munPctPea),
       'Demanda hipotecaria sólida','Capacidad económica similar al municipio','Mayor riesgo de morosidad hipotecaria');
-    p10+=scRow(sc6,'Ritmo hogares nuevos/AGEB',N(zonaAvgCrec,1),'ref resto mun: '+N(restoAvgCrec,1),
-      'Zona de mayor absorción que la media','Ritmo similar al resto del municipio','Crecimiento por debajo del municipio');
     p10+='</div>';
+    // Ritmo hogares — referencial, no suma al score
+    p10+='<div style="display:flex;align-items:flex-start;gap:2mm;padding:1.5mm 2.5mm;border-radius:3px;background:#f8fafc;border:1px solid #e2e8f0;margin-bottom:4mm"><span style="font-size:9pt;flex-shrink:0;color:#94a3b8">◎</span><div style="font-size:7.5pt;line-height:1.4"><span style="font-weight:600;color:#64748b">Ritmo hogares nuevos/AGEB:</span> <span style="font-family:IBM Plex Mono,monospace;color:#475569">'+N(zonaAvgCrec,1)+'</span> <span style="color:#94a3b8">/ ref municipio: '+N(restoAvgCrec,1)+'</span> <span style="color:#94a3b8;font-style:italic;font-size:6.5pt">· Dato referencial — no incluido en score</span></div></div>';
     p10+='<div class="rpt-section">Resumen Ejecutivo · Dinámica Territorial</div>';
     var demog='';
     if(crecPobPct>20) demog='La zona mostró un <strong>crecimiento demográfico sólido del '+Pct(crecPobPct)+'</strong> entre 2010-2020 ('+munPrincipal+': '+P1(munCrecPobPct)+'), superando al municipio en '+Math.abs(crecPobPct-munCrecPobPct).toFixed(1)+'pp. Esto indica expansión activa de la base de demanda.';
@@ -4632,6 +4691,14 @@ function generarReporte(){
     else if(avgEsc<munAvgEsc-0.5&&pctPea<munPctPea-2) escPeaInsight='La escolaridad promedio ('+N(avgEsc,1)+' años) y la participación económica ('+P1(pctPea)+') se ubican por debajo del municipio. El mercado objetivo responde mejor a producto accesible, crédito INFONAVIT/FOVISSSTE y unidades de menor precio.';
     else escPeaInsight='La escolaridad promedio es <strong>'+N(avgEsc,1)+' años</strong> y la PEA representa <strong>'+P1(pctPea)+'</strong> de la población, ambos comparables al municipio ('+N(munAvgEsc,1)+' a / '+P1(munPctPea)+'). Perfil económico sólido y diverso — apto para producto de segmento medio a medio-alto.';
     p10+=insight(escPeaInsight,avgEsc>=munAvgEsc&&pctPea>=munPctPea?'pos':'neutral');
+    // NSE en conclusiones
+    if(nseTotal>0){
+      var _munAltoP10=0,_munTotalNseP10=0;
+      munFeatsAll.forEach(function(f){_munAltoP10+=(+(f.properties.nse_ab)||0)+(+(f.properties.nse_cmas)||0);_munTotalNseP10+=(+(f.properties.nse_viviendas)||0);});
+      var _munAltoPctP10=_munTotalNseP10>0?_munAltoP10/_munTotalNseP10*100:0;
+      var _p10NseTxt='<strong>Perfil NSE de la zona:</strong> el segmento predominante es <strong>'+nsePredZona+' ('+NSE_LABELS[nsePredZona]+')</strong> con el '+_nseMap[nsePredZona].toFixed(0)+'% de los hogares. La proporción de NSE alto (AB+C+) es de '+P1(pNseAlto)+(pNseAlto>_munAltoPctP10+3?' — '+(pNseAlto-_munAltoPctP10).toFixed(0)+'pp por encima del municipio, señal de mayor poder adquisitivo. Esto favorece productos de mayor valor y ticket más alto.':pNseAlto<_munAltoPctP10-3?' — '+(_munAltoPctP10-pNseAlto).toFixed(0)+'pp por debajo del municipio. El producto debe orientarse a vivienda accesible con crédito institucional.':' — comparable al municipio ('+P1(_munAltoPctP10)+'). El mix de producto medio es adecuado para esta zona.')+' El producto óptimo para el NSE predominante es: <strong>'+tipoProd+'</strong>.';
+      p10+=insight(_p10NseTxt,pNseAlto>=_munAltoPctP10?'pos':'neutral');
+    }
     var p12totZ=totSolt+totCas+totSep;
     var pctCasZ2=p12totZ>0?totCas/p12totZ*100:0;
     var pctSoltZ2=p12totZ>0?totSolt/p12totZ*100:0;
@@ -4655,22 +4722,7 @@ function generarReporte(){
     else if(pctSoltZ2>45||pct1524>20) tipoProd='1–2 recámaras · Compacto · Departamento o renta';
     else if(pct60>munPct60+3) tipoProd='1 nivel · Accesible · Planta baja prioritaria';
     else tipoProd='Mixto · 2 recámaras · Uso flexible';
-    p10+='<div class="rpt-section" style="margin-top:3mm">Buyer Persona · Perfil del Residente Predominante</div>';
-    p10+='<div style="border:1.5px solid #e0f2fe;border-radius:6px;padding:3mm 4mm;background:#f0f9ff;margin-bottom:3mm">';
-    p10+='<div style="display:flex;align-items:center;gap:3mm;margin-bottom:2mm">';
-    p10+='<span style="font-size:16pt">👤</span>';
-    p10+='<div><div style="font-size:9pt;font-weight:700;color:#0369a1">'+segLabel+'</div>';
-    p10+='<div style="font-size:7.5pt;color:#475569;margin-top:0.5mm">'+segDesc+'</div></div></div>';
-    p10+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:2mm">';
-    p10+='<div style="text-align:center;background:#fff;border-radius:3px;padding:2mm"><div style="font-size:11pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+P1(pct2559)+'</div><div style="font-size:6pt;color:#64748b;text-transform:uppercase">25–59 años</div></div>';
-    p10+='<div style="text-align:center;background:#fff;border-radius:3px;padding:2mm"><div style="font-size:11pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+N(avgEsc,1)+' a</div><div style="font-size:6pt;color:#64748b;text-transform:uppercase">Escolaridad</div></div>';
-    p10+='<div style="text-align:center;background:#fff;border-radius:3px;padding:2mm"><div style="font-size:11pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+P1(pctPea)+'</div><div style="font-size:6pt;color:#64748b;text-transform:uppercase">PEA activa</div></div>';
-    p10+='<div style="text-align:center;background:#fff;border-radius:3px;padding:2mm"><div style="font-size:11pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+(avgHnvLocal2>0?N(avgHnvLocal2,1):'—')+'</div><div style="font-size:6pt;color:#64748b;text-transform:uppercase">Hijos/mujer</div></div>';
-    p10+='</div>';
-    p10+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm">';
-    p10+='<div style="font-size:7pt;color:#334155"><span style="color:#64748b">Estado civil: </span>'+(p12totZ>0?P1(pctCasZ2)+' casados · '+P1(pctSoltZ2)+' solteros':'Sin datos')+'</div>';
-    p10+='<div style="font-size:7pt;color:#334155"><span style="color:#64748b">Tipología óptima: </span><strong>'+tipoProd+'</strong></div>';
-    p10+='</div></div>';
+    // Variables buyer persona — usadas en p11
     var buyerConclusion='';
     if(segLabel.indexOf('Adulto Profesional')>=0||segLabel.indexOf('Familia Establecida')>=0){
       buyerConclusion='El perfil predominante — <strong>'+segLabel+'</strong> — tiene capacidad real de pago hipotecario. El producto recomendado es <strong>'+tipoProd+'</strong>. La combinación de escolaridad alta y PEA activa favorece el acceso a crédito formal (hipotecas bancarias o INFONAVIT modalidad II). Evitar sobredimensionar el precio sin diferenciación de producto.';
@@ -4681,23 +4733,77 @@ function generarReporte(){
     } else {
       buyerConclusion='La zona presenta un <strong>Perfil Mixto</strong> con diversidad de grupos de edad y estado civil. El producto recomendado es <strong>'+tipoProd+'</strong>. El desarrollo de uso mixto o la oferta de tipologías variadas en el mismo proyecto maximiza la absorción al atender varios segmentos simultáneamente.';
     }
-    p10+=insight(buyerConclusion,'pos');
-    p10+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pag. 12 / 13</span><span>'+fecha+'</span></div>';
+
+    // ── Visión dual: oportunidades + riesgos siempre presentes ──
+    var _dualOps=[], _dualRisks=[];
+    if(sc1==='pos') _dualOps.push('Crecimiento poblacional activo ('+Pct(crecPobPct)+')');
+    else if(sc1==='neg') _dualRisks.push('Contracción o estancamiento poblacional ('+Pct(crecPobPct)+')');
+    if(sc2==='pos') _dualOps.push('Oferta habitacional en expansión ('+Pct(crecVivPct)+')');
+    else if(sc2==='neg') _dualRisks.push('Mercado de vivienda estancado o en contracción ('+Pct(crecVivPct)+')');
+    if(sc3==='pos') _dualOps.push('Vacancia baja ('+P1(pctVivDes)+') — absorción activa sin sobreoferta');
+    else if(sc3==='neg') _dualRisks.push('Vacancia alta ('+P1(pctVivDes)+') — evaluar sobreoferta antes de invertir');
+    if(sc4==='pos') _dualOps.push('Escolaridad superior al municipio ('+N(avgEsc,1)+' vs '+N(munAvgEsc,1)+' años) — NSE favorable');
+    else if(sc4==='neg') _dualRisks.push('Escolaridad por debajo del municipio ('+N(avgEsc,1)+' vs '+N(munAvgEsc,1)+' años) — NSE limitado');
+    if(sc5==='pos') _dualOps.push('PEA activa ('+P1(pctPea)+') — capacidad hipotecaria por encima del municipio');
+    else if(sc5==='neg') _dualRisks.push('PEA baja ('+P1(pctPea)+' vs mun. '+P1(munPctPea)+') — mayor riesgo de morosidad');
+    if(pct2559>50) _dualOps.push('Bono demográfico activo: '+P1(pct2559)+' en edad productiva — pico de demanda a corto plazo');
+    if(pctVivDes<8&&sc3!=='pos') _dualOps.push('Vacancia controlada — mercado con capacidad de absorción');
+    if(_vivNecesarias>100) _dualOps.push('Demanda proyectada 2030: ~'+N(_vivNecesarias)+' viviendas adicionales');
+    if(pctVivTemp>10) _dualRisks.push('Alta proporción de vivienda temporal ('+P1(pctVivTemp)+') — demanda de residencia permanente limitada');
+    // Asegurar al menos un elemento en cada lista
+    if(!_dualOps.length) _dualOps.push('Oportunidad de nicho en rehabilitación o renta de bajo ticket');
+    if(!_dualRisks.length) _dualRisks.push('Mercado competitivo — confirmar demanda con estudio de campo');
+    p10+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-top:3mm;margin-bottom:2mm">';
+    p10+='<div style="border:1.5px solid #bbf7d0;border-radius:5px;padding:2.5mm 3mm;background:#f0fdf4">';
+    p10+='<div style="font-size:6.5pt;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2mm">✓ Oportunidades</div>';
+    _dualOps.forEach(function(t){ p10+='<div style="font-size:6.5pt;color:#166534;line-height:1.4;margin-bottom:1mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#16a34a">▸</span>'+t+'</div>'; });
+    p10+='</div>';
+    p10+='<div style="border:1.5px solid #fed7aa;border-radius:5px;padding:2.5mm 3mm;background:#fff8f5">';
+    p10+='<div style="font-size:6.5pt;font-weight:700;color:#ea580c;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2mm">⚠ Aspectos a considerar</div>';
+    _dualRisks.forEach(function(t){ p10+='<div style="font-size:6.5pt;color:#9a3412;line-height:1.4;margin-bottom:1mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#ea580c">▸</span>'+t+'</div>'; });
+    p10+='</div>';
     p10+='</div>';
 
-    // ── PÁGINA 11: Recomendaciones + Banner + Tabla COEZA ──────────────────
+    p10+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pag. 13 / 14</span><span>'+fecha+'</span></div>';
+    p10+='</div>';
+
+    // ── PÁGINA 11: Buyer Persona + Recomendaciones + Banner + Tabla COEZA ──────────────────
     var p11='<div class="report-page report-last">';
     p11+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p11+='<div class="rpt-title" style="font-size:15pt;margin-bottom:4mm">Recomendaciones Estratégicas</div>';
+    p11+='<div class="rpt-title" style="font-size:15pt;margin-bottom:3mm">Recomendaciones Estratégicas</div>';
+    // ── Buyer Persona (movido de p10) ──
+    p11+='<div style="border:1px solid #bae6fd;border-radius:5px;padding:2.5mm 3.5mm;background:#f0f9ff;margin-bottom:3mm">';
+    p11+='<div style="font-size:5.5pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Buyer Persona · Perfil del Residente Predominante</div>';
+    p11+='<div style="display:flex;align-items:flex-start;gap:3mm">';
+    p11+='<div style="flex:1">';
+    p11+='<div style="font-size:8.5pt;font-weight:700;color:#0369a1;margin-bottom:.5mm">'+segLabel+'</div>';
+    p11+='<div style="font-size:7pt;color:#475569;line-height:1.5;margin-bottom:1.5mm">'+segDesc+'</div>';
+    p11+='<div style="font-size:7pt;color:#334155"><span style="color:#64748b">Tipología óptima: </span><strong>'+tipoProd+'</strong></div>';
+    p11+='<div style="font-size:7pt;color:#334155;margin-top:.3mm"><span style="color:#64748b">Estado civil: </span>'+(p12totZ>0?P1(pctCasZ2)+' casados · '+P1(pctSoltZ2)+' solteros':'Sin datos')+'</div>';
+    p11+='</div>';
+    p11+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5mm;flex-shrink:0;width:52mm">';
+    p11+='<div style="text-align:center;background:#fff;border-radius:3px;padding:1.5mm;border:1px solid #bae6fd"><div style="font-size:9pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+P1(pct2559)+'</div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase">25–59 a</div></div>';
+    p11+='<div style="text-align:center;background:#fff;border-radius:3px;padding:1.5mm;border:1px solid #bae6fd"><div style="font-size:9pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+N(avgEsc,1)+'a</div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase">Escolaridad</div></div>';
+    p11+='<div style="text-align:center;background:#fff;border-radius:3px;padding:1.5mm;border:1px solid #bae6fd"><div style="font-size:9pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+P1(pctPea)+'</div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase">PEA</div></div>';
+    p11+='<div style="text-align:center;background:#fff;border-radius:3px;padding:1.5mm;border:1px solid #bae6fd"><div style="font-size:9pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+(avgHnvLocal2>0?N(avgHnvLocal2,1):'—')+'</div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase">Hijos/mujer</div></div>';
+    p11+='</div></div>';
+    p11+=insight(buyerConclusion,'pos');
+    p11+='</div>';
+    // ── Recomendaciones estratégicas con texto expandido ──
+    p11+='<div class="rpt-section" style="margin-top:2mm">Recomendaciones de Inversión · Análisis de la Zona</div>';
     var recs=[];
-    if(crecPobPct>=munCrecPobPct&&pctVivDes<12) recs.push('Zona apta para <strong>desarrollo inmobiliario nuevo</strong>: crecimiento activo + baja vacancia minimizan riesgo de sobreoferta.');
-    if(avgEsc>munAvgEsc+0.5) recs.push('Perfil socioeconómico medio-alto justifica posicionamiento de <strong>producto premium o residencial</strong>. El diferencial de escolaridad (+'+N(avgEsc-munAvgEsc,1)+' años) se correlaciona con mayor capacidad de pago.');
-    if(pctPea>munPctPea+2) recs.push('Alta participación económica ('+P1(pctPea)+' vs '+P1(munPctPea)+' municipal) indica <strong>demanda efectiva de crédito hipotecario</strong> y menor riesgo de morosidad.');
-    if(zonaAvgCrec>0&&zonaAvgCrec>=restoAvgCrec) recs.push('El crecimiento de hogares de la zona está en línea o por encima del municipio — <strong>momento favorable para entrar al mercado</strong> antes de que la densificación incremente los costos de suelo.');
-    if(pctVivDes>14) recs.push('La vacancia elevada sugiere analizar primero el <strong>mercado de renovación y reposicionamiento</strong> antes que nueva construcción. La rehabilitación de unidades vacías puede ser más rentable.');
-    if(avgHpV>3.8) recs.push('Hacinamiento relativo alto ('+N(avgHpV,2)+' hab/viv) indica <strong>demanda habitacional reprimida</strong>. Producto de precio accesible o programas INFONAVIT/FOVISSSTE tienen alta absorción potencial.');
-    if(!recs.length) recs.push('Zona con indicadores equilibrados. Evaluar diferenciación de producto y timing de entrada según la dinámica de la zona inmediatamente adyacente.');
-    recs.forEach(function(r){p11+=insight(r,'pos');});
+    if(crecPobPct>=munCrecPobPct&&pctVivDes<12) recs.push('<strong>Desarrollo inmobiliario nuevo.</strong> La combinación de crecimiento poblacional sostenido y vacancia controlada ('+P1(pctVivDes)+') indica que el mercado puede absorber nueva oferta sin riesgo de sobreoferta. Es el momento idóneo para iniciar un proyecto: la demanda supera a la oferta disponible y el costo de suelo aún no refleja la presión futura. Se recomienda avanzar con estudios de factibilidad y asegurar terreno en el corto plazo.');
+    if(avgEsc>munAvgEsc+0.5) recs.push('<strong>Producto residencial o medio-alto.</strong> El perfil educativo de la zona ('+N(avgEsc,1)+' años de escolaridad vs. '+N(munAvgEsc,1)+' en el municipio) se correlaciona con mayor capacidad de pago, acceso a crédito hipotecario bancario y disposición a pagar por acabados y amenidades de calidad. Este diferencial justifica un posicionamiento de producto medio-alto con tipología de <strong>'+tipoProd+'</strong>. La estrategia de venta no debe competir en precio; el diferenciador clave debe ser la calidad constructiva y el estilo de vida.');
+    if(pctPea>munPctPea+2) recs.push('<strong>Demanda hipotecaria sólida.</strong> La tasa de PEA activa de '+P1(pctPea)+' supera al municipio ('+P1(munPctPea)+'), lo que indica una base de compradores potenciales con ingreso activo y menor riesgo de morosidad. Esta zona presenta condiciones favorables para desarrollos en venta con financiamiento institucional (hipotecas bancarias, INFONAVIT modalidad II o cofinavit). Se recomienda estructurar una alianza hipotecaria desde la etapa de preventa para maximizar la conversión.');
+    if(zonaAvgCrec>0&&zonaAvgCrec>=restoAvgCrec) recs.push('<strong>Entrada anticipada al mercado.</strong> El crecimiento de hogares en esta zona sigue una tendencia igual o superior al municipio, lo que posiciona a este mercado en una fase de expansión activa. Entrar antes de que la densificación incremente significativamente los costos de suelo representa una ventaja competitiva real: la demanda crece pero la oferta aún no está saturada. Las zonas en expansión temprana concentran los mejores retornos ajustados por riesgo en el ciclo inmobiliario.');
+    if(pctVivDes>14) recs.push('<strong>Estrategia de renovación y reposicionamiento.</strong> La vacancia del '+P1(pctVivDes)+' supera el umbral saludable de referencia (~12%). Antes de agregar oferta nueva, se recomienda estudiar primero el mercado secundario: la rehabilitación y reposicionamiento de viviendas vacías puede generar mejores rendimientos con menor inversión y tiempo de desarrollo. El primer paso es identificar si la vacancia proviene de viviendas obsoletas (oportunidad de renovación) o de sobreoferta estructural (señal de cautela para proyectos nuevos).');
+    if(avgHpV>3.8) recs.push('<strong>Demanda habitacional reprimida.</strong> El promedio de '+N(avgHpV,2)+' habitantes por vivienda — por encima del estándar municipal ('+N(munAvgHpV,2)+') — indica que parte de la población comparte espacio por limitaciones de acceso a vivienda y no por elección. Esta presión sobre el parque existente representa una oportunidad directa para productos de precio accesible financiados a través de INFONAVIT o FOVISSSTE, con tipología de <strong>'+tipoProd+'</strong>. La estrategia de producto debe priorizar la accesibilidad económica y los plazos de escrituración.');
+    if(!recs.length) recs.push('<strong>Zona con indicadores equilibrados.</strong> Los indicadores de esta zona no muestran señales extremas: se sitúan dentro del rango de la media municipal. En este escenario, el éxito de un proyecto dependerá más de la diferenciación de producto que de la dinámica macro de la zona. Se recomienda profundizar en la investigación de campo: levantamiento de precios de mercado, análisis de la competencia directa en un radio de 2 km y entrevistas con residentes para identificar necesidades no atendidas.');
+    recs.forEach(function(r){
+      p11+='<div style="border-left:3px solid #00a8a6;padding:2mm 3mm;margin-bottom:2mm;background:#f8fafc;border-radius:0 4px 4px 0">';
+      p11+='<div style="font-size:6.5pt;color:#1e293b;line-height:1.75">'+r+'</div>';
+      p11+='</div>';
+    });
 
     // Banner DATERRA · COEZA (alineación corregida)
     p11+='<div style="background:linear-gradient(135deg,#092c3b 0%,#074e4b 65%,#00a89e 100%);border-radius:6px;padding:3.5mm 4mm;margin-top:4mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
@@ -4758,10 +4864,57 @@ function generarReporte(){
     p11+='Para mayor información encuéntranos en <strong><a href="https://consulting.coeza.mx" style="color:#0ea5e9;text-decoration:none">consulting.coeza.mx</a></strong>';
     p11+='</div>';
 
-    p11+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pag. 13 / 13</span><span>'+fecha+'</span></div>';
+    p11+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pag. 14 / 14</span><span>'+fecha+'</span></div>';
     p11+='</div>';
 
-    return p1+pExec+p3+p2+p4+p5+p6+p7+p8+p9+p_nse+p10+p11;
+    // ── PÁGINA 2: Índice de Contenidos ─────────────────────────────────────
+    var pIdx='<div class="report-page">';
+    pIdx+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    // Encabezado del índice
+    pIdx+='<div style="border-bottom:3px solid #00e2e0;padding-bottom:3mm;margin-bottom:5mm">';
+    pIdx+='<div style="font-size:7pt;font-family:IBM Plex Mono,monospace;color:#00a8a6;letter-spacing:2px;text-transform:uppercase;margin-bottom:1mm">DATERRA · Reporte de Análisis Sociodemográfico</div>';
+    pIdx+='<div style="font-size:18pt;font-weight:700;color:#092c3b;line-height:1.1">Índice de Contenidos</div>';
+    pIdx+='<div style="font-size:8pt;color:#64748b;margin-top:1.5mm">'+munPrincipal+' · '+tipoNombre+' · '+n+' AGEBs analizados · '+fecha+'</div>';
+    pIdx+='</div>';
+    // Filas del índice — diseño profesional sin emojis ni círculos
+    function _idxRow(pag, titulo, desc){
+      return '<div style="display:grid;grid-template-columns:9mm 1fr 9mm;align-items:center;border-bottom:1px solid #e2e8f0;padding:1.8mm 0;gap:2mm">'
+        +'<div style="font-size:7pt;font-weight:700;color:#00a8a6;font-family:IBM Plex Mono,monospace;line-height:1">'+pag+'</div>'
+        +'<div>'
+        +'<div style="font-size:8pt;font-weight:700;color:#092c3b;line-height:1.2">'+titulo+'</div>'
+        +'<div style="font-size:6.5pt;color:#64748b;margin-top:.4mm;line-height:1.4">'+desc+'</div>'
+        +'</div>'
+        +'<div style="font-size:7.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-align:right;line-height:1">'+pag+'</div>'
+        +'</div>';
+    }
+    function _idxSection(label){
+      return '<div style="font-size:5.5pt;font-weight:700;color:#fff;background:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:1px;padding:.8mm 2.5mm;border-radius:2px;margin:2.5mm 0 0.5mm;display:inline-block">'+label+'</div>';
+    }
+    pIdx+=_idxSection('ANÁLISIS DE MERCADO');
+    pIdx+=_idxRow('1','Panorama de Zona','Mapa del área analizada · KPIs de población, vivienda y crecimiento · benchmarks municipales');
+    pIdx+=_idxRow('3','Resumen Ejecutivo','Score de entorno (base 10) · señales clave · conclusión estratégica de la zona');
+    pIdx+=_idxRow('4','Crecimiento Comparativo','Variación intercensal 2010–2020 de población, hogares y vivienda vs. municipio y estado');
+    pIdx+=_idxSection('DEMOGRAFÍA Y HABITACIONAL');
+    pIdx+=_idxRow('5','Análisis de Vivienda','Vacancia · tipología dominante · densidad de ocupación · indicadores de absorción');
+    pIdx+=_idxRow('6','Distribución de Edades','Pirámide de edad · grupos etarios · bono demográfico · segmento predominante');
+    pIdx+=_idxRow('7','Parque Habitacional','Comparativa 2010 vs. 2020 · dormitorios · habitantes por vivienda · tipología de parque');
+    pIdx+=_idxRow('8','Actividad Económica + NSE','PEA activa · escolaridad · distribución NSE AMAI · capacidad de pago estimada');
+    pIdx+=_idxRow('9','Estructura Familiar','Estado civil · promedio de hijos nacidos vivos · composición del hogar');
+    pIdx+=_idxSection('MAPAS DE CALOR');
+    pIdx+=_idxRow('10','Heatmap · Hogares Totales','Distribución espacial de hogares · concentración interna de la zona analizada');
+    pIdx+=_idxRow('11','Heatmap · Crecimiento de Hogares','Expansión intercensal por AGEB · zonas de mayor dinamismo habitacional');
+    pIdx+=_idxRow('12','Mapa NSE · Comparativas','NSE categórico por AGEB · barras comparativas zona vs. municipio · insight NSE');
+    pIdx+=_idxSection('ESTRATEGIA');
+    pIdx+=_idxRow('13','Conclusiones · Estrategia de Mercado','Score final de entorno · oportunidades y riesgos · análisis integral de la zona');
+    pIdx+=_idxRow('14','Recomendaciones Estratégicas','Buyer persona · recomendaciones de producto · soluciones COEZA · nota metodológica');
+    pIdx+='<div style="margin-top:3.5mm;padding:1.5mm 3mm;border-top:2px solid #00e2e0;font-size:6pt;color:#64748b;line-height:1.5">';
+    pIdx+='<span style="font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px">Fuentes · </span>';
+    pIdx+='Censo de Población y Vivienda 2020 · INEGI · Clasificación NSE AMAI 2018 · Proyecciones CONAPO · Análisis COEZA Consulting.';
+    pIdx+='</div>';
+    pIdx+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · COEZA Consulting</span><span>Pag. 2 / 14</span><span>'+fecha+'</span></div>';
+    pIdx+='</div>';
+
+    return p1+pIdx+pExec+p3+p2+p4+p5+p6+p7+p8+p9+p_nse+p10+p11;
   }
 
   // Estadísticas del municipio completo para comparativa en heatmaps
