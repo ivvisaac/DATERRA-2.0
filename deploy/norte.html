@@ -3182,7 +3182,7 @@ function imprimirReporte(){
   }
 
   // Timeout global: si en 45s no termina, desbloquear
-  var _globalTO=setTimeout(function(){ restaurar('timeout'); }, 45000);
+  var _globalTO=setTimeout(function(){ restaurar('timeout'); }, 150000);
 
   btn.innerHTML='⏳ Preparando...';
   btn.disabled=true;
@@ -5285,7 +5285,7 @@ function generarReporte(){
   var munAvgHogPorAgeb=munNAgebsTotal>0?(munTotHogAll/munNAgebsTotal):0;
   var zonaAvgHogPorAgeb=n>0?(totHog/n):0;
   // Mostrar sin mapa → luego con mapa
-  document.getElementById('pdf-content').innerHTML=buildHTML(null,null,null,munPrincipal,munNAgebsTotal);
+  document.getElementById('pdf-content').innerHTML=buildHTML(null,null,null,null,munPrincipal,munNAgebsTotal);
   document.getElementById('pdf-header-sub').textContent=n+' AGEBs · '+municipiosStr+' · '+tipoNombre+(herramientaDetalle?' · '+herramientaDetalle:'');
   var munLats=[],munLons=[];
   munFeatsAll.forEach(function(f){f.geometry.coordinates[0].forEach(function(c){munLons.push(c[0]);munLats.push(c[1]);});});
