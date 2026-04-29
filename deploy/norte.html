@@ -4945,7 +4945,7 @@ function generarReporte(){
     var _claseOrd=['A','A-','B+','B','B-','C+','C'];
     var _clasePred=_claseOrd.filter(function(c){return _claseCount[c];}).sort(function(a,b){return (_claseCount[b]||0)-(_claseCount[a]||0);})[0]||'B';
     var _oportunidad=_bodsZona.length<5?'Alta':(_bodsZona.length<15?'Media':'Saturada');
-    var _nseScore={'A/B':7,'C+':6,'C':5,'C-':4,'D+':3,'D':2,'E':1}[avgNsePred]||4;
+    var _nseScore={'A/B':7,'C+':6,'C':5,'C-':4,'D+':3,'D':2,'E':1}[nsePredZona]||4;
     var _clsRec=_nseScore>=6?'A / A-':(_nseScore>=4?'B+ / B':'B- / C+');
     var _precioRec=_nseScore>=6?'$80-120 MXN/m²/mes':(_nseScore>=4?'$55-80 MXN/m²/mes':'$35-60 MXN/m²/mes');
     var _clsDesc=_nseScore>=6?'NSE alto → tenants exigentes. Spec institucional o BTS premium.':(_nseScore>=4?'NSE medio → manufactura ligera, logística y distribución regional.':'NSE bajo-medio → PyMEs locales, almacenaje y operaciones de menor escala.');
@@ -5172,12 +5172,12 @@ function generarReporte(){
     p_bod3+='<div style="font-size:5.5pt;font-weight:700;color:#c7d2fe;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:2mm">Clase Recomendada para la Zona</div>';
     p_bod3+='<div style="font-size:20pt;font-weight:700;line-height:1;margin-bottom:1.5mm">'+_clsRec+'</div>';
     p_bod3+='<div style="font-size:6.5pt;color:#e0e7ff;line-height:1.5;margin-bottom:2mm">'+_clsDesc+'</div>';
-    p_bod3+='<div style="border-top:1px solid rgba(255,255,255,.25);padding-top:2mm"><div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm"><div><div style="font-size:5pt;color:#a5b4fc;text-transform:uppercase">Precio sugerido</div><div style="font-size:8pt;font-weight:700;color:#fff;font-family:IBM Plex Mono,monospace">'+_precioRec+'</div></div><div><div style="font-size:5pt;color:#a5b4fc;text-transform:uppercase">Oportunidad</div><div style="font-size:8pt;font-weight:700;color:'+(_oportunidad==='Alta'?'#4ade80':(_oportunidad==='Media'?'#fbbf24':'#f87171'))+';font-family:IBM Plex Mono,monospace">'+_oportunidad+'</div></div><div><div style="font-size:5pt;color:#a5b4fc;text-transform:uppercase">Competencia</div><div style="font-size:8pt;font-weight:700;color:#fff;font-family:IBM Plex Mono,monospace">'+_bodsZona.length+' bodegas</div></div><div><div style="font-size:5pt;color:#a5b4fc;text-transform:uppercase">NSE Zona</div><div style="font-size:8pt;font-weight:700;color:#fff;font-family:IBM Plex Mono,monospace">'+avgNsePred+'</div></div></div></div></div>';
+    p_bod3+='<div style="border-top:1px solid rgba(255,255,255,.25);padding-top:2mm"><div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm"><div><div style="font-size:5pt;color:#a5b4fc;text-transform:uppercase">Precio sugerido</div><div style="font-size:8pt;font-weight:700;color:#fff;font-family:IBM Plex Mono,monospace">'+_precioRec+'</div></div><div><div style="font-size:5pt;color:#a5b4fc;text-transform:uppercase">Oportunidad</div><div style="font-size:8pt;font-weight:700;color:'+(_oportunidad==='Alta'?'#4ade80':(_oportunidad==='Media'?'#fbbf24':'#f87171'))+';font-family:IBM Plex Mono,monospace">'+_oportunidad+'</div></div><div><div style="font-size:5pt;color:#a5b4fc;text-transform:uppercase">Competencia</div><div style="font-size:8pt;font-weight:700;color:#fff;font-family:IBM Plex Mono,monospace">'+_bodsZona.length+' bodegas</div></div><div><div style="font-size:5pt;color:#a5b4fc;text-transform:uppercase">NSE Zona</div><div style="font-size:8pt;font-weight:700;color:#fff;font-family:IBM Plex Mono,monospace">'+nsePredZona+'</div></div></div></div></div>';
 
     // Factores
     p_bod3+='<div><div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #6366f1;padding-bottom:1mm;margin-bottom:1.5mm">Factores de Decisión</div>';
     function _fRow(label,val,good){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:.8mm 1mm;margin-bottom:.8mm;background:#f8fafc;border-radius:3px;border-left:2.5px solid '+(good?'#16a34a':'#f97316')+'"><span style="font-size:5.5pt;color:#334155">'+label+'</span><span style="font-family:IBM Plex Mono,monospace;font-size:6pt;font-weight:700;color:#092c3b">'+val+'</span></div>';}
-    p_bod3+=_fRow('NSE predominante zona',avgNsePred,_nseScore>=5);
+    p_bod3+=_fRow('NSE predominante zona',nsePredZona,_nseScore>=5);
     p_bod3+=_fRow('PEA activa en zona',P1(pctPea),pctPea>50);
     p_bod3+=_fRow('Bodegas ya en zona',_bodsZona.length+' bodegas',_bodsZona.length<10);
     p_bod3+=_fRow('Renta mediana zona',_medRenta2?'$'+_medRenta2.toFixed(0)+'/m²/mes':'Sin datos',true);
@@ -5223,7 +5223,7 @@ function generarReporte(){
     p_ind_concl+=_minKpi2(P1(pctPea),'PEA activa');
     p_ind_concl+=_minKpi2(N(avgEsc,1)+' a','Escolaridad');
     p_ind_concl+=_minKpi2(P1(pct2559),'Edad 25-59a');
-    p_ind_concl+=_minKpi2(avgNsePred,'NSE predom.');
+    p_ind_concl+=_minKpi2(nsePredZona,'NSE predom.');
     p_ind_concl+='</div>';
     p_ind_concl+='<div style="font-size:5.5pt;color:#1e40af;line-height:1.55;background:#dbeafe;border-radius:3px;padding:1.5mm">'+(pctPea>55?'PEA por encima del promedio regional — disponibilidad de fuerza laboral para operaciones industriales.':'Fuerza laboral en formación. Proyectar absorción con cautela.')+'</div>';
     p_ind_concl+='</div>';
