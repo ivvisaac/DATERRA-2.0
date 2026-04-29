@@ -1096,6 +1096,14 @@ body.mob-ui #help-card{max-height:85vh!important}
   <div class="ctrl cap">
     <span class="ctrl-lbl">Variable</span>
     <select id="sel-var" onchange="cambiarVar()">
+      <optgroup label="⚡ Industrial (acceso rápido) ──">
+        <option value="nse_predominante">NSE predominante por AGEB</option>
+        <option value="pct_pea">% PEA (participación laboral)</option>
+        <option value="escolaridad">Escolaridad promedio (años)</option>
+        <option value="densidad_pob">Densidad poblacional (hab/km2)</option>
+        <option value="crec_pct_hog">Crecimiento de hogares 2010-2020 (%)</option>
+        <option value="pob_total">Población total 2020</option>
+      </optgroup>
       <optgroup label="── Poblacion ──">
         <option value="pob_total">Poblacion total 2020</option>
         <option value="pob_2010">Poblacion total 2010</option>
@@ -1133,7 +1141,8 @@ body.mob-ui #help-card{max-height:85vh!important}
       <optgroup label="── Hogares ──">
         <option value="hog_total">Hogares 2020</option>
         <option value="hog_2010">Hogares 2010</option>
-        <option value="crec_abs_hog">Crecimiento de hogares 2010-2020</option>
+        <option value="crec_abs_hog">Crecimiento de hogares 2010-2020 (abs.)</option>
+        <option value="crec_pct_hog">Crecimiento de hogares 2010-2020 (%)</option>
         <option value="prom_hnv">Promedio hijos nacidos vivos por mujer</option>
       </optgroup>
       <optgroup label="── Educacion y Economia ──">
@@ -1829,6 +1838,7 @@ var VARS = {
   hog_total:        {l:"Hogares 2020",u:"hog",sum:true,signed:false},
   hog_2010:         {l:"Hogares 2010",u:"hog",sum:true,signed:false},
   crec_abs_hog:     {l:"Crecimiento neto de hogares 2010-2020",u:"hog",sum:true,signed:true},
+  crec_pct_hog:     {l:"Crecimiento % de hogares 2010-2020",u:"%",sum:false,signed:true,factor:100},
   prom_hnv:         {l:"Hijos nacidos vivos por mujer (fertilidad)",u:"",sum:false,signed:false,dec:1,avg:true},
   escolaridad:      {l:"Escolaridad promedio (proxy de nivel socioeconomico)",u:"anos",sum:false,signed:false,dec:1,avg:true},
   pea:              {l:"Poblacion Economicamente Activa (PEA)",u:"pers",sum:true,signed:false},
