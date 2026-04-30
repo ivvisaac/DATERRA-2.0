@@ -4378,14 +4378,14 @@ function generarReporte(){
     // ────────── PÁGINA 4: Estructura de Edad ──────────
     var p4='<div class="report-page">';
     p4+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p4+='<div class="rpt-meta">'+munPrincipal+' · Estructura de Edad · '+fecha+'</div>';
-    p4+='<div class="rpt-section">Estructura de Edad · Zona vs '+munPrincipal+' vs '+(GEO&&GEO.estado||'Estado')+'*</div>';
+    p4+='<div class="rpt-meta">'+munPrincipal+' · Perfil por Edad · '+fecha+'</div>';
+    p4+='<div class="rpt-section">Estructura de Edad y Perfil Laboral · Zona vs '+munPrincipal+' vs '+(GEO&&GEO.estado||'Estado')+'*</div>';
     p4+='<div class="rpt-chart-full"><div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm">';
     var eGrupos=[
-      ['0-14 años',pct014,munPct014,estPct014,'#3eb8f0',true,'Menor a 25: zona joven; Mayor a 35: alta demanda familiar'],
-      ['15-24 años',pct1524,munPct1524,est.pct_15_24||0,'#5ddba8',true,'Clave para demanda de renta y vivienda económica'],
-      ['25-59 años',pct2559,munPct2559,est.pct_25_59||0,'#a78bfa',true,'Compradores primarios; más alto es mejor para ventas'],
-      ['60+ años',pct60,munPct60,estPct60,'#f0b840',false,'Mercado accesible; más alto orienta a unidades pequeñas']
+      ['0-14 años',pct014,munPct014,estPct014,'#3eb8f0',true,'Indica renovación generacional · menor % = zona consolidada, fuerza laboral más madura'],
+      ['15-24 años',pct1524,munPct1524,est.pct_15_24||0,'#5ddba8',true,'Trabajadores entrantes — operativos y técnicos en formación · alto = bono joven disponible'],
+      ['25-59 años',pct2559,munPct2559,est.pct_25_59||0,'#a78bfa',true,'Franja laboral productiva clave — operadores, técnicos y mandos medios · mayor % = mayor pool laboral'],
+      ['60+ años',pct60,munPct60,estPct60,'#f0b840',false,'Menor disponibilidad laboral activa · alto % indica plaza con menor renovación de fuerza de trabajo']
     ];
     eGrupos.forEach(function(eg){
       var s2=sem(eg[1],eg[2],eg[5],true);
@@ -4429,7 +4429,14 @@ function generarReporte(){
     });
     p4+='<div style="font-size:5pt;color:#94a3b8;text-align:center;margin-top:1mm;font-style:italic">Distribución M/F estimada en base a proporción total de la zona · INEGI Censo 2020</div>';
     p4+='</div>';
-    p4+=analisisEdad();
+    var _p4wf='';
+    var _workerPct=pct1524+pct2559;
+    var _munWorkerPct=(munPct1524||0)+(munPct2559||0);
+    if(_workerPct>60){_p4wf=insight('La zona concentra <strong>'+P1(_workerPct)+'</strong> de su población en edad económicamente activa (15-59 años), superando al municipio ('+P1(_munWorkerPct)+'). <strong>Pool laboral abundante</strong> — atractivo para industria manufacturera y logística que requiere captación masiva de operativos.','pos');}
+    else if(_workerPct>50){_p4wf=insight('El <strong>'+P1(_workerPct)+'</strong> de la población está en franja laboral (15-59 años) — comparable al municipio ('+P1(_munWorkerPct)+'). Disponibilidad de mano de obra estable para operaciones industriales estándar.','neutral');}
+    else{_p4wf=insight('La franja laboral (15-59 años) representa <strong>'+P1(_workerPct)+'</strong> de la población — por debajo del municipio ('+P1(_munWorkerPct)+'). Zona con mayor proporción de personas fuera de edad productiva; evaluar transporte de personal desde zonas aledañas.','warn');}
+    if(pct1524>(munPct1524||0)+3){_p4wf+=insight('Alta presencia de jóvenes 15-24 años (<strong>'+P1(pct1524)+'</strong> vs mun. '+P1(munPct1524||0)+'). Ideal para operaciones de manufactura ligera, ensamble y centros de distribución que requieren operativos en formación con alta capacidad de aprendizaje.','pos');}
+    p4+=_p4wf;
     p4+=DISC;
     p4+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 6 / 14</span><span>'+fecha+'</span></div>';
     p4+='</div>';
@@ -4484,11 +4491,19 @@ function generarReporte(){
     p6+='<div class="rpt-charts"><div class="rpt-chart-box"><div class="rpt-chart-ttl">Indicadores Economicos</div><div style="margin-top:3mm">';
     p6+=barra3('% PEA activa',pctPea,munPctPea,estPctPea,'#3eb8f0','%',1,true);
     p6+=barra3('% Femenina',pctFem,mun.pct_fem||50,est.pct_fem||50.5,'#f472b6','%',1);
-    var socInsight=pctPea>munPctPea+3?insight('Alta participación económica (<strong>'+P1(pctPea)+'</strong> vs municipio: '+P1(munPctPea)+'). Desocupación zona: '+P1(pctDesocPea)+'. Mercado con demanda hipotecaria sólida y menor riesgo de morosidad.','pos'):pctDesocPea>7?insight('Tasa de desocupación <strong>'+P1(pctDesocPea)+'</strong> del PEA en la zona. Evaluar estabilidad del ingreso antes de desarrollar vivienda en precio alto. PEA activa: '+P1(pctPea)+' vs municipio: '+P1(munPctPea)+'.','warn'):insight('Participación económica <strong>'+P1(pctPea)+'</strong> — comparable al promedio municipal ('+P1(munPctPea)+'). Desocupación zona: '+P1(pctDesocPea)+'. Mercado laboral estable con demanda efectiva de vivienda.','neutral');
+    var socInsight=pctPea>munPctPea+3?insight('Alta participación económica (<strong>'+P1(pctPea)+'</strong> vs municipio: '+P1(munPctPea)+'). Desocupación zona: '+P1(pctDesocPea)+'. <strong>Pool laboral activo y disponible</strong> — menor rotación esperada y costos de reclutamiento más bajos para operaciones industriales.','pos'):pctDesocPea>7?insight('Tasa de desocupación <strong>'+P1(pctDesocPea)+'</strong> del PEA. Zona con oferta laboral disponible: facilita reclutamiento masivo de operativos. Monitorear calidad y perfil de esa fuerza de trabajo disponible. PEA activa: '+P1(pctPea)+' vs municipio: '+P1(munPctPea)+'.','warn'):insight('Participación económica <strong>'+P1(pctPea)+'</strong> — comparable al promedio municipal ('+P1(munPctPea)+'). Desocupación zona: '+P1(pctDesocPea)+'. Mercado laboral estable con disponibilidad de fuerza de trabajo para manufactura y logística.','neutral');
     p6+='</div>'+socInsight+'</div></div>';
-    p6+='<div class="rpt-section">Analisis Economico y Recomendaciones</div>';
-    p6+=analisisVivienda();
-    p6+=analisisEconomia();
+    p6+='<div class="rpt-section">Indicadores Laborales · Escolaridad y Empleabilidad</div>';
+    p6+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2mm;margin-bottom:2.5mm">';
+    p6+='<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:4px;padding:2.5mm;text-align:center"><div style="font-size:12pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+N(avgEsc,1)+'<span style="font-size:7pt"> años</span></div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;margin-top:.5mm">Escolaridad Zona</div></div>';
+    p6+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:2.5mm;text-align:center"><div style="font-size:12pt;font-weight:700;color:#475569;font-family:IBM Plex Mono,monospace">'+N(munAvgEsc,1)+'<span style="font-size:7pt"> años</span></div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;margin-top:.5mm">Escolaridad Mun.</div></div>';
+    p6+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:2.5mm;text-align:center"><div style="font-size:12pt;font-weight:700;color:#94a3b8;font-family:IBM Plex Mono,monospace">'+N(estAvgEsc,1)+'<span style="font-size:7pt"> años</span></div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;margin-top:.5mm">Escolaridad Est.</div></div>';
+    p6+='</div>';
+    var _escLaboralInsight='';
+    if(avgEsc>=12){_escLaboralInsight=insight('Escolaridad promedio <strong>'+N(avgEsc,1)+' años</strong> (bachillerato o más). La zona cuenta con perfiles técnicos calificados aptos para manufactura avanzada, control de calidad ISO, BPO y operaciones de mayor valor agregado. Diferencial positivo frente al municipio ('+N(munAvgEsc,1)+' años).','pos');}
+    else if(avgEsc>=9){_escLaboralInsight=insight('Escolaridad promedio <strong>'+N(avgEsc,1)+' años</strong> (secundaria completa). Perfil operativo estándar — apto para manufactura de ensamble, logística, almacenaje y operaciones de línea. Compatible con la mayoría de operaciones industriales de la ZM La Laguna.','neutral');}
+    else{_escLaboralInsight=insight('Escolaridad promedio <strong>'+N(avgEsc,1)+' años</strong> (primaria o secundaria incompleta). Mano de obra disponible para operaciones básicas. Se recomienda plan de capacitación interna o reclutamiento complementario en zonas con mayor escolaridad.','warn');}
+    p6+=_escLaboralInsight;
     // ── Bloque NSE ──
     if(nseTotal>0){
       p6+='<div class="rpt-section">Nivel Socioeconómico · Distribución AMAI · Zona analizada</div>';
@@ -4508,10 +4523,10 @@ function generarReporte(){
       });
       p6+='</div>';
       // Insight NSE
-      var nseInsight='La zona presenta NSE predominante <strong>'+nsePredZona+' ('+NSE_LABELS[nsePredZona]+')</strong> con el '+_nseMap[nsePredZona].toFixed(1)+'% de los hogares. ';
-      if(pNseAlto>40) nseInsight+='El <strong>'+pNseAlto.toFixed(1)+'%</strong> de hogares pertenece a NSE alto-medio (AB+C+). Demanda de vivienda media-alta y residencial con capacidad hipotecaria sólida.';
-      else if(pNseMedio>40) nseInsight+='El <strong>'+pNseMedio.toFixed(1)+'%</strong> corresponde a NSE medio (C, C-). Mercado orientado a vivienda media con financiamiento institucional (INFONAVIT/FOVISSSTE).';
-      else nseInsight+='Predominancia de NSE popular (D+, D, E: <strong>'+pNsePopular.toFixed(1)+'%</strong>). Mercado de interés social con alta dependencia de subsidio y crédito accesible.';
+      var nseInsight='NSE predominante en la zona: <strong>'+nsePredZona+' ('+NSE_LABELS[nsePredZona]+')</strong> con el '+_nseMap[nsePredZona].toFixed(1)+'% de los hogares. ';
+      if(pNseAlto>40) nseInsight+='Zona de NSE alto-medio (AB+C+: <strong>'+pNseAlto.toFixed(1)+'%</strong>). Entorno favorable para tenants industriales de mayor valor agregado y perfiles técnico-profesionales. Menor ausentismo y mayor estabilidad laboral esperados.';
+      else if(pNseMedio>40) nseInsight+='NSE medio predominante (C, C-: <strong>'+pNseMedio.toFixed(1)+'%</strong>). Zona con trabajadores de perfil operativo-técnico consolidado — ideal para manufactura estándar, logística y distribución regional.';
+      else nseInsight+='NSE popular predominante (D+, D, E: <strong>'+pNsePopular.toFixed(1)+'%</strong>). Alta disponibilidad de mano de obra operativa de bajo costo. Compatible con manufactura intensiva en trabajo, maquila y almacenaje.';
       p6+=insight(nseInsight,pNseAlto>30?'pos':pNseMedio>40?'neutral':'warn');
     }
     p6+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 8 / 14</span><span>'+fecha+'</span></div>';
@@ -4974,40 +4989,8 @@ function generarReporte(){
     // ── PÁGINA 11: Buyer Persona + Recomendaciones + Banner + Tabla COEZA ──────────────────
     var p11='<div class="report-page report-last">';
     p11+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p11+='<div class="rpt-title" style="font-size:15pt;margin-bottom:3mm">Recomendaciones Estratégicas</div>';
-    // ── Buyer Persona (movido de p10) ──
-    p11+='<div style="border:1px solid #bae6fd;border-radius:5px;padding:2.5mm 3.5mm;background:#f0f9ff;margin-bottom:3mm">';
-    p11+='<div style="font-size:5.5pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Buyer Persona · Perfil del Residente Predominante</div>';
-    p11+='<div style="display:flex;align-items:flex-start;gap:3mm">';
-    p11+='<div style="flex:1">';
-    p11+='<div style="font-size:8.5pt;font-weight:700;color:#0369a1;margin-bottom:.5mm">'+segLabel+'</div>';
-    p11+='<div style="font-size:7pt;color:#475569;line-height:1.5;margin-bottom:1.5mm">'+segDesc+'</div>';
-    p11+='<div style="font-size:7pt;color:#334155"><span style="color:#64748b">Tipología óptima: </span><strong>'+tipoProd+'</strong></div>';
-    p11+='<div style="font-size:7pt;color:#334155;margin-top:.3mm"><span style="color:#64748b">Estado civil: </span>'+(p12totZ>0?P1(pctCasZ2)+' casados · '+P1(pctSoltZ2)+' solteros':'Sin datos')+'</div>';
-    p11+='</div>';
-    p11+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5mm;flex-shrink:0;width:52mm">';
-    p11+='<div style="text-align:center;background:#fff;border-radius:3px;padding:1.5mm;border:1px solid #bae6fd"><div style="font-size:9pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+P1(pct2559)+'</div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase">25–59 a</div></div>';
-    p11+='<div style="text-align:center;background:#fff;border-radius:3px;padding:1.5mm;border:1px solid #bae6fd"><div style="font-size:9pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+N(avgEsc,1)+'a</div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase">Escolaridad</div></div>';
-    p11+='<div style="text-align:center;background:#fff;border-radius:3px;padding:1.5mm;border:1px solid #bae6fd"><div style="font-size:9pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+P1(pctPea)+'</div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase">PEA</div></div>';
-    p11+='<div style="text-align:center;background:#fff;border-radius:3px;padding:1.5mm;border:1px solid #bae6fd"><div style="font-size:9pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+(avgHnvLocal2>0?N(avgHnvLocal2,1):'—')+'</div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase">Hijos/mujer</div></div>';
-    p11+='</div></div>';
-    p11+=insight(buyerConclusion,'pos');
-    p11+='</div>';
-    // ── Recomendaciones estratégicas con texto expandido ──
-    p11+='<div class="rpt-section" style="margin-top:2mm">Recomendaciones de Inversión · Análisis de la Zona</div>';
-    var recs=[];
-    if(crecPobPct>=munCrecPobPct&&pctVivDes<12) recs.push('<strong>Desarrollo inmobiliario nuevo.</strong> La combinación de crecimiento poblacional sostenido y vacancia controlada ('+P1(pctVivDes)+') indica que el mercado puede absorber nueva oferta sin riesgo de sobreoferta. Es el momento idóneo para iniciar un proyecto: la demanda supera a la oferta disponible y el costo de suelo aún no refleja la presión futura. Se recomienda avanzar con estudios de factibilidad y asegurar terreno en el corto plazo.');
-    if(avgEsc>munAvgEsc+0.5) recs.push('<strong>Producto residencial o medio-alto.</strong> El perfil educativo de la zona ('+N(avgEsc,1)+' años de escolaridad vs. '+N(munAvgEsc,1)+' en el municipio) se correlaciona con mayor capacidad de pago, acceso a crédito hipotecario bancario y disposición a pagar por acabados y amenidades de calidad. Este diferencial justifica un posicionamiento de producto medio-alto con tipología de <strong>'+tipoProd+'</strong>. La estrategia de venta no debe competir en precio; el diferenciador clave debe ser la calidad constructiva y el estilo de vida.');
-    if(pctPea>munPctPea+2) recs.push('<strong>Demanda hipotecaria sólida.</strong> La tasa de PEA activa de '+P1(pctPea)+' supera al municipio ('+P1(munPctPea)+'), lo que indica una base de compradores potenciales con ingreso activo y menor riesgo de morosidad. Esta zona presenta condiciones favorables para desarrollos en venta con financiamiento institucional (hipotecas bancarias, INFONAVIT modalidad II o cofinavit). Se recomienda estructurar una alianza hipotecaria desde la etapa de preventa para maximizar la conversión.');
-    if(zonaAvgCrec>0&&zonaAvgCrec>=restoAvgCrec) recs.push('<strong>Entrada anticipada al mercado.</strong> El crecimiento de hogares en esta zona sigue una tendencia igual o superior al municipio, lo que posiciona a este mercado en una fase de expansión activa. Entrar antes de que la densificación incremente significativamente los costos de suelo representa una ventaja competitiva real: la demanda crece pero la oferta aún no está saturada. Las zonas en expansión temprana concentran los mejores retornos ajustados por riesgo en el ciclo inmobiliario.');
-    if(pctVivDes>14) recs.push('<strong>Estrategia de renovación y reposicionamiento.</strong> La vacancia del '+P1(pctVivDes)+' supera el umbral saludable de referencia (~12%). Antes de agregar oferta nueva, se recomienda estudiar primero el mercado secundario: la rehabilitación y reposicionamiento de viviendas vacías puede generar mejores rendimientos con menor inversión y tiempo de desarrollo. El primer paso es identificar si la vacancia proviene de viviendas obsoletas (oportunidad de renovación) o de sobreoferta estructural (señal de cautela para proyectos nuevos).');
-    if(avgHpV>3.8) recs.push('<strong>Demanda habitacional reprimida.</strong> El promedio de '+N(avgHpV,2)+' habitantes por vivienda — por encima del estándar municipal ('+N(munAvgHpV,2)+') — indica que parte de la población comparte espacio por limitaciones de acceso a vivienda y no por elección. Esta presión sobre el parque existente representa una oportunidad directa para productos de precio accesible financiados a través de INFONAVIT o FOVISSSTE, con tipología de <strong>'+tipoProd+'</strong>. La estrategia de producto debe priorizar la accesibilidad económica y los plazos de escrituración.');
-    if(!recs.length) recs.push('<strong>Zona con indicadores equilibrados.</strong> Los indicadores de esta zona no muestran señales extremas: se sitúan dentro del rango de la media municipal. En este escenario, el éxito de un proyecto dependerá más de la diferenciación de producto que de la dinámica macro de la zona. Se recomienda profundizar en la investigación de campo: levantamiento de precios de mercado, análisis de la competencia directa en un radio de 2 km y entrevistas con residentes para identificar necesidades no atendidas.');
-    recs.forEach(function(r){
-      p11+='<div style="border-left:3px solid #00a8a6;padding:2mm 3mm;margin-bottom:2mm;background:#f8fafc;border-radius:0 4px 4px 0">';
-      p11+='<div style="font-size:6.5pt;color:#1e293b;line-height:1.75">'+r+'</div>';
-      p11+='</div>';
-    });
+    p11+='<div class="rpt-title" style="font-size:15pt;margin-bottom:3mm">Soluciones COEZA · Servicios para Decisiones Industriales</div>';
+    p11+='<div style="font-size:8pt;color:#475569;line-height:1.7;margin-bottom:3mm">El análisis presentado en este reporte cubre el contexto demográfico-laboral, económico y de mercado inmobiliario industrial de la zona seleccionada en ZM La Laguna. Para tomar decisiones de inversión fundamentadas, COEZA Consulting ofrece los siguientes servicios especializados:</div>';
 
     // Banner DATERRA · COEZA (alineación corregida)
     p11+='<div style="background:linear-gradient(135deg,#092c3b 0%,#074e4b 65%,#00a89e 100%);border-radius:6px;padding:3.5mm 4mm;margin-top:4mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
@@ -5057,10 +5040,10 @@ function generarReporte(){
     // Nota metodológica
     p11+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:2.5mm 4mm;font-size:6.5pt;color:#64748b;line-height:1.6;margin-top:3mm">';
     p11+='<strong style="color:#475569;font-size:7pt">Nota metodológica.</strong> ';
-    p11+='Este reporte analiza <strong>'+n+' AGEBs</strong> seleccionados mediante '+tipoNombre.toLowerCase()+' en '+(GEO&&GEO.estado||'México')+'. ';
-    p11+='Los datos corresponden al <strong>Censo de Población y Vivienda 2020</strong> del INEGI a nivel AGEB urbano. ';
-    p11+='Las comparativas con el municipio de <strong>'+munPrincipal+'</strong> reflejan <strong>únicamente AGEBs urbanos con datos disponibles</strong>, excluyendo localidades rurales. ';
-    p11+='Las proyecciones 2030 utilizan la tasa de crecimiento municipal estimada por CONAPO. Los crecimientos corresponden al periodo intercensal 2010-2020.';
+    p11+='Este reporte analiza <strong>'+n+' AGEBs</strong> seleccionados mediante '+tipoNombre.toLowerCase()+' en ZM La Laguna. ';
+    p11+='Datos sociodemográficos: <strong>Censo de Población y Vivienda 2020</strong>, INEGI, nivel AGEB urbano. Datos económicos: <strong>Censo Económico INEGI 2023</strong>, ZM La Laguna (Torreón, Gómez Palacio, Lerdo). ';
+    p11+='Inventario industrial: listings públicos 2025 (Lamudi, Colliers, VYNMSA, COEZA). Cap rate calculado con NOI=Renta×12×0.92×0.80, vacancia 8%, OpEx 20%. ';
+    p11+='Las comparativas demográficas con '+munPrincipal+' reflejan únicamente AGEBs urbanos con datos disponibles. Validar todas las recomendaciones con estudio de campo y broker industrial especializado.';
     p11+='</div>';
 
     // Para mayor información
@@ -5876,8 +5859,124 @@ function generarReporte(){
     p_ind_concl+=_rptFooterInd(8);
     p_ind_concl+='</div>';
 
+    // ══════════════════════════════════════════════════════════════
+    // PAG IND-CONCL-2 · Recomendaciones Estratégicas Integrales
+    // ══════════════════════════════════════════════════════════════
+    var p_ind_concl2='<div class="report-page">';
+    p_ind_concl2+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    p_ind_concl2+='<div style="border-bottom:3px solid #f97316;padding-bottom:2mm;margin-bottom:2.5mm">';
+    p_ind_concl2+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Recomendaciones Estratégicas · '+munPrincipal+'</div>';
+    p_ind_concl2+='<div style="font-size:7pt;color:#f97316;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Tipo de nave recomendada · Pros & Contras · Infraestructura · Sectores objetivo</div>';
+    p_ind_concl2+='</div>';
 
-        return p1+pIdx+pExec+p3+p4+p6+p_dem_ind+pMapParques+pMapRenta+pMapVenta+p_nse+p10+p_ind1+p_ind2+p_bod1+p_bod2+p_bod3+p_ter+p_zona_ind+p_ind_concl+p11;
+    // ── Síntesis del entorno: economía + demografía + mercado ──────
+    var _indScore=0,_indOps=[],_indRisks=[];
+    // Economía: crecimiento de empleo industrial
+    var _empCrec=_totE18>0?(_totE23-_totE18)/_totE18*100:0;
+    if(_empCrec>10){_indScore+=2;_indOps.push('Crecimiento de empleo ZM +'+_empCrec.toFixed(0)+'% (2018-23) — mercado industrial en expansión activa');}
+    else if(_empCrec>0){_indScore+=1;_indOps.push('Empleo industrial ZM creció '+_empCrec.toFixed(0)+'% — demanda de espacios con tendencia positiva');}
+    else{_indRisks.push('Empleo ZM estancado o negativo — evaluar ciclo sectorial antes de invertir');}
+    // Demografía laboral
+    var _workerZona2=pct1524+pct2559;
+    if(_workerZona2>60&&avgEsc>=10){_indScore+=2;_indOps.push('Pool laboral amplio ('+P1(_workerZona2)+' en edad activa) y escolaridad adecuada ('+N(avgEsc,1)+' años)');}
+    else if(_workerZona2>50){_indScore+=1;_indOps.push('Disponibilidad laboral moderada ('+P1(_workerZona2)+' en edad activa)');}
+    else{_indRisks.push('Pool laboral limitado ('+P1(_workerZona2)+' en edad activa) — evaluar transporte de personal');}
+    // Mercado inmobiliario
+    if(_bodsZona.length<5){_indScore+=2;_indOps.push('Baja competencia de oferta — primer entrante puede definir precio de referencia');}
+    else if(_bodsZona.length<15){_indScore+=1;}
+    else{_indRisks.push('Mercado con '+_bodsZona.length+' bodegas disponibles — diferenciación de producto indispensable');}
+    // NSE entorno
+    if(_nseScore>=5){_indScore+=1;_indOps.push('Entorno NSE '+nsePredZona+' — tenants con mayor solvencia y capacidad de renta');}
+    else{_indRisks.push('NSE del entorno limitado — orientar producto a precio competitivo');}
+    var _indScoreColor=_indScore>=5?'#16a34a':_indScore>=3?'#d97706':'#ea580c';
+    var _indScoreLbl=_indScore>=5?'ENTORNO INDUSTRIAL FAVORABLE':_indScore>=3?'ENTORNO MODERADO — DIFERENCIACIÓN CLAVE':'ENTORNO RETADOR — NICHO ESPECÍFICO';
+    p_ind_concl2+='<div style="background:'+_indScoreColor+';color:#fff;border-radius:5px;padding:2.5mm 4mm;margin-bottom:2.5mm;display:flex;align-items:center;gap:3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_ind_concl2+='<span style="font-size:20pt;font-weight:700;font-family:IBM Plex Mono,monospace;line-height:1">'+_indScore+'<span style="font-size:8pt;opacity:.75">/7</span></span>';
+    p_ind_concl2+='<div><div style="font-size:9pt;font-weight:700;letter-spacing:.3px">'+_indScoreLbl+'</div><div style="font-size:6.5pt;opacity:.85;margin-top:.3mm">'+n+' AGEBs · Empleo + Demografía + Mercado + NSE</div></div>';
+    p_ind_concl2+='</div>';
+
+    // ── Tipo de nave recomendada ──────────────────────────────────
+    var _naveRec='',_naveDesc='',_naveColor='#0891b2';
+    var _competenciaDesc='';
+    if(_bodsZona.length===0){
+      _naveRec='Clase A / Build-to-Suit';_naveColor='#7c3aed';
+      _naveDesc='Sin competencia directa en zona — primer entrante puede definir el estándar del mercado. BTS para tenant ancla o Clase A especulativa para capturar demanda de nearshoring y manufactura avanzada.';
+      _competenciaDesc='Sin competencia directa identificada en la zona.';
+    } else if(_nseScore>=6&&_bodsZona.length<10){
+      _naveRec='Clase A / A−';_naveColor='#6d28d9';
+      _naveDesc='NSE alto del entorno + oferta limitada = ventana de mercado para Clase A. Tenants objetivo: manufactura de precisión, electrónica, farmacéutica, automotriz Tier 1-2.';
+      _competenciaDesc=_bodsZona.length+' bodegas existentes en zona (Clase '+_clasePred+' predom.).';
+    } else if(_nseScore>=4||_bodsZona.length>=10){
+      _naveRec='Clase B+ / B';_naveColor='#2563eb';
+      _naveDesc='Mercado con competencia moderada — diferenciarse con spec técnico superior a la clase predominante ('+_clasePred+'): altura libre ≥10m, piso 7 ton/m², andenes dobles. Precio dentro de cuartil superior del mercado.';
+      _competenciaDesc=_bodsZona.length+' bodegas en zona. Clase predominante: '+_clasePred+'. Mediana renta: $'+(_medRenta2?_medRenta2.toFixed(0):'—')+'/m²/mes.';
+    } else {
+      _naveRec='Clase B− / C+';_naveColor='#16a34a';
+      _naveDesc='Entorno NSE popular con alta oferta — posicionarse en segmento precio-volumen para PyMEs locales, almacenaje, comercio mayorista y distribución regional de bajo costo.';
+      _competenciaDesc=_bodsZona.length+' bodegas en zona. Alta oferta relativa — precio competitivo indispensable.';
+    }
+    p_ind_concl2+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:2.5mm;margin-bottom:2.5mm">';
+    // Nave recomendada
+    p_ind_concl2+='<div style="border:2px solid '+_naveColor+';border-radius:5px;padding:2.5mm;background:'+_naveColor+'0d">';
+    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:'+_naveColor+';font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">▶ Tipo de Nave Recomendada</div>';
+    p_ind_concl2+='<div style="font-size:11pt;font-weight:700;color:'+_naveColor+';font-family:IBM Plex Mono,monospace;margin-bottom:1.5mm">'+_naveRec+'</div>';
+    p_ind_concl2+='<div style="font-size:5.5pt;color:#334155;line-height:1.55">'+_naveDesc+'</div>';
+    p_ind_concl2+='<div style="margin-top:1.5mm;font-size:5pt;color:#64748b;font-style:italic">Competencia: '+_competenciaDesc+'</div>';
+    p_ind_concl2+='</div>';
+    // Precio y especificaciones
+    p_ind_concl2+='<div style="border:1px solid #e2e8f0;border-radius:5px;padding:2.5mm;background:#f8fafc">';
+    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Especificaciones Técnicas Recomendadas</div>';
+    var _specAltura=_nseScore>=6?'12-14 m':_nseScore>=4?'9-12 m':'7-9 m';
+    var _specPiso=_nseScore>=6?'8-10 ton/m²':_nseScore>=4?'6-7 ton/m²':'4-5 ton/m²';
+    var _specKva=_nseScore>=6?'≥500 kVA':_nseScore>=4?'150-300 kVA':'100-150 kVA';
+    var _specOfi=_nseScore>=6?'15-20%':_nseScore>=4?'10-15%':'5-10%';
+    var _specAndenes=_nseScore>=6?'≥4 andenes + patio 40m':'2-3 andenes + patio':'1-2 andenes';
+    [['Altura libre',_specAltura,'#6d28d9'],['Carga piso',_specPiso,'#2563eb'],['Potencia elec.',_specKva,'#0891b2'],['Área oficinas',_specOfi,'#16a34a'],['Acceso camiones',_specAndenes,'#d97706']].forEach(function(sp){
+      p_ind_concl2+='<div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #f1f5f9;padding:1mm 0;font-size:5.5pt"><span style="color:#64748b">'+sp[0]+'</span><span style="font-weight:700;color:'+sp[2]+';font-family:IBM Plex Mono,monospace">'+sp[1]+'</span></div>';
+    });
+    p_ind_concl2+='</div>';
+    p_ind_concl2+='</div>';
+
+    // ── Pros & Contras de la zona ──────────────────────────────────
+    if(!_indOps.length)_indOps.push('Zona con potencial de desarrollo industrial identificado');
+    if(!_indRisks.length)_indRisks.push('Mercado competitivo — confirmar con broker industrial y estudio de absorción');
+    p_ind_concl2+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-bottom:2.5mm">';
+    p_ind_concl2+='<div style="border:1.5px solid #bbf7d0;border-radius:5px;padding:2mm 2.5mm;background:#f0fdf4">';
+    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">✓ Factores Positivos de la Zona</div>';
+    _indOps.forEach(function(t){p_ind_concl2+='<div style="font-size:5.5pt;color:#166534;line-height:1.5;margin-bottom:.8mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#16a34a">▸</span>'+t+'</div>';});
+    p_ind_concl2+='</div>';
+    p_ind_concl2+='<div style="border:1.5px solid #fed7aa;border-radius:5px;padding:2mm 2.5mm;background:#fff8f5">';
+    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#ea580c;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">⚠ Factores de Riesgo / Consideraciones</div>';
+    _indRisks.forEach(function(t){p_ind_concl2+='<div style="font-size:5.5pt;color:#9a3412;line-height:1.5;margin-bottom:.8mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#ea580c">▸</span>'+t+'</div>';});
+    p_ind_concl2+='</div>';
+    p_ind_concl2+='</div>';
+
+    // ── Sectores objetivo (top 4 por empleo) ──────────────────────
+    var _topSects=[].concat(_cM,_cC,_cT).filter(function(r){return r.e23>50;}).sort(function(a,b){return b.e23-a.e23;}).slice(0,4);
+    if(_topSects.length){
+      p_ind_concl2+='<div style="background:#092c3b;border-radius:5px;padding:2.5mm 3mm;margin-bottom:2mm">';
+      p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#00e2e0;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Sectores Objetivo · Mayor Empleo y Valor Agregado ZM La Laguna</div>';
+      p_ind_concl2+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5mm">';
+      _topSects.forEach(function(r,i){
+        var _secColor=_scol[String(r.sec_n)]||'#f97316';
+        var _vaM=r.va23>0?'$'+_N2(r.va23,0)+' MDP VA':'VA n/d';
+        var _invM=r.inv23>0?'$'+_N2(r.inv23,0)+' MDP inv.':'';
+        p_ind_concl2+='<div style="background:rgba(255,255,255,.06);border-radius:3px;padding:1.5mm;border-left:2.5px solid '+_secColor+'">';
+        p_ind_concl2+='<div style="font-size:9pt;font-weight:700;color:'+_secColor+';font-family:IBM Plex Mono,monospace;line-height:1">0'+(i+1)+'</div>';
+        p_ind_concl2+='<div style="font-size:5pt;color:#e0f2fe;font-weight:600;margin-top:.3mm;line-height:1.4">'+(r.sub.length>50?r.sub.substring(0,50)+'…':r.sub)+'</div>';
+        p_ind_concl2+='<div style="font-size:4.8pt;color:#94a3b8;margin-top:.5mm;font-family:IBM Plex Mono,monospace">'+_N2(r.e23)+' emp · '+_vaM+(r.d_e!==null&&r.d_e>0?' · +'+_N2(r.d_e)+' emp 18-23':'')+'</div>';
+        if(_invM)p_ind_concl2+='<div style="font-size:4.5pt;color:#64748b;margin-top:.2mm">'+_invM+'</div>';
+        p_ind_concl2+='</div>';
+      });
+      p_ind_concl2+='</div></div>';
+    }
+
+    // ── Nota metodológica ──────────────────────────────────────────
+    p_ind_concl2+='<div style="background:#fefce8;border:1px solid #fde68a;border-radius:4px;padding:1.5mm;font-size:4.8pt;color:#92400e;line-height:1.5"><strong>Metodología:</strong> Score industrial: Crecimiento empleo ZM (Censo Econ. INEGI 2018/2023) + Demografía laboral AGEB + Oferta bodegas (listings 2025) + NSE AMAI 2018. Tipo de nave recomendada basado en NSE entorno + nivel de competencia. Especificaciones: estándares CBRE/JLL México 2024. Sectores ordenados por empleos 2023.</div>';
+    p_ind_concl2+=_rptFooterInd('Concl. 2/2');
+    p_ind_concl2+='</div>';
+
+        return p1+pIdx+pExec+p3+p4+p6+p_dem_ind+pMapParques+pMapRenta+pMapVenta+p_nse+p_ind1+p_ind2+p_bod1+p_bod2+p_bod3+p_ter+p_zona_ind+p_ind_concl+p_ind_concl2+p11;
   }
 
   // Estadísticas del municipio completo para comparativa en heatmaps
