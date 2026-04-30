@@ -4161,164 +4161,121 @@ function generarReporte(){
         +'<br><span style="color:'+c+';font-style:italic;font-size:6.5pt">'+desc+'</span></div></div>';
     }
 
-    // Conclusión ejecutiva — calculada aquí para poder renderizarla antes de los KPIs
-    var _nseResumen=nseTotal>0?'NSE predominante <strong>'+nsePredZona+'</strong> ('+_nseMap[nsePredZona].toFixed(0)+'% de hogares). ':'';
-    var _execConclusionText=_execScore>=7
-      ?_nseResumen+'Los indicadores arrojan una lectura <strong>favorable ('+_execScoreDisp+'/10)</strong> para el desarrollo inmobiliario: crecimiento activo, vacancia controlada y demanda alineada con el perfil <strong>'+_execSegLabel+'</strong>. Existe una ventana real de oportunidad. Para aprovecharla al máximo, un estudio de mercado profesional permite confirmar la demanda efectiva, evitar sobreestimar la absorción y definir el precio óptimo. <strong>COEZA Consulting</strong> puede ayudarte a dar ese paso.'
-      :_execScore>=4
-      ?_nseResumen+'La zona presenta <strong>señales mixtas ('+_execScoreDisp+'/10)</strong>: algunos indicadores apuntan a oportunidad para el perfil <strong>'+_execSegLabel+'</strong>, mientras otros — como vacancia o ritmo de crecimiento — merecen atención antes de comprometer capital. La buena noticia: con el producto correcto y el precio adecuado, los mercados moderados suelen tener menos competencia. Un análisis profesional permite identificar esa ventana. <strong>COEZA Consulting</strong> tiene soluciones diseñadas para eso.'
-      :_nseResumen+'La zona muestra <strong>indicadores que invitan a evaluar con cuidado ('+_execScoreDisp+'/10)</strong>, pero esto no descarta la oportunidad — en zonas con menor presión competitiva suelen existir nichos reales para rehabilitación, renta o productos de bajo ticket bien ubicados. La clave está en identificar cuál es esa oportunidad específica y en qué condiciones. <strong>COEZA Consulting</strong> puede hacer ese análisis por ti.';
+    // ── Pre-cómputo industrial para pExec ─────────────────────────────
+    var _pxMfg=INDUSTRIAL.censo.filter(function(r){return r.sec_n>=31&&r.sec_n<=33;});
+    var _pxCom=INDUSTRIAL.censo.filter(function(r){return r.sec_n===43;});
+    var _pxLog=INDUSTRIAL.censo.filter(function(r){return r.sec_n===48||r.sec_n===49;});
+    var _pxSumE=function(arr,k){return arr.reduce(function(a,r){return a+(r[k]||0);},0);};
+    var _pxMfgE23=_pxSumE(_pxMfg,'e23'),_pxComE23=_pxSumE(_pxCom,'e23'),_pxLogE23=_pxSumE(_pxLog,'e23');
+    var _pxTotE23=_pxMfgE23+_pxComE23+_pxLogE23;
+    var _pxTotE18=_pxSumE(_pxMfg,'e18')+_pxSumE(_pxCom,'e18')+_pxSumE(_pxLog,'e18');
+    var _pxZmVA=_pxSumE(INDUSTRIAL.censo,'va23');
+    var _pxZmInv=_pxSumE(INDUSTRIAL.censo,'inv23');
+    var _pxEmpCrec=_pxTotE23-_pxTotE18;
+    var _pxEmpCrecPct=_pxTotE18>0?(_pxEmpCrec/_pxTotE18*100):0;
+    var _pxBodCount=INDUSTRIAL.bodegas.length;
+    var _pxPqCount=INDUSTRIAL.parques.length;
+    var _pxRentasAll=INDUSTRIAL.bodegas.filter(function(b){return b.op==='Renta'&&b.rent_m2>0;}).map(function(b){return b.rent_m2;}).sort(function(a,b){return a-b;});
+    var _pxMedRenta=_pxRentasAll.length?_pxRentasAll[Math.floor(_pxRentasAll.length/2)]:null;
+    var _pxNseScore={'A/B':7,'C+':6,'C':5,'C-':4,'D+':3,'D':2,'E':1}[nsePredZona]||4;
+    var _pxClsRec=_pxNseScore>=6?'Clase A / A−':_pxNseScore>=4?'Clase B+ / B':'Clase B− / C+';
+    var _pxPrecioRec=_pxNseScore>=6?'$80-120/m²/mes':_pxNseScore>=4?'$55-80/m²/mes':'$35-60/m²/mes';
+    var _pxTopMot=INDUSTRIAL.censo.filter(function(r){return r.e23>0;}).sort(function(a,b){return b.e23-a.e23;})[0];
+    var _pxScore=0,_pxOps=[],_pxRisks=[];
+    if(_pxEmpCrecPct>10){_pxScore+=2;_pxOps.push('Empleo industrial ZM +'+_pxEmpCrecPct.toFixed(0)+'% (2018-23) — mercado en expansión activa');}
+    else if(_pxEmpCrecPct>0){_pxScore+=1;_pxOps.push('Empleo ZM con tendencia positiva (+'+_pxEmpCrecPct.toFixed(0)+'%)');}
+    else _pxRisks.push('Empleo ZM estancado — evaluar ciclo sectorial antes de invertir');
+    var _pxWorker=pct1524+pct2559;
+    if(_pxWorker>60&&avgEsc>=10){_pxScore+=2;_pxOps.push('Pool laboral amplio: '+P1(_pxWorker)+' en edad activa · escolaridad '+N(avgEsc,1)+' años');}
+    else if(_pxWorker>50){_pxScore+=1;_pxOps.push('Disponibilidad laboral moderada ('+P1(_pxWorker)+' en edad activa)');}
+    else _pxRisks.push('Pool laboral limitado ('+P1(_pxWorker)+' en edad activa) — evaluar transporte de personal');
+    if(_pxBodCount<25){_pxScore+=2;_pxOps.push('Inventario limitado ('+_pxBodCount+' bodegas ZM) — posición de primer entrante o diferenciación alta');}
+    else if(_pxBodCount<60){_pxScore+=1;_pxOps.push('Inventario moderado en ZM ('+_pxBodCount+' bodegas) — diferenciación por clase y spec técnico');}
+    else _pxRisks.push('Inventario amplio en ZM ('+_pxBodCount+' bodegas) — diferenciación de producto indispensable');
+    if(_pxNseScore>=5){_pxScore+=2;_pxOps.push('NSE entorno '+nsePredZona+' — tenants con mayor solvencia y capacidad de renta');}
+    else if(_pxNseScore>=3){_pxScore+=1;_pxOps.push('NSE entorno '+nsePredZona+' — mercado PyME y manufactura estándar');}
+    else _pxRisks.push('NSE del entorno limitado — orientar producto a precio competitivo');
+    if(!_pxOps.length)_pxOps.push('Zona con potencial industrial identificado');
+    if(!_pxRisks.length)_pxRisks.push('Confirmar viabilidad con estudio de absorción y broker industrial');
+    var _pxScoreColor=_pxScore>=6?'#16a34a':_pxScore>=3?'#d97706':'#ea580c';
+    var _pxScoreLbl=_pxScore>=6?'ENTORNO FAVORABLE':_pxScore>=3?'ENTORNO MODERADO':'ENTORNO RETADOR';
+    var _pxConcl=_pxScore>=6
+      ?'La zona presenta un <strong>entorno industrial favorable ('+_pxScore+'/8)</strong>: la ZM La Laguna registra crecimiento sostenido de empleo manufacturero y logístico, la demografía local ofrece un pool laboral de calidad con escolaridad de '+N(avgEsc,1)+' años, y el NSE del entorno ('+nsePredZona+') es compatible con tenants de '+_pxClsRec+'. La inversión estimada en la ZM alcanza $'+(_pxZmInv>=1000?(_pxZmInv/1000).toFixed(1)+'B':_pxZmInv.toFixed(0))+' MDP (2023), señal de confianza del sector privado. <strong>Se recomienda avanzar con estudios de absorción</strong> para confirmar demanda efectiva y definir especificaciones técnicas óptimas.'
+      :_pxScore>=3
+      ?'El entorno industrial es <strong>moderado ('+_pxScore+'/8)</strong>: existen oportunidades concretas en la ZM La Laguna, con crecimiento de empleo y valor agregado, pero algunos factores requieren atención antes de comprometer capital. La clave está en la <strong>diferenciación de producto y precio de entrada</strong>. Se recomienda analizar la competencia directa, definir un tenant objetivo claro y validar la demanda con un estudio de mercado profesional antes de decidir la clase de nave.'
+      :'El entorno presenta <strong>retos de mercado ('+_pxScore+'/8)</strong>. Sin embargo, zonas con menor presión competitiva y NSE específico abren oportunidades para nichos concretos: manufactura de bajo costo, almacenaje o distribución regional. Se recomienda un estudio de factibilidad enfocado en demanda reprimida y análisis del tenant objetivo antes de avanzar en el desarrollo.';
 
     var pExec='<div class="report-page">';
     pExec+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-
-    // Banner ejecutivo
     pExec+='<div style="background:linear-gradient(135deg,#0f172a,#1e3a5f);border-radius:6px;padding:2.5mm 5mm;margin-bottom:2mm;display:flex;justify-content:space-between;align-items:center">';
-    pExec+='<div><div style="font-size:7pt;font-family:IBM Plex Mono,monospace;color:rgba(148,226,224,0.8);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.5mm">Resumen Ejecutivo</div>';
+    pExec+='<div><div style="font-size:7pt;font-family:IBM Plex Mono,monospace;color:rgba(148,226,224,0.8);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.5mm">Resumen Ejecutivo · Análisis Industrial · ZM La Laguna</div>';
     pExec+='<div style="font-size:11pt;font-weight:700;color:#fff;line-height:1.2">'+munPrincipal+' · '+tipoNombre+'</div>';
-    pExec+='<div style="font-size:7pt;color:rgba(200,220,240,0.7);margin-top:.5mm">'+n+' AGEBs analizados · '+fecha+'</div></div>';
-    pExec+='<div style="text-align:center;background:'+_execBg+';border:1.5px solid '+_execBorder+';border-radius:6px;padding:2mm 4mm;flex-shrink:0">';
-    pExec+='<div style="font-size:6pt;font-family:IBM Plex Mono,monospace;color:'+_execColor+';letter-spacing:1px;margin-bottom:1mm">ENTORNO DE MERCADO</div>';
-    pExec+='<div style="font-size:20pt;font-weight:700;color:'+_execColor+';font-family:IBM Plex Mono,monospace;line-height:1">'+_execScoreDisp+'<span style="font-size:8pt;opacity:.7">/10</span></div>';
-    pExec+='<div style="font-size:8pt;font-weight:700;color:'+_execColor+';margin-top:1.5mm;letter-spacing:.5px">'+_execLbl+'</div></div>';
+    pExec+='<div style="font-size:7pt;color:rgba(200,220,240,0.7);margin-top:.5mm">'+n+' AGEBs · Censo Económico INEGI 2023 · Inventario COEZA 2025 · '+fecha+'</div></div>';
+    pExec+='<div style="text-align:center;background:'+_pxScoreColor+'18;border:1.5px solid '+_pxScoreColor+'55;border-radius:6px;padding:2mm 4mm;flex-shrink:0">';
+    pExec+='<div style="font-size:6pt;font-family:IBM Plex Mono,monospace;color:'+_pxScoreColor+';letter-spacing:1px;margin-bottom:1mm">SCORE INDUSTRIAL</div>';
+    pExec+='<div style="font-size:20pt;font-weight:700;color:'+_pxScoreColor+';font-family:IBM Plex Mono,monospace;line-height:1">'+_pxScore+'<span style="font-size:8pt;opacity:.7">/8</span></div>';
+    pExec+='<div style="font-size:6.5pt;font-weight:700;color:'+_pxScoreColor+';margin-top:1.5mm;letter-spacing:.5px">'+_pxScoreLbl+'</div></div>';
     pExec+='</div>';
-
-    // Conclusión ejecutiva — aparece ANTES de los KPIs para lectura inmediata
-    pExec+='<div style="background:linear-gradient(135deg,'+_execBg+',rgba(248,250,252,0.5));border:1.5px solid '+_execBorder+';border-radius:6px;padding:2.5mm 4mm;margin-bottom:2mm">';
-    pExec+='<div style="font-size:6pt;font-weight:700;color:'+_execColor+';text-transform:uppercase;letter-spacing:1px;margin-bottom:1mm">Conclusión · Entorno '+_execLbl+'</div>';
-    pExec+='<div style="font-size:7pt;color:#1e293b;line-height:1.5">'+_execConclusionText+'</div></div>';
-
-    // KPIs hero — 5 métricas críticas en una fila
+    pExec+='<div style="background:'+_pxScoreColor+'0f;border:1.5px solid '+_pxScoreColor+'44;border-radius:6px;padding:2.5mm 4mm;margin-bottom:2mm">';
+    pExec+='<div style="font-size:6pt;font-weight:700;color:'+_pxScoreColor+';text-transform:uppercase;letter-spacing:1px;margin-bottom:1mm">Conclusión Estratégica · '+_pxScoreLbl+'</div>';
+    pExec+='<div style="font-size:7pt;color:#1e293b;line-height:1.55">'+_pxConcl+'</div></div>';
     pExec+='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2mm;margin-bottom:2mm">';
-    function _kpi(val,lbl,delta,dColor){
-      return '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:2.5mm 3mm;text-align:center">'+
-        '<div style="font-size:12pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;letter-spacing:-.5px">'+val+'</div>'+
-        '<div style="font-size:6pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.8mm;line-height:1.3">'+lbl+'</div>'+
-        (delta?'<div style="font-size:6.5pt;color:'+dColor+';font-family:IBM Plex Mono,monospace;font-weight:600;margin-top:.8mm">'+delta+'</div>':'')+'</div>';
+    function _kpiInd(val,lbl,sub,subColor){
+      return '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:2.5mm 3mm;text-align:center">'
+        +'<div style="font-size:11pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;letter-spacing:-.5px;line-height:1.1">'+val+'</div>'
+        +'<div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.8mm;line-height:1.3">'+lbl+'</div>'
+        +(sub?'<div style="font-size:6pt;color:'+(subColor||'#64748b')+';font-family:IBM Plex Mono,monospace;font-weight:600;margin-top:.8mm">'+sub+'</div>':'')+'</div>';
     }
-    pExec+=_kpi(N(totPob),'Habitantes<br>2020',D(crecPobPct),crecPobPct>=0?'#059669':'#dc2626');
-    var totPeaZona=Math.round(pctPea/100*totPob);
-    pExec+=_kpi(N(totPeaZona),'PEA activa<br>en zona',P1(pctPea)+' activa',pctPea>=45?'#059669':'#64748b');
-    pExec+=_kpi(N(totProy),'Proyección<br>2030','+'+(N(_demanda2030))+' hab.','#7c3aed');
-    pExec+=_kpi(P1(pctPea),'PEA / Pob.',P1(_pctDes)+' vacantes',_pctDes>18?'#dc2626':'#64748b');
-    pExec+=_kpi(N(avgEsc,1)+' años','Escolaridad<br>promedio',_nse.split('(')[0].trim(),'#0f172a');
+    pExec+=_kpiInd(N(_pxTotE23),'Empleos ZM<br>2023',(_pxEmpCrecPct>=0?'+':'')+_pxEmpCrecPct.toFixed(0)+'% vs 2018',_pxEmpCrecPct>=0?'#059669':'#dc2626');
+    pExec+=_kpiInd('$'+(_pxZmVA>=1000?(_pxZmVA/1000).toFixed(1)+'B':_pxZmVA.toFixed(0)+' M'),'Valor Agr. ZM<br>2023 (MDP)','Mfg+Comercio+Log.','#0369a1');
+    pExec+=_kpiInd(_pxBodCount,'Bodegas<br>inventario ZM',_pxPqCount+' parques industriales','#7c3aed');
+    pExec+=_kpiInd(_pxMedRenta?'$'+_pxMedRenta.toFixed(0):'S/D','Renta med.<br>MXN/m²/mes',_pxClsRec+' recomendada','#ea580c');
+    pExec+=_kpiInd(P1(pctPea),'PEA activa<br>en zona',N(avgEsc,1)+' años esc. · '+P1(pct2559)+' en 25-59a','#059669');
     pExec+='</div>';
-
-    // Tres columnas: scorecard entorno | señales clave | buyer persona
     pExec+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.5mm;margin-bottom:2mm">';
-
-    // Col 1: Entorno de mercado scorecard
     pExec+='<div>';
-    pExec+='<div style="font-size:7pt;font-weight:700;color:#092c3b;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid '+_execColor+';padding-bottom:1.5mm;margin-bottom:3mm">Entorno · '+_execScoreDisp+'/10 pts</div>';
-    pExec+=_scRow2(_esc1,'Crecimiento pob.',Pct(crecPobPct),_esc1==='pos'?'Expansión activa de demanda':_esc1==='mod'?'Crecimiento moderado':'Posible migración o cambio uso');
-    pExec+=_scRow2(_esc2,'Crecimiento viv.',Pct(crecVivPct),_esc2==='pos'?'Oferta habitacional en expansión':_esc2==='mod'?'Expansión lenta, equilibrada':'Mercado estancado o contracción');
-    pExec+=_scRow2(_esc3,'Vacancia',P1(pctVivDes),_esc3==='pos'?'Absorción activa, sin sobreoferta':_esc3==='mod'?'Vacancia normal, monitorear':'Sobreoferta, evaluar antes de invertir');
-    pExec+=_scRow2(_esc4,'NSE / Perfil socioecon.',nseTotal>0?(nsePredZona+' · '+P1(pNseAlto)+' AB+C+'):(N(avgEsc,1)+'a / mun. '+N(munAvgEsc,1)+'a'),_esc4==='pos'?'NSE superior al municipio':_esc4==='mod'?'NSE comparable al municipio':'NSE por debajo del municipio');
-    pExec+=_scRow2(_esc5,'PEA activa',P1(pctPea)+' / mun. '+P1(munPctPea),_esc5==='pos'?'Demanda hipotecaria sólida':_esc5==='mod'?'Capacidad similar al municipio':'Mayor riesgo de morosidad');
-    // Ritmo hogares — referencial, no suma al score
-    pExec+='<div style="display:flex;align-items:flex-start;gap:2mm;padding:1.5mm 2mm;border-radius:3px;background:#f8fafc;border:1px solid #e2e8f0;margin-bottom:1.5mm"><span style="font-size:8pt;flex-shrink:0;line-height:1.3;color:#94a3b8">◎</span><div style="font-size:7pt;line-height:1.3"><span style="font-weight:600;color:#64748b">Ritmo hogares/AGEB</span> <span style="color:#94a3b8;font-family:IBM Plex Mono,monospace;font-size:6.5pt">'+N(_exZonaAvgCrec,1)+' / mun. '+N(_exRestoAvgCrec,1)+'</span><br><span style="color:#94a3b8;font-style:italic;font-size:6.5pt">Referencial · no suma al score</span></div></div>';
-    // NSE bloque
-    if(nseTotal>0){
-      var _nseC1Color=NSE_COLORS[nsePredZona]||'#64748b';
-      pExec+='<div style="margin-top:2mm;padding:1.5mm 2mm;border-radius:3px;background:'+_nseC1Color+'18;border:1px solid '+_nseC1Color+'44">';
-      pExec+='<div style="font-size:5.5pt;font-weight:700;color:'+_nseC1Color+';text-transform:uppercase;letter-spacing:.6px;margin-bottom:1mm">NSE predominante</div>';
-      pExec+='<div style="font-size:8pt;font-weight:700;color:'+_nseC1Color+';font-family:IBM Plex Mono,monospace">'+nsePredZona+' · '+_nseMap[nsePredZona].toFixed(0)+'%</div>';
-      pExec+='<div style="font-size:6pt;color:#475569;margin-top:.5mm">'+(NSE_LABELS[nsePredZona]||nsePredZona)+' · Alto (AB+C+): '+P1(pNseAlto)+'</div>';
-      pExec+='</div>';
-    }
-    pExec+='</div>';
-
-    // Col 2: Señales clave
-    pExec+='<div>';
-    pExec+='<div style="font-size:7pt;font-weight:700;color:#092c3b;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #00a8a6;padding-bottom:1.5mm;margin-bottom:3mm">Señales clave</div>';
-    pExec+=_signals;
-    pExec+='</div>';
-
-    // Col 3: Buyer Persona
-    pExec+='<div>';
-    pExec+='<div style="font-size:7pt;font-weight:700;color:#092c3b;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #0369a1;padding-bottom:1.5mm;margin-bottom:2.5mm">Buyer Persona</div>';
-
-    // Nombre y descripción del segmento
-    pExec+='<div style="font-size:7.5pt;font-weight:700;color:#0369a1;line-height:1.2;margin-bottom:1mm">'+_execSegLabel+'</div>';
-    pExec+='<div style="font-size:6.5pt;color:#334155;line-height:1.4;margin-bottom:2mm">'+_execSegDesc+'</div>';
-
-    // Mini stats: grupo de edad dominante + escolaridad + PEA + estado civil
-    function _miniStat(val,lbl){ return '<div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:3px;padding:1.5mm;text-align:center"><div style="font-size:8.5pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+val+'</div><div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;margin-top:.3mm;line-height:1.2">'+lbl+'</div></div>'; }
-    var _mainAgePct,_mainAgeLbl;
-    if(_esMayorPred){ _mainAgePct=P1(pct60); _mainAgeLbl='60+ años'; }
-    else if(_esJovenPred){ _mainAgePct=P1(pct1524); _mainAgeLbl='15–24 años'; }
-    else { _mainAgePct=P1(pct2559); _mainAgeLbl='25–59 años'; }
-    pExec+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm;margin-bottom:1.5mm">';
-    pExec+=_miniStat(_mainAgePct,_mainAgeLbl);
-    pExec+=_miniStat(N(avgEsc,1)+'a','Escolaridad');
-    pExec+=_miniStat(P1(pctPea),'PEA activa');
-    pExec+=_miniStat(_execTotZ>0?P1(_execCasZ)+'%':'—','Casados');
-    pExec+='</div>';
-
-    // Barras de distribución de edades
-    function _barEd2(lbl,pct,color,bold){ return '<div style="display:flex;align-items:center;gap:1mm;margin-bottom:.5mm"><div style="font-size:6pt;color:'+(bold?'#0369a1':'#475569')+';font-weight:'+(bold?'700':'400')+';width:14mm;flex-shrink:0">'+lbl+'</div><div style="flex:1;height:3px;background:#e2e8f0;border-radius:2px;overflow:hidden"><div style="height:100%;width:'+Math.min(pct*2,100)+'%;background:'+color+'"></div></div><div style="font-size:6pt;font-family:IBM Plex Mono,monospace;color:'+(bold?'#0369a1':'#1e293b')+';font-weight:'+(bold?'700':'400')+';width:7mm;text-align:right;flex-shrink:0">'+P1(pct)+'</div></div>'; }
-    pExec+=_barEd2('0–14',pct014,'#3eb8f0',false);
-    pExec+=_barEd2('15–24',pct1524,'#5ddba8',_esJovenPred);
-    pExec+=_barEd2('25–59',pct2559,'#7c3aed',_esFamiliaProf||_esFamiliaMedia||_esParejaSH||_esSolteroAdulto);
-    pExec+=_barEd2('60+',pct60,'#f0b840',_esMayorPred);
-
-    // Por qué este segmento
-    pExec+='<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:4px;padding:1.5mm 2mm;margin-top:1.5mm;margin-bottom:1.5mm">';
-    pExec+='<div style="font-size:5pt;color:#92400e;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:.5mm">Por qué este perfil</div>';
-    pExec+='<div style="font-size:6pt;color:#78350f;line-height:1.35">'+_execSegReason+'</div>';
-    pExec+='</div>';
-
-    // Tipología óptima (sin precios)
-    pExec+='<div style="background:#f0fdfc;border:1px solid #b2f0ef;border-radius:4px;padding:1.5mm 2mm">';
-    pExec+='<div style="font-size:5pt;color:#0d9488;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:.5mm">Tipología recomendada</div>';
-    pExec+='<div style="font-size:6pt;color:#134e4a;line-height:1.35">'+_execTipo+'</div>';
-    pExec+='</div>';
-
-    pExec+='</div>'; // cierra col 3
-
-    pExec+='</div>'; // cierra grid 3 col
-
-    // Banner COEZA completo + grid de soluciones en resumen ejecutivo
-    pExec+='<div style="background:linear-gradient(135deg,#092c3b 0%,#074e4b 65%,#00a89e 100%);border-radius:6px;padding:2mm 3mm;margin-top:1.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
-    pExec+='<div style="display:flex;align-items:center;justify-content:space-between;gap:3mm">';
-    pExec+='<div style="display:flex;align-items:center;gap:2.5mm;flex:1;min-width:0">';
-    pExec+='<div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-start;gap:1mm">';
-    pExec+='<img src="'+LOGO_B64_BLANCO+'" alt="DATERRA" style="height:4.5mm;width:auto;max-width:25mm;display:block"/>';
-    pExec+='<span style="font-size:4.5pt;color:#7dd3d2;letter-spacing:.2px;white-space:nowrap;line-height:1">by COEZA Consulting</span>';
-    pExec+='</div>';
-    pExec+='<div style="width:1px;height:7mm;background:rgba(255,255,255,.2);flex-shrink:0;align-self:center"></div>';
-    pExec+='<div style="min-width:0">';
-    pExec+='<div style="font-size:6.5pt;font-weight:700;color:#fff;margin-bottom:.8mm">¿Quieres tomar mejores decisiones de inversión?</div>';
-    pExec+='<div style="font-size:5.5pt;color:#b2e8e8;line-height:1.5">Contáctanos para un <strong style="color:#29ebb9">estudio de mercado profesional</strong> — demanda efectiva, análisis de competencia, due diligence y estrategia de producto a la medida.</div>';
-    pExec+='</div></div>';
-    pExec+='<div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:1mm;text-align:right">';
-    pExec+='<div style="background:#00e2e0;color:#092c3b;font-weight:700;font-size:6pt;padding:1.5mm 3mm;border-radius:3px;font-family:\'IBM Plex Mono\',monospace;white-space:nowrap">consulting.coeza.mx</div>';
-    pExec+='<div style="font-size:4.5pt;color:#b2f0ef;font-family:\'IBM Plex Mono\',monospace;white-space:nowrap">contacto@coeza.mx · 871 503 7777</div>';
-    pExec+='</div></div></div>';
-    // Grid de soluciones
-    pExec+='<div style="margin-top:1.5mm">';
-    pExec+='<div style="font-size:5.5pt;font-weight:700;color:#0369a1;font-family:\'IBM Plex Mono\',monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1mm">COEZA Consulting · Soluciones a tu medida</div>';
-    pExec+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1mm">';
-    var _execSols=[
-      ['01','Project Discovery','#0ea5e9','Encontramos el mejor giro para tu ubicación — análisis Smart Match, ciclos inmobiliarios, zonas idóneas.'],
-      ['02','Project Diagnosis','#10b981','Estudio de mercado rápido — panorama sociodemográfico, zona, uso de suelo y benchmark.'],
-      ['03','Diagnosis Plus','#8b5cf6','Solución integral: due diligence legal y ambiental, viabilidad financiera y volumetría.'],
-      ['04','Just Market','#f59e0b','Viabilidad de mercado y financiera — evaluación de riesgo, benchmark y precios de producto.'],
-      ['05','Project Expansion','#ec4899','Expande con visión — análisis multivariante para selección de zonas metropolitanas o AGEBs.'],
-      ['06','Project Custom','#64748b','Hecho a la medida — para retos atípicos o combinaciones fuera de los paquetes estándar.']
-    ];
-    _execSols.forEach(function(s){
-      pExec+='<div style="border:1px solid '+s[2]+'55;border-radius:3px;padding:1.5mm 2mm;background:'+s[2]+'0d;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
-      pExec+='<div style="display:flex;align-items:center;gap:1mm;margin-bottom:.5mm">';
-      pExec+='<span style="background:'+s[2]+';color:#fff;font-family:\'IBM Plex Mono\',monospace;font-size:5pt;font-weight:700;padding:0.3mm 1mm;border-radius:2px;-webkit-print-color-adjust:exact;print-color-adjust:exact">'+s[0]+'</span>';
-      pExec+='<span style="font-size:6pt;font-weight:700;color:#1e293b">'+s[1]+'</span>';
-      pExec+='</div>';
-      pExec+='<div style="font-size:5pt;color:#475569;line-height:1.4">'+s[3]+'</div>';
-      pExec+='</div>';
+    pExec+='<div style="font-size:7pt;font-weight:700;color:#092c3b;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid '+_pxScoreColor+';padding-bottom:1.5mm;margin-bottom:2mm">Zona · Factores Clave</div>';
+    _pxOps.forEach(function(t){pExec+='<div style="display:flex;gap:1.5mm;margin-bottom:1.5mm;font-size:6.5pt;color:#166534;line-height:1.4"><span style="flex-shrink:0;color:#16a34a;font-weight:700">✓</span>'+t+'</div>';});
+    _pxRisks.forEach(function(t){pExec+='<div style="display:flex;gap:1.5mm;margin-bottom:1.5mm;font-size:6.5pt;color:#9a3412;line-height:1.4"><span style="flex-shrink:0;color:#ea580c;font-weight:700">⚠</span>'+t+'</div>';});
+    pExec+='<div style="margin-top:2mm;background:#f0f9ff;border:1px solid #bae6fd;border-radius:4px;padding:1.5mm">';
+    pExec+='<div style="font-size:5.5pt;font-weight:700;color:#0369a1;text-transform:uppercase;letter-spacing:.6px;margin-bottom:1mm">Perfil Laboral · Zona</div>';
+    [['PEA activa',P1(pctPea)],['Escolaridad',N(avgEsc,1)+' años'],['Edad 15-59',P1(pct2559)],['NSE predom.',nsePredZona]].forEach(function(r){
+      pExec+='<div style="display:flex;justify-content:space-between;font-size:6pt;border-bottom:1px solid #e0f2fe;padding:.5mm 0"><span style="color:#334155">'+r[0]+'</span><span style="font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+r[1]+'</span></div>';
     });
-    pExec+='</div></div>';
-
-    pExec+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Análisis Ejecutivo · COEZA Consulting</span><span>Pag. 3 / 14</span><span>'+fecha+'</span></div>';
+    pExec+='</div>';
+    pExec+='</div>';
+    pExec+='<div>';
+    pExec+='<div style="font-size:7pt;font-weight:700;color:#092c3b;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #ea580c;padding-bottom:1.5mm;margin-bottom:2mm">Economía · ZM La Laguna</div>';
+    [['Manufactura (31-33)',_pxMfgE23,'#ea580c'],['Comercio (43)',_pxComE23,'#2563eb'],['Logística (48-49)',_pxLogE23,'#7c3aed']].forEach(function(s){
+      var pctS=_pxTotE23>0?s[1]/_pxTotE23*100:0;
+      pExec+='<div style="margin-bottom:2mm"><div style="display:flex;justify-content:space-between;font-size:6.5pt;margin-bottom:.5mm"><span style="color:#334155;font-weight:500">'+s[0]+'</span><span style="color:'+s[2]+';font-weight:700;font-family:IBM Plex Mono,monospace">'+N(s[1])+' emp</span></div>';
+      pExec+='<div style="background:#e2e8f0;border-radius:2px;height:4px"><div style="background:'+s[2]+';width:'+Math.min(95,pctS)+'%;height:100%;border-radius:2px"></div></div></div>';
+    });
+    pExec+='<div style="font-size:6pt;color:#334155;margin-top:1.5mm;background:#fff7ed;border-radius:3px;padding:1.5mm;border-left:2.5px solid #ea580c;line-height:1.5">';
+    pExec+=(_pxTopMot?'<strong>Motor líder:</strong> '+(_pxTopMot.sub.length>38?_pxTopMot.sub.substring(0,38)+'…':_pxTopMot.sub)+' ('+N(_pxTopMot.e23)+' emp)<br>':'');
+    pExec+='<strong>Inversión ZM 2023:</strong> $'+(_pxZmInv>=1000?(_pxZmInv/1000).toFixed(1)+'B':_pxZmInv.toFixed(0))+' MDP<br>';
+    pExec+='<strong>Empleos netos 2018-23:</strong> '+((_pxEmpCrec>=0?'+':'')+N(_pxEmpCrec))+' ('+(_pxEmpCrecPct>=0?'+':'')+_pxEmpCrecPct.toFixed(0)+'%)';
+    pExec+='</div>';
+    pExec+='</div>';
+    pExec+='<div>';
+    pExec+='<div style="font-size:7pt;font-weight:700;color:#092c3b;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #7c3aed;padding-bottom:1.5mm;margin-bottom:2mm">Recomendación · '+_pxClsRec+'</div>';
+    pExec+='<div style="font-size:10pt;font-weight:700;color:#7c3aed;font-family:IBM Plex Mono,monospace;margin-bottom:1.5mm">'+_pxClsRec+'</div>';
+    pExec+='<div style="font-size:6pt;color:#475569;line-height:1.5;margin-bottom:1.5mm">NSE <strong>'+nsePredZona+'</strong> del entorno → tenants '+(_pxNseScore>=6?'con alta capacidad de renta y exigencias técnicas elevadas. Manufactura avanzada y nearshoring.':_pxNseScore>=4?'medianos solventes. Manufactura general, logística y distribución regional.':'sensibles al precio. PyMEs locales, almacenaje y distribución de bajo costo.')+' </div>';
+    [['Precio de entrada',_pxPrecioRec],['Renta mediana ZM',_pxMedRenta?'$'+_pxMedRenta.toFixed(0)+'/m²/mes':'S/D'],['Inventario ZM',_pxBodCount+' bodegas'],['Parques industriales',_pxPqCount+' en ZM']].forEach(function(r){
+      pExec+='<div style="display:flex;justify-content:space-between;font-size:6pt;border-bottom:1px solid #ede9fe;padding:.6mm 0"><span style="color:#64748b">'+r[0]+'</span><span style="font-weight:700;color:#7c3aed;font-family:IBM Plex Mono,monospace">'+r[1]+'</span></div>';
+    });
+    pExec+='<div style="margin-top:1.5mm;background:#f5f3ff;border-radius:3px;padding:1.5mm;font-size:5.5pt;color:#4c1d95;line-height:1.45">';
+    pExec+='<strong>Tenant objetivo:</strong> '+(_pxNseScore>=6?'Manufactura avanzada, electrónica, farmacéutica, nearshoring Tier 1-2. Contratos 5-10 años.':_pxNseScore>=4?'Manufactura general, logística regional, distribución. Contratos 3-5 años con ajuste INPC.':'PyMEs locales, almacenaje, comercio mayorista. Contratos 1-3 años, precio competitivo.')+'</div>';
+    pExec+='</div>';
+    pExec+='</div>';
+    pExec+='<div style="background:linear-gradient(135deg,#092c3b 0%,#074e4b 65%,#00a89e 100%);border-radius:5px;padding:2mm 3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:flex;align-items:center;justify-content:space-between;gap:3mm">';
+    pExec+='<div style="display:flex;align-items:center;gap:2.5mm;flex:1">';
+    pExec+='<img src="'+LOGO_B64_BLANCO+'" alt="DATERRA" style="height:4.5mm;width:auto;max-width:25mm;display:block;flex-shrink:0"/>';
+    pExec+='<div style="font-size:5.5pt;color:#b2e8e8;line-height:1.4">Análisis industrial basado en Censo Económico INEGI 2023 · Inventario COEZA 2025 · Censo de Población y Vivienda INEGI 2020 · NSE AMAI 2018</div>';
+    pExec+='</div>';
+    pExec+='<div style="flex-shrink:0;text-align:right"><div style="font-size:5pt;color:#b2f0ef;font-family:IBM Plex Mono,monospace;white-space:nowrap">consulting.coeza.mx · contacto@coeza.mx</div></div>';
+    pExec+='</div>';
+    pExec+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pag. 3 / 21</span><span>'+fecha+'</span></div>';
     pExec+='</div>';
 
     // ────────── PÁGINA 2 (ahora 3): Análisis Dinámica Territorial ──────────
@@ -5057,58 +5014,53 @@ function generarReporte(){
     // ── PÁGINA 2: Índice de Contenidos ─────────────────────────────────────
     var pIdx='<div class="report-page">';
     pIdx+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    // Encabezado del índice
-    pIdx+='<div style="border-bottom:3px solid #00e2e0;padding-bottom:3mm;margin-bottom:5mm">';
-    pIdx+='<div style="font-size:7pt;font-family:IBM Plex Mono,monospace;color:#00a8a6;letter-spacing:2px;text-transform:uppercase;margin-bottom:1mm">DATERRA · Reporte de Análisis Sociodemográfico</div>';
+    pIdx+='<div style="border-bottom:3px solid #00e2e0;padding-bottom:3mm;margin-bottom:4mm">';
+    pIdx+='<div style="font-size:7pt;font-family:IBM Plex Mono,monospace;color:#00a8a6;letter-spacing:2px;text-transform:uppercase;margin-bottom:1mm">DATERRA · Reporte de Análisis Industrial</div>';
     pIdx+='<div style="font-size:18pt;font-weight:700;color:#092c3b;line-height:1.1">Índice de Contenidos</div>';
-    pIdx+='<div style="font-size:8pt;color:#64748b;margin-top:1.5mm">'+munPrincipal+' · '+tipoNombre+' · '+n+' AGEBs analizados · '+fecha+'</div>';
+    pIdx+='<div style="font-size:8pt;color:#64748b;margin-top:1.5mm">'+munPrincipal+' · ZM La Laguna · '+n+' AGEBs analizados · '+fecha+'</div>';
     pIdx+='</div>';
-    // Filas del índice — diseño profesional sin emojis ni círculos
-    function _idxRow(pag, titulo, desc){
+    function _idxRow(pag,titulo,desc){
       return '<div style="display:grid;grid-template-columns:9mm 1fr 9mm;align-items:center;border-bottom:1px solid #e2e8f0;padding:1.8mm 0;gap:2mm">'
         +'<div style="font-size:7pt;font-weight:700;color:#00a8a6;font-family:IBM Plex Mono,monospace;line-height:1">'+pag+'</div>'
-        +'<div>'
-        +'<div style="font-size:8pt;font-weight:700;color:#092c3b;line-height:1.2">'+titulo+'</div>'
-        +'<div style="font-size:6.5pt;color:#64748b;margin-top:.4mm;line-height:1.4">'+desc+'</div>'
-        +'</div>'
+        +'<div><div style="font-size:8pt;font-weight:700;color:#092c3b;line-height:1.2">'+titulo+'</div>'
+        +'<div style="font-size:6.5pt;color:#64748b;margin-top:.4mm;line-height:1.4">'+desc+'</div></div>'
         +'<div style="font-size:7.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-align:right;line-height:1">'+pag+'</div>'
         +'</div>';
     }
-    function _idxSection(label){
-      return '<div style="font-size:5.5pt;font-weight:700;color:#fff;background:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:1px;padding:.8mm 2.5mm;border-radius:2px;margin:2.5mm 0 0.5mm;display:inline-block">'+label+'</div>';
+    function _idxSection(label,color){
+      var c=color||'#092c3b';
+      return '<div style="font-size:5.5pt;font-weight:700;color:#fff;background:'+c+';font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:1px;padding:.8mm 2.5mm;border-radius:2px;margin:2.5mm 0 0.5mm;display:inline-block">'+label+'</div>';
     }
-    pIdx+=_idxSection('ANÁLISIS DE MERCADO');
-    pIdx+=_idxRow('1','Panorama de Zona','Mapa del área analizada · KPIs de población, vivienda y crecimiento · benchmarks municipales');
-    pIdx+=_idxRow('3','Resumen Ejecutivo','Score de entorno (base 10) · señales clave · conclusión estratégica de la zona');
-    pIdx+=_idxRow('4','Crecimiento Comparativo','Variación intercensal 2010–2020 de población, hogares y vivienda vs. municipio y estado');
-    pIdx+=_idxSection('DEMOGRAFÍA Y HABITACIONAL');
-    pIdx+=_idxRow('5','Análisis de Vivienda','Vacancia · tipología dominante · densidad de ocupación · indicadores de absorción');
-    pIdx+=_idxRow('6','Distribución de Edades','Pirámide de edad · grupos etarios · bono demográfico · segmento predominante');
-    pIdx+=_idxRow('7','Parque Habitacional','Comparativa 2010 vs. 2020 · dormitorios · habitantes por vivienda · tipología de parque');
-    pIdx+=_idxRow('8','Actividad Económica + NSE','PEA activa · escolaridad · distribución NSE AMAI · capacidad de pago estimada');
-    pIdx+=_idxRow('9','Estructura Familiar','Estado civil · promedio de hijos nacidos vivos · composición del hogar');
-    pIdx+=_idxSection('MAPAS DE CALOR');
-    pIdx+=_idxRow('10','Heatmap · Hogares Totales','Distribución espacial de hogares · concentración interna de la zona analizada');
-    pIdx+=_idxRow('11','Heatmap · Crecimiento de Hogares','Expansión intercensal por AGEB · zonas de mayor dinamismo habitacional');
-    pIdx+=_idxRow('12','Mapa NSE · Comparativas','NSE categórico por AGEB · barras comparativas zona vs. municipio · insight NSE');
-    pIdx+=_idxSection('ESTRATEGIA');
-    pIdx+=_idxRow('13','Conclusiones · Estrategia de Mercado','Score final de entorno · oportunidades y riesgos · análisis integral de la zona');
-    pIdx+=_idxRow('14','Recomendaciones Estratégicas','Buyer persona · recomendaciones de producto · soluciones COEZA · nota metodológica');
-
-    pIdx+=_idxSection('ANÁLISIS INDUSTRIAL & BODEGAS');
-    pIdx+=_idxRow('14','Panorama Económico 2018→2023','Manufactura · Comercio · Transporte — empleos, producción bruta, cambios intercensales clave');
-    pIdx+=_idxRow('15','Top Industrias ZM La Laguna 2023','Ranking por empleo y producción · mercados consolidados y potenciales · insights de crecimiento');
-    pIdx+=_idxRow('16','Inventario Bodegas · ZM Laguna','120 bodegas · 30 parques · tabulador por clase y municipio · precios asking · oferta disponible');
-    pIdx+=_idxRow('17','Bodegas en la Zona Analizada','Inventario filtrado por radio o municipio · comparativa zona vs ZM · competencia directa');
-    pIdx+=_idxRow('18','Recomendación de Bodega','Clase óptima · precio de entrada · tenant target · diferenciadores · análisis de oportunidad');
-    pIdx+=_idxSection('CONCLUSIÓN ESTRATÉGICA INTEGRAL');
-    pIdx+=_idxRow('19','Conclusión Industrial','Síntesis: demografía + economía + mercado inmobiliario · top 3 recomendaciones accionables');
-    pIdx+=_idxRow('20','Recomendaciones COEZA','Buyer persona · soluciones de producto · servicios COEZA · nota metodológica');
-    pIdx+='<div style="margin-top:3.5mm;padding:1.5mm 3mm;border-top:2px solid #00e2e0;font-size:6pt;color:#64748b;line-height:1.5">';
+    pIdx+=_idxSection('CONTEXTO Y RESUMEN','#0f172a');
+    pIdx+=_idxRow('1','Panorama de Zona','Mapa del área analizada · KPIs demográficos y laborales · benchmarks municipales');
+    pIdx+=_idxRow('3','Resumen Ejecutivo Industrial','Score de oportunidad /8 · pros y contras de la zona · panorama económico · recomendación de nave');
+    pIdx+=_idxSection('DEMOGRAFÍA Y FUERZA LABORAL','#0369a1');
+    pIdx+=_idxRow('4','Crecimiento Comparativo','Variación intercensal 2010-2020 de población y hogares vs municipio y estado');
+    pIdx+=_idxRow('5','Perfil por Edad y Laboral','Estructura de edades · franja laboral activa 15-59 años · bono joven · pool de trabajo disponible');
+    pIdx+=_idxRow('6','Actividad Económica y NSE','PEA activa · escolaridad · distribución NSE AMAI · perfil de tenants y mano de obra');
+    pIdx+=_idxRow('7','Perfil Laboral de la Zona','Indicadores de fuerza de trabajo vs ZM La Laguna · PEA, desocupación, escolaridad');
+    pIdx+=_idxRow('8','Distribución NSE por AGEB','Heatmap categórico NSE · concentración de nivel socioeconómico por zona');
+    pIdx+=_idxSection('PANORAMA ECONÓMICO INDUSTRIAL','#ea580c');
+    pIdx+=_idxRow('9','Panorama Económico 2018→2023','Manufactura · Comercio · Logística — empleos, valor agregado, inversión, remuneraciones ZM');
+    pIdx+=_idxRow('10','Top Industrias ZM La Laguna','Ranking sectorial por empleo y VA · crecimiento intercensal · qué pide cada sector al mercado');
+    pIdx+=_idxSection('INVENTARIO INDUSTRIAL','#7c3aed');
+    pIdx+=_idxRow('11','Mapa Parques Industriales','Ubicación de parques industriales en ZM · distancia al terreno analizado · infraestructura');
+    pIdx+=_idxRow('12','Mapa Inventario en Renta','Distribución geográfica de bodegas en renta · concentración por zona · precios asking');
+    pIdx+=_idxRow('13','Mapa Inventario en Venta y Terrenos','Bodegas en venta + terrenos industriales disponibles · precio/m² por zona');
+    pIdx+=_idxRow('14','Bodegas en Renta · ZM La Laguna','Inventario de renta · clases disponibles · rangos de precio · análisis de mercado');
+    pIdx+=_idxRow('15','Bodegas en Venta · ZM La Laguna','Inventario en venta · precio/m² · oportunidades de adquisición');
+    pIdx+=_idxRow('16','Análisis de Mercado Industrial','Mercado de la zona analizada · competencia directa · recomendación de clase y precio');
+    pIdx+=_idxRow('17','Terrenos Industriales Disponibles','Oferta de terrenos por zona · precio/m² · superficie · potencial de desarrollo');
+    pIdx+=_idxRow('18','Zonas Industriales ZM','Clasificación y descripción de zonas · ventajas competitivas por corredor');
+    pIdx+=_idxSection('CONCLUSIONES ESTRATÉGICAS','#16a34a');
+    pIdx+=_idxRow('19','Conclusión Industrial','Score de entorno · tipo de nave recomendada · pros y contras · sectores objetivo · especificaciones técnicas');
+    pIdx+=_idxRow('20','Recomendaciones Estratégicas','Recomendaciones accionables · parques industriales clave · cap rate de la zona · infraestructura');
+    pIdx+=_idxRow('21','Soluciones COEZA','Servicios especializados para decisiones de inversión industrial · contacto');
+    pIdx+='<div style="margin-top:3mm;padding:1.5mm 3mm;border-top:2px solid #00e2e0;font-size:6pt;color:#64748b;line-height:1.5">';
     pIdx+='<span style="font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px">Fuentes · </span>';
-    pIdx+='Censo de Población y Vivienda 2020 · INEGI · Clasificación NSE AMAI 2018 · Proyecciones CONAPO · Análisis COEZA Consulting.';
+    pIdx+='Censo Económico INEGI 2023 · Inventario Industrial COEZA 2025 · Censo Población y Vivienda 2020 · NSE AMAI 2018 · Proyecciones CONAPO.';
     pIdx+='</div>';
-    pIdx+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · COEZA Consulting</span><span>Pag. 2 / 20</span><span>'+fecha+'</span></div>';
+    pIdx+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pag. 2 / 21</span><span>'+fecha+'</span></div>';
     pIdx+='</div>';
 
 
@@ -5976,7 +5928,7 @@ function generarReporte(){
     p_ind_concl2+=_rptFooterInd('Concl. 2/2');
     p_ind_concl2+='</div>';
 
-        return p1+pIdx+pExec+p3+p4+p6+p_dem_ind+pMapParques+pMapRenta+pMapVenta+p_nse+p_ind1+p_ind2+p_bod1+p_bod2+p_bod3+p_ter+p_zona_ind+p_ind_concl+p_ind_concl2+p11;
+        return p1+pIdx+pExec+p3+p4+p6+p_dem_ind+p_nse+p_ind1+p_ind2+pMapParques+pMapRenta+pMapVenta+p_bod1+p_bod2+p_bod3+p_ter+p_zona_ind+p_ind_concl+p_ind_concl2+p11;
   }
 
   // Estadísticas del municipio completo para comparativa en heatmaps
