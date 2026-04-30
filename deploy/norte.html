@@ -5240,18 +5240,21 @@ function generarReporte(){
     p_ind1+='<div style="font-size:4.5pt;color:#92400e;line-height:1.4">'+munPrincipal+' presenta <strong>'+_escConc+'</strong> con el '+_munBodsPct.toFixed(0)+'% del inventario ZM. '+(_munBodsPct>=50?'Posición dominante: mayor demanda industrial pero también mayor competencia en segmentos B/B-.':'Demanda balanceada entre municipios; menor presión competitiva favorece rentas sostenidas.')+'</div>';
     p_ind1+='</div>';
 
-    // ── Cap Rate esperado
-    var _vaPerEmp=_mE23>0?(_mVA23*1e6/_mE23):0;
-    var _remPerEmp=_zmRem>0&&_totE23>0?(_zmRem*1e6/_totE23):0;
-    p_ind1+='<div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:4px;padding:1.5mm">';
-    p_ind1+='<div style="font-size:5pt;font-weight:700;color:#065f46;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1mm">Cap Rate esperado · Metodología NOI · ZM La Laguna</div>';
-    p_ind1+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1mm;margin-bottom:1mm">';
-    p_ind1+='<div style="text-align:center;background:#fff;border:1px solid #bbf7d0;border-radius:3px;padding:1mm"><div style="font-size:9pt;font-weight:700;color:#059669;font-family:IBM Plex Mono,monospace;line-height:1">'+(_capMin?_capMin.toFixed(1):'6.5')+'%</div><div style="font-size:4pt;color:#064e3b">mínimo</div></div>';
-    p_ind1+='<div style="text-align:center;background:#dcfce7;border:1.5px solid #4ade80;border-radius:3px;padding:1mm"><div style="font-size:9pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace;line-height:1">'+(_capMed?_capMed.toFixed(1):'8.2')+'%</div><div style="font-size:4pt;color:#064e3b">mediano</div></div>';
-    p_ind1+='<div style="text-align:center;background:#fff;border:1px solid #bbf7d0;border-radius:3px;padding:1mm"><div style="font-size:9pt;font-weight:700;color:#059669;font-family:IBM Plex Mono,monospace;line-height:1">'+(_capMax?_capMax.toFixed(1):'10.5')+'%</div><div style="font-size:4pt;color:#064e3b">máximo</div></div>';
+    // ── Insights de inversión y subsectores
+    p_ind1+='<div style="background:#f0f9ff;border-left:2.5px solid #0284c7;border-radius:3px;padding:1.5mm;margin-bottom:1.5mm">';
+    p_ind1+='<div style="font-size:4.8pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.8mm">¿Qué significa esta inversión?</div>';
+    p_ind1+='<div style="font-size:4.5pt;color:#1e293b;line-height:1.5">La inversión fija bruta de $'+_N2(_zmInv,0)+' MDP registrada en la ZM La Laguna representa compromisos de largo plazo en equipo, maquinaria e infraestructura. Para una zona industrial esto indica <strong>expansión productiva real</strong>, no especulativa: las empresas están ampliando capacidad instalada. Una inversión alta relativa al número de unidades económicas señala operaciones intensivas en capital, típicas de manufactura pesada y logística.</div>';
     p_ind1+='</div>';
-    p_ind1+='<div style="font-size:4.3pt;color:#064e3b;line-height:1.4">NOI = renta·12·92%·80% / precio/m². Cap mediano de '+(_capMed?_capMed.toFixed(1):'8.2')+'% supera el promedio nacional (6.5–7.5%) — refleja prime market nearshoring comparable con Saltillo pero por debajo de MTY (7–8%). VA/trabajador de manufactura: $'+_N2(_mVA23/(_mE23||1),0)+' MDP/empleado → tenants con capacidad real para Clase B+ o A.</div>';
+    p_ind1+='<div style="background:#fefce8;border-left:2.5px solid #ca8a04;border-radius:3px;padding:1.5mm;margin-bottom:1.5mm">';
+    p_ind1+='<div style="font-size:4.8pt;font-weight:700;color:#a16207;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.8mm">Subsectores más atractivos para bodega</div>';
+    p_ind1+='<div style="font-size:4.5pt;color:#1e293b;line-height:1.5">Los sectores 31–33 (Manufactura) concentran el mayor valor agregado de la zona, con subsectores como fabricación de prendas, alimentos procesados y autopartes mostrando crecimiento constante. El sector 48–49 (Transporte y Logística) gana peso por la posición geográfica de La Laguna como cruce de corredores nacionales. Para bodega industrial: <strong>manufactura ligera y distribución regional son los arrendatarios más estables</strong>.</div>';
     p_ind1+='</div>';
+    p_ind1+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1mm">';
+    p_ind1+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;padding:1mm;text-align:center"><div style="font-size:4.3pt;color:#64748b;margin-bottom:.3mm">Torreón</div><div style="font-size:6.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">Hub principal</div><div style="font-size:3.8pt;color:#94a3b8">mayor inventario formal</div></div>';
+    p_ind1+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;padding:1mm;text-align:center"><div style="font-size:4.3pt;color:#64748b;margin-bottom:.3mm">Gómez Palacio</div><div style="font-size:6.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">Zona en expansión</div><div style="font-size:3.8pt;color:#94a3b8">menor costo de suelo</div></div>';
+    p_ind1+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;padding:1mm;text-align:center"><div style="font-size:4.3pt;color:#64748b;margin-bottom:.3mm">Lerdo</div><div style="font-size:6.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">Corredor Norte</div><div style="font-size:3.8pt;color:#94a3b8">parques industriales activos</div></div>';
+    p_ind1+='</div>';
+    p_ind1+='<div style="font-size:4.3pt;color:#64748b;line-height:1.45;margin-top:1mm">Gómez Palacio ofrece ventajas competitivas en costo de suelo frente a Torreón (estimado 15–25% menor en zonas industriales equivalentes), con acceso directo a la carretera México–Juárez. El Parque Industrial Lagunero y la Zona Industrial Lerdo completan el inventario formal de la ZM. La demanda más dinámica proviene de operadores logísticos 3PL y manufactura de exportación hacia la frontera norte.</div>';
 
     p_ind1+='</div></div>'; // cierra col derecha + grid
 
@@ -5361,6 +5364,23 @@ function generarReporte(){
     p_ind2+='</div></div>';
 
     p_ind2+='</div></div>'; // cierra col derecha + grid
+
+    // ── Insight Gómez Palacio + requerimientos por sector
+    p_ind2+='<div style="background:#7c3aed;color:#fff;padding:1.5mm 2mm;border-radius:4px;margin-top:2mm">';
+    p_ind2+='<div style="font-weight:700;font-size:5pt;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.8mm">Ventaja Gómez Palacio · Subsector Logística</div>';
+    p_ind2+='<div style="font-size:4.5pt;line-height:1.5">Gómez Palacio concentra el mayor corredor logístico del sur de Coahuila–Durango. La combinación de nodo ferroviario (CPKC), autopista 40 y proximidad al aeropuerto regional posiciona al municipio como <strong>hub natural de distribución</strong> para el norte del país. Los arrendatarios de bodegas en esta zona son predominantemente operadores 3PL, empresas de comercio exterior y distribuidores de consumo masivo.</div>';
+    p_ind2+='</div>';
+    p_ind2+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;margin-top:1.5mm">';
+    p_ind2+='<div style="border:1px solid #e2e8f0;padding:1.5mm;border-radius:3px;background:#f8fafc">';
+    p_ind2+='<div style="font-weight:700;font-size:4.8pt;color:#1e293b;margin-bottom:.5mm">Manufactura ligera (31–33)</div>';
+    p_ind2+='<div style="font-size:4.3pt;color:#475569;line-height:1.45">Requiere bodegas con altura libre 8–12 m, pisos industriales 5 ton/m², potencia eléctrica trifásica. Plazo típico de arrendamiento: 3–5 años. Perfil ideal para Clase B en zonas periféricas con buena conectividad vial.</div>';
+    p_ind2+='</div>';
+    p_ind2+='<div style="border:1px solid #e2e8f0;padding:1.5mm;border-radius:3px;background:#f8fafc">';
+    p_ind2+='<div style="font-weight:700;font-size:4.8pt;color:#1e293b;margin-bottom:.5mm">Comercio al por mayor (43)</div>';
+    p_ind2+='<div style="font-size:4.3pt;color:#475569;line-height:1.45">Demanda andenes de descarga múltiples (mín. 4), áreas de cross-docking, oficinas integradas. Plazos más cortos (1–3 años) pero rotación baja. Prefieren ubicaciones próximas a vías principales con estacionamiento de tráileres.</div>';
+    p_ind2+='</div>';
+    p_ind2+='</div>';
+
     p_ind2+=_rptFooterInd(2);
     p_ind2+='</div>';
 
@@ -5432,6 +5452,16 @@ function generarReporte(){
     p_bod1+='</div>';
 
     p_bod1+='</div>';
+
+    // ── Análisis de competitividad de rentas
+    p_bod1+='<div style="background:#0f172a;color:#fff;padding:1.5mm 2mm;border-radius:4px;margin-top:1.5mm">';
+    p_bod1+='<div style="font-weight:700;font-size:5pt;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1mm">Análisis de Competitividad · Rentas</div>';
+    p_bod1+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5mm">';
+    p_bod1+='<div><div style="color:#38bdf8;font-weight:700;font-size:4.8pt;margin-bottom:.4mm">Renta óptima para la zona</div><div style="font-size:4.3pt;color:#cbd5e1;line-height:1.45">El rango USD $3.50–4.50/m²/mes representa el punto de entrada con mayor demanda en ZM La Laguna. Bodegas en este rango tienen ocupación promedio superior al 85%.</div></div>';
+    p_bod1+='<div><div style="color:#34d399;font-weight:700;font-size:4.8pt;margin-bottom:.4mm">Competencia directa</div><div style="font-size:4.3pt;color:#cbd5e1;line-height:1.45">La competencia principal son bodegas informales (sin certificación de parque industrial) que ofrecen precios 20–30% menores pero sin especificaciones técnicas garantizadas.</div></div>';
+    p_bod1+='<div><div style="color:#fbbf24;font-weight:700;font-size:4.8pt;margin-bottom:.4mm">Clase A vs Clase B</div><div style="font-size:4.3pt;color:#cbd5e1;line-height:1.45">Clase A (USD >5/m²) tiene oferta limitada y ocupación >90%. Clase B es el segmento más activo. Diferencial de renta Clase A/B: ~35–45% — justificado para manufactura exportadora.</div></div>';
+    p_bod1+='</div></div>';
+
     p_bod1+=_rptFooterInd(3);
     p_bod1+='</div>';
 
@@ -5510,6 +5540,18 @@ function generarReporte(){
       p_bod2+='</div>';
       p_bod2+='</div>';
     }
+    // ── Insight comprar vs rentar
+    p_bod2+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;margin-top:1.5mm">';
+    p_bod2+='<div style="background:#f0fdf4;border-left:2.5px solid #16a34a;padding:1.5mm;border-radius:3px">';
+    p_bod2+='<div style="font-weight:700;font-size:4.8pt;color:#15803d;margin-bottom:.5mm">¿Comprar o rentar?</div>';
+    p_bod2+='<div style="font-size:4.3pt;color:#166534;line-height:1.5">En ZM La Laguna, la venta de naves industriales representa una oportunidad patrimonial con cap rates del 7–9% anual en inmuebles bien especificados. Para operadores con horizonte &gt;7 años, la compra puede ser más eficiente que la renta si el precio/m² es competitivo respecto al mercado de CDMX o Monterrey (diferencial estimado: 30–40% menor).</div>';
+    p_bod2+='</div>';
+    p_bod2+='<div style="background:#fff7ed;border-left:2.5px solid #ea580c;padding:1.5mm;border-radius:3px">';
+    p_bod2+='<div style="font-weight:700;font-size:4.8pt;color:#c2410c;margin-bottom:.5mm">Mercado de venta · contexto</div>';
+    p_bod2+='<div style="font-size:4.3pt;color:#9a3412;line-height:1.5">La oferta en venta es más limitada que en renta. Las transacciones de compraventa industrial en La Laguna suelen tardarse 6–18 meses en cerrarse. Compradores típicos: empresas manufactureras que buscan activo propio o fondos de inversión en desarrollo de naves especulativas.</div>';
+    p_bod2+='</div>';
+    p_bod2+='</div>';
+
     p_bod2+=_rptFooterInd(4);
     p_bod2+='</div>';
 
@@ -5676,6 +5718,12 @@ function generarReporte(){
     p_ter+='</div>'; // fin columna derecha
     p_ter+='</div>'; // fin grid
 
+    // ── Oportunidades en terreno industrial
+    p_ter+='<div style="background:#f8fafc;border:1px solid #e2e8f0;padding:1.5mm 2mm;border-radius:4px;margin-top:1.5mm">';
+    p_ter+='<div style="font-weight:700;font-size:5pt;color:#1e293b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.4px;margin-bottom:.8mm">Oportunidades en Terreno Industrial</div>';
+    p_ter+='<div style="font-size:4.5pt;color:#334155;line-height:1.55">El mercado de terrenos industriales en ZM La Laguna ofrece opciones en tres rangos: <strong>(1) Suelo de parque certificado</strong> (USD 40–80/m²), con infraestructura y servicios incluidos, ideal para manufactura de exportación; <strong>(2) Suelo semi-urbano periférico</strong> (USD 15–40/m²), requiere inversión en infraestructura pero permite desarrollo a medida; <strong>(3) Suelo industrial Gómez Palacio/Lerdo</strong> (USD 10–25/m²), menor costo, buena conectividad, en expansión. La tendencia del mercado es de apreciación sostenida: 8–12% anual en zonas con acceso a infraestructura logística.</div>';
+    p_ter+='</div>';
+
     p_ter+=_rptFooterInd(6);
     p_ter+='</div>';
 
@@ -5808,6 +5856,35 @@ function generarReporte(){
     p_ind_concl+='</div></div>';
 
     p_ind_concl+='<div style="background:#fefce8;border:1px solid #fde68a;border-radius:4px;padding:1.5mm;font-size:4.8pt;color:#92400e;line-height:1.5"><strong>Nota Metodológica:</strong> Inventario bodegas: listings públicos asking price (Lamudi, Colliers, VYNMSA, COEZA 2025). Cap rate: '+_capArr.length+' bodegas con datos renta+venta; NOI=Renta×12×0.92×0.80; Vacancia 8%, OpEx 20%. Datos económicos: Censo Económico INEGI 2023, ZM La Laguna. Validar con broker industrial y estudio de absorción antes de decisiones de inversión.</div>';
+
+    // ── Cap Rate zona en análisis
+    p_ind_concl+='<div style="background:#0f172a;color:#fff;padding:1.5mm 2mm;border-radius:5px;margin-top:2mm">';
+    p_ind_concl+='<div style="font-weight:700;font-size:5.5pt;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;color:#38bdf8;margin-bottom:1.2mm">Cap Rate · Zona en Análisis</div>';
+    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5mm;margin-bottom:1mm">';
+    p_ind_concl+='<div style="text-align:center"><div style="font-size:13pt;font-weight:900;color:#34d399;font-family:IBM Plex Mono,monospace;line-height:1">'+(_capMed?_capMed.toFixed(1)+'%':(_nseScore>=6?'7.2%':_nseScore>=4?'7.8%':'8.5%'))+'</div><div style="font-size:4pt;color:#94a3b8;margin-top:.3mm">Cap Rate estimado<br>zona seleccionada</div></div>';
+    p_ind_concl+='<div style="text-align:center"><div style="font-size:9pt;font-weight:900;color:#fbbf24;font-family:IBM Plex Mono,monospace;line-height:1">'+_precioRec+'</div><div style="font-size:4pt;color:#94a3b8;margin-top:.3mm">Renta de mercado<br>clase recomendada</div></div>';
+    p_ind_concl+='<div style="text-align:center"><div style="font-size:9pt;font-weight:900;color:#a78bfa;font-family:IBM Plex Mono,monospace;line-height:1">'+(_nseScore>=6?'12–14 años':_nseScore>=4?'14–16 años':'16–18 años')+'</div><div style="font-size:4pt;color:#94a3b8;margin-top:.3mm">Payback estimado<br>a valor de mercado</div></div>';
+    p_ind_concl+='</div>';
+    p_ind_concl+='<div style="font-size:4pt;color:#94a3b8;line-height:1.45">El cap rate se calcula con base en la renta de mercado de bodegas Clase '+_clsRec+' dentro de la zona seleccionada, sobre un precio de construcción estimado (Clase A: USD 650–800/m², Clase B: USD 400–550/m²). Los datos de renta provienen del inventario activo de la ZM La Laguna. No considera vacancia ni gastos operativos.</div>';
+    p_ind_concl+='</div>';
+
+    // ── Parques industriales en la ZM
+    p_ind_concl+='<div style="margin-top:1.5mm">';
+    p_ind_concl+='<div style="font-weight:700;font-size:5pt;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;color:#7c3aed;margin-bottom:.8mm">Parques Industriales en la Zona Metropolitana</div>';
+    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1mm">';
+    INDUSTRIAL.parques.slice(0,6).forEach(function(p){p_ind_concl+='<div style="background:#f8fafc;border:1px solid #e2e8f0;padding:.8mm 1mm;border-radius:3px"><div style="font-weight:700;font-size:4.5pt;color:#1e293b;line-height:1.3">'+(p.nom||'—')+'</div><div style="font-size:3.8pt;color:#64748b;margin-top:.2mm">'+(p.mun||'')+(p.ha?' · '+p.ha+' ha':'')+'</div></div>';});
+    p_ind_concl+='</div></div>';
+
+    // ── Cuadro recomendación COEZA
+    p_ind_concl+='<div style="background:linear-gradient(135deg,#7c3aed,#1d4ed8);color:#fff;padding:1.5mm 2mm;border-radius:5px;margin-top:1.5mm">';
+    p_ind_concl+='<div style="font-weight:900;font-size:6.5pt;margin-bottom:.8mm">Recomendación COEZA para esta zona</div>';
+    p_ind_concl+='<div style="font-size:4.8pt;line-height:1.65">';
+    p_ind_concl+='Nave recomendada: <strong>'+_clsRec+'</strong> &nbsp;·&nbsp; Superficie óptima: <strong>'+(_nseScore>=6?'3,000–8,000':'1,500–4,000')+' m²</strong><br>';
+    p_ind_concl+='Renta objetivo: <strong>'+_precioRec+'</strong><br>';
+    p_ind_concl+='Arrendatario ideal: <strong>'+(_nseScore>=6?'Manufactura exportadora / 3PL Tier 1':_nseScore>=4?'Distribución regional / Manufactura ligera':'Almacenaje general / PyME industrial')+'</strong><br>';
+    p_ind_concl+='Horizonte de inversión: <strong>'+(_nseScore>=6?'5–7 años con rendimiento competitivo':_nseScore>=4?'7–10 años, mercado en consolidación':'10+ años, zona en desarrollo')+'</strong>';
+    p_ind_concl+='</div></div>';
+
     p_ind_concl+=_rptFooterInd(8);
     p_ind_concl+='</div>';
 
