@@ -5930,7 +5930,7 @@ function generarReporte(){
     var _specPiso=_nseScore>=6?'8-10 ton/m²':_nseScore>=4?'6-7 ton/m²':'4-5 ton/m²';
     var _specKva=_nseScore>=6?'≥500 kVA':_nseScore>=4?'150-300 kVA':'100-150 kVA';
     var _specOfi=_nseScore>=6?'15-20%':_nseScore>=4?'10-15%':'5-10%';
-    var _specAndenes=_nseScore>=6?'≥4 andenes + patio 40m':'2-3 andenes + patio':'1-2 andenes';
+    var _specAndenes=_nseScore>=6?'≥4 andenes + patio 40m':_nseScore>=4?'2-3 andenes + patio':'1-2 andenes';
     [['Altura libre',_specAltura,'#6d28d9'],['Carga piso',_specPiso,'#2563eb'],['Potencia elec.',_specKva,'#0891b2'],['Área oficinas',_specOfi,'#16a34a'],['Acceso camiones',_specAndenes,'#d97706']].forEach(function(sp){
       p_ind_concl2+='<div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #f1f5f9;padding:1mm 0;font-size:5.5pt"><span style="color:#64748b">'+sp[0]+'</span><span style="font-weight:700;color:'+sp[2]+';font-family:IBM Plex Mono,monospace">'+sp[1]+'</span></div>';
     });
