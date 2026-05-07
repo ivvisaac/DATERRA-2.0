@@ -4248,18 +4248,19 @@ function generarReporte(){
     pExec+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Por qué lo decimos</div>';
     pExec+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2mm;margin-bottom:3mm">';
     var _kpiH=[
-      [N(_pxTotE23),'empleos registrados','Demanda laboral activa','#0f172a'],
-      [(_pxEmpCrecPct>=0?'+':'')+_pxEmpCrecPct.toFixed(1)+'%','crecimiento 2018-23','Economía en expansión','#0f172a'],
-      [_pxBodCount,'en inventario ZM','Mercado activo','#0f172a'],
-      [_pxMedRenta?'$'+_pxMedRenta.toFixed(0):'S/D','MXN/m²/mes','Punto de entrada accesible','#0f172a'],
-      [P1(pctPea),'PEA activa zona','Pool laboral disponible','#0f172a'],
-      [nsePredZona,'NSE zona',(_pxNseScore>=6?'Tenants alta solvencia':_pxNseScore>=4?'Tenants medianos solventes':'PyMEs locales'),'#0f172a']
+      [N(_pxTotE23),'empleos registrados','Demanda laboral activa','#0f172a','#fff'],
+      [(_pxEmpCrecPct>=0?'+':'')+_pxEmpCrecPct.toFixed(1)+'%','crecimiento 2018-23','Economía en expansión','#0f172a','#f8fafc'],
+      ['6.2%','Disponibilidad ZM','Equilibrio de mercado','#d97706','#fff7ed'],
+      [_pxMedRenta?'$'+_pxMedRenta.toFixed(0):'S/D','MXN/m²/mes · Zona','Punto de entrada accesible','#0f172a','#f8fafc'],
+      [P1(pctPea),'PEA activa zona','Pool laboral disponible','#0f172a','#fff'],
+      [nsePredZona,'NSE zona',(_pxNseScore>=6?'Tenants alta solvencia':_pxNseScore>=4?'Tenants medianos solventes':'PyMEs locales'),'#0f172a','#f8fafc']
     ];
     _kpiH.forEach(function(c,i){
-      pExec+='<div style="background:'+(i%2===0?'#fff':'#f8fafc')+';border:1px solid #e2e8f0;border-radius:4px;padding:2.5mm 3mm">';
+      pExec+='<div style="background:'+c[4]+';border:1px solid #e2e8f0;border-radius:4px;padding:2.5mm 3mm">';
       pExec+='<div style="font-size:18px;font-weight:700;color:'+c[3]+';font-family:IBM Plex Mono,monospace;line-height:1.1">'+c[0]+'</div>';
       pExec+='<div style="font-size:6pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.6mm">'+c[1]+'</div>';
       pExec+='<div style="font-size:6pt;color:#475569;margin-top:.4mm;font-style:italic">'+c[2]+'</div>';
+      if(i===3&&_pxMedRenta){pExec+='<div style="font-size:5.5pt;color:#94a3b8;margin-top:.3mm;font-family:IBM Plex Mono,monospace">Ref ZM: USD $6.71/m²/mes</div>';}
       pExec+='</div>';
     });
     pExec+='</div>';
@@ -4269,7 +4270,7 @@ function generarReporte(){
     pExec+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2mm;margin-bottom:3mm">';
     var _pxRiesgosDef=[
       ['Aranceles y T-MEC','Revisión T-MEC 2026 puede afectar decisiones de nearshoring','MEDIO','#d97706'],
-      ['Sobreoferta Clase A','Entrega simultánea de proyectos spec puede presionar vacancia','MEDIO','#d97706'],
+      ['Sobreoferta especulativa','58,100 m² en construcción + tasa disponibilidad 6.2% — mercado en absorción activa','MEDIO','#d97706'],
       ['Mercado secundario','La Laguna compite con Saltillo y Mty por tenants Tier 1','BAJO','#16a34a']
     ];
     _pxRiesgosDef.forEach(function(r){
@@ -4286,7 +4287,7 @@ function generarReporte(){
     pExec+='<div style="font-size:6pt;color:#94a3b8;text-align:center;line-height:1.5">Este análisis se basa en datos INEGI Censo 2020 · INEGI Económico 2023 · Inventario COEZA 2025</div>';
     pExec+='</div>';
 
-    pExec+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pag. 2 / 21</span><span>'+fecha+'</span></div>';
+    pExec+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pag. 2 / 22</span><span>'+fecha+'</span></div>';
     pExec+='</div>';
 
     // ────────── PÁGINA 2 (ahora 3): Análisis Dinámica Territorial ──────────
@@ -5058,23 +5059,24 @@ function generarReporte(){
     pIdx+=_idxSection('PANORAMA ECONÓMICO INDUSTRIAL','#ea580c');
     pIdx+=_idxRow('9','Panorama Económico 2018→2023','Manufactura · Comercio · Logística — empleos, valor agregado, inversión, remuneraciones ZM');
     pIdx+=_idxRow('10','Top Industrias ZM La Laguna','Ranking sectorial por empleo y VA · crecimiento intercensal · qué pide cada sector');
-    pIdx+=_idxRow('11','Análisis Zona Industrial','Mercado de la zona analizada · competencia directa · recomendación de clase y precio');
+    pIdx+=_idxRow('11','Demanda Actual del Mercado','Inventario ZM · absorción bruta 2025 · disponibilidad 6.2% · proyección 2026 · Fuente: Newmark 2S25');
+    pIdx+=_idxRow('12','Análisis Zona Industrial','Mercado de la zona analizada · competencia directa · recomendación de clase y precio');
     pIdx+=_idxSection('MAPAS E INVENTARIO INDUSTRIAL','#7c3aed');
-    pIdx+=_idxRow('12','Mapa Parques Industriales','Ubicación de parques industriales en ZM · distancia al terreno analizado · infraestructura');
-    pIdx+=_idxRow('13','Mapa Inventario en Renta','Distribución geográfica de bodegas en renta · concentración por zona · precios asking');
-    pIdx+=_idxRow('14','Mapa Inventario en Venta y Terrenos','Bodegas en venta + terrenos industriales disponibles · precio/m² por zona');
-    pIdx+=_idxRow('15','Bodegas en Renta · ZM La Laguna','Inventario de renta · clases disponibles · rangos de precio · análisis de mercado');
-    pIdx+=_idxRow('16','Bodegas en Venta · ZM La Laguna','Inventario en venta · precio/m² · oportunidades de adquisición');
-    pIdx+=_idxRow('17','Terrenos Industriales Disponibles','Oferta de terrenos por zona · precio/m² · superficie · potencial de desarrollo');
+    pIdx+=_idxRow('13','Mapa Parques Industriales','Ubicación de parques industriales en ZM · distancia al terreno analizado · infraestructura');
+    pIdx+=_idxRow('14','Mapa Inventario en Renta','Distribución geográfica de bodegas en renta · concentración por zona · precios asking');
+    pIdx+=_idxRow('15','Mapa Inventario en Venta y Terrenos','Bodegas en venta + terrenos industriales disponibles · precio/m² por zona');
+    pIdx+=_idxRow('16','Bodegas en Renta · ZM La Laguna','Inventario de renta · clases disponibles · rangos de precio · análisis de mercado');
+    pIdx+=_idxRow('17','Bodegas en Venta · ZM La Laguna','Inventario en venta · precio/m² · oportunidades de adquisición');
+    pIdx+=_idxRow('18','Terrenos Industriales Disponibles','Oferta de terrenos por zona · precio/m² · superficie · potencial de desarrollo');
     pIdx+=_idxSection('CONCLUSIONES ESTRATÉGICAS','#16a34a');
-    pIdx+=_idxRow('18','Conclusiones y Recomendación','Score de entorno · tipo de nave · pros y contras · cap rate · sectores objetivo');
-    pIdx+=_idxRow('19','Especificaciones Estratégicas','Especificaciones técnicas óptimas · recomendaciones accionables · scoring detallado');
-    pIdx+=_idxRow('20','Soluciones COEZA','Servicios especializados para decisiones de inversión industrial · contacto');
+    pIdx+=_idxRow('19','Conclusiones y Recomendación','Score de entorno · tipo de nave · pros y contras · cap rate · sectores objetivo');
+    pIdx+=_idxRow('20','Especificaciones Estratégicas','Especificaciones técnicas óptimas · recomendaciones accionables · scoring detallado');
+    pIdx+=_idxRow('21','Soluciones COEZA','Servicios especializados para decisiones de inversión industrial · contacto');
     pIdx+='<div style="margin-top:3mm;padding:1.5mm 3mm;border-top:2px solid #00e2e0;font-size:6pt;color:#64748b;line-height:1.5">';
     pIdx+='<span style="font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px">Fuentes · </span>';
     pIdx+='Censo Económico INEGI 2023 · Inventario Industrial COEZA 2025 · Censo Población y Vivienda 2020 · NSE AMAI 2018 · Proyecciones CONAPO.';
     pIdx+='</div>';
-    pIdx+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pag. 4 / 21</span><span>'+fecha+'</span></div>';
+    pIdx+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pag. 4 / 22</span><span>'+fecha+'</span></div>';
     pIdx+='</div>';
 
 
@@ -5397,6 +5399,90 @@ function generarReporte(){
 
     p_ind2+=_rptFooterInd(2);
     p_ind2+='</div>';
+
+    // ══════════════════════════════════════════════════════════════
+    // PAG DEMANDA · Demanda Actual del Mercado — Newmark 2S25
+    // ══════════════════════════════════════════════════════════════
+    var p_demanda='<div class="report-page">';
+    p_demanda+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+
+    // Header
+    p_demanda+='<div style="background:#0f172a;padding:3mm 4mm 2.5mm;margin:-1mm -1mm 3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_demanda+='<div style="font-size:11px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1mm">Demanda actual del mercado</div>';
+    p_demanda+='<div style="font-size:8px;color:#94a3b8">ZM La Laguna · Fuente: Newmark México 2S 2025</div>';
+    p_demanda+='</div>';
+
+    // KPI Row — 4 KPIs
+    p_demanda+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:3mm">';
+    p_demanda+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:2.5mm 3mm">';
+    p_demanda+='<div style="font-size:16px;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1">1.68M m²</div>';
+    p_demanda+='<div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.6mm">Inventario total ZM</div>';
+    p_demanda+='</div>';
+    p_demanda+='<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:4px;padding:2.5mm 3mm">';
+    p_demanda+='<div style="font-size:16px;font-weight:700;color:#d97706;font-family:IBM Plex Mono,monospace;line-height:1.1">6.2%</div>';
+    p_demanda+='<div style="font-size:5.5pt;color:#92400e;text-transform:uppercase;letter-spacing:.4px;margin-top:.6mm">Tasa de disponibilidad</div>';
+    p_demanda+='</div>';
+    p_demanda+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:2.5mm 3mm">';
+    p_demanda+='<div style="font-size:16px;font-weight:700;color:#15803d;font-family:IBM Plex Mono,monospace;line-height:1.1">USD $6.71</div>';
+    p_demanda+='<div style="font-size:5.5pt;color:#166534;text-transform:uppercase;letter-spacing:.4px;margin-top:.6mm">Precio de salida 2S25 /m²/mes</div>';
+    p_demanda+='</div>';
+    p_demanda+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:2.5mm 3mm">';
+    p_demanda+='<div style="font-size:16px;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1">73,200 m²</div>';
+    p_demanda+='<div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.6mm">Absorción bruta 2025</div>';
+    p_demanda+='</div>';
+    p_demanda+='</div>';
+
+    // Two columns
+    p_demanda+='<div style="display:grid;grid-template-columns:60% 40%;gap:3.5mm">';
+
+    // Left column
+    p_demanda+='<div>';
+    p_demanda+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #f97316;padding-bottom:1mm;margin-bottom:2mm">Dinámica de absorción</div>';
+    p_demanda+='<div style="font-size:6pt;color:#334155;line-height:1.6;margin-bottom:1.5mm">La absorción bruta acumulada 2025 fue de <strong>73,200 m²</strong>, superando los 54,400 m² del año anterior (<strong>+34.6%</strong>). El mercado mostró mayor dinamismo en 2S25 con 43,300 m² absorbidos.</div>';
+    p_demanda+='<div style="font-size:6pt;color:#334155;line-height:1.6;margin-bottom:2.5mm">La absorción neta acumulada fue de <strong>−12,300 m²</strong>, producto de la finalización de proyectos especulativos. Esta cifra no indica retiro de demanda — refleja entrega de inventario nuevo en proceso de colocación.</div>';
+
+    p_demanda+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #f97316;padding-bottom:1mm;margin-bottom:2mm">Espacio en desarrollo</div>';
+
+    // Barra spec vs BTS
+    p_demanda+='<div style="margin-bottom:1.5mm">';
+    p_demanda+='<div style="display:flex;justify-content:space-between;font-size:5.5pt;color:#475569;margin-bottom:1mm"><span>En construcción: <strong>58,100 m²</strong></span><span style="font-family:IBM Plex Mono,monospace;color:#0f172a;font-weight:700">76.6% Spec · 23.4% BTS</span></div>';
+    p_demanda+='<div style="background:#e2e8f0;border-radius:3px;height:9px;overflow:hidden">';
+    p_demanda+='<div style="display:flex;height:100%">';
+    p_demanda+='<div style="width:76.6%;background:#f97316;height:100%"></div>';
+    p_demanda+='<div style="width:23.4%;background:#fde68a;height:100%;background:repeating-linear-gradient(45deg,#fde68a,#fde68a 2px,#fef9c3 2px,#fef9c3 5px)"></div>';
+    p_demanda+='</div></div>';
+    p_demanda+='<div style="display:flex;justify-content:space-between;font-size:5pt;color:#64748b;margin-top:.8mm">';
+    p_demanda+='<span style="color:#ea580c;font-weight:600">44,500 m² Especulativos</span>';
+    p_demanda+='<span style="color:#d97706;font-weight:600">13,600 m² Build-to-Suit</span>';
+    p_demanda+='</div></div>';
+
+    p_demanda+='<div style="font-size:6pt;color:#334155;line-height:1.5;background:#fff7ed;border:1px solid #fed7aa;border-radius:3px;padding:1.5mm 2mm">Nueva oferta entregada 2025: <strong>75,800 m²</strong> — equivalente al 4.5% del inventario total.</div>';
+    p_demanda+='</div>';
+
+    // Right column
+    p_demanda+='<div>';
+    // Proyección 2026
+    p_demanda+='<div style="background:#0f172a;border-radius:5px;padding:2.5mm 3mm;margin-bottom:2.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_demanda+='<div style="font-size:7pt;font-weight:700;color:#00e2e0;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Proyección 2026</div>';
+    p_demanda+='<div style="font-size:5.5pt;color:#e2e8f0;line-height:1.6;margin-bottom:.8mm">▸ Demanda similar a 2025 impulsada por naves especulativas</div>';
+    p_demanda+='<div style="font-size:5.5pt;color:#e2e8f0;line-height:1.6;margin-bottom:.8mm">▸ Precio de salida estable ~USD $6.50/m²/mes</div>';
+    p_demanda+='<div style="font-size:5.5pt;color:#e2e8f0;line-height:1.6;margin-bottom:.8mm">▸ Proyectos spec en construcción terminando 1S26</div>';
+    p_demanda+='<div style="font-size:5.5pt;color:#29ebb9;line-height:1.6;font-weight:600;margin-top:1mm">▸ Oportunidad: mercado preparado para atender demanda en consolidación</div>';
+    p_demanda+='</div>';
+    // Implicación para la zona
+    p_demanda+='<div style="border:1.5px solid #16a34a;border-radius:5px;padding:2.5mm 3mm;background:#f0fdf4">';
+    p_demanda+='<div style="font-size:7pt;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Implicación para la zona</div>';
+    p_demanda+='<div style="font-size:5.5pt;color:#14532d;line-height:1.65">Con 6.2% de disponibilidad y absorción creciente, ZM La Laguna opera en zona de equilibrio. El mercado no está saturado — las 103,900 m² disponibles incluyen inventario nuevo aún en colocación. Para producto bien especificado en ubicación con acceso vial, el tiempo estimado de arrendamiento es inferior a 12 meses.</div>';
+    p_demanda+='</div>';
+    p_demanda+='</div>';
+
+    p_demanda+='</div>'; // fin grid
+
+    // Footer Newmark
+    p_demanda+='<div style="margin-top:3mm;text-align:right;font-size:5pt;color:#94a3b8;font-style:italic">Fuente: Newmark México — Mercado Industrial La Laguna, Segundo Semestre 2025. nmrk.lat/reportes-de-mercado</div>';
+
+    p_demanda+=_rptFooterInd('3a');
+    p_demanda+='</div>';
 
     // ══════════════════════════════════════════════════════════════
     // PAG BOD-1 · Inventario Bodegas ZM La Laguna
@@ -6025,7 +6111,7 @@ function generarReporte(){
     p_ind_concl2+='</div>';
 
         // Orden narrativa comercial: conclusión primero, evidencia después
-        return p1+pExec+p3+pIdx+p4+p_dem_ind+p_nse+p_ind1+p_ind2+p_zona_ind+pMapParques+pMapRenta+pMapVenta+p_bod1+p_bod2+p_bod3+p_ter+p_ind_concl+p_ind_concl2+p11;
+        return p1+pExec+p3+pIdx+p4+p_dem_ind+p_nse+p_ind1+p_ind2+p_demanda+p_zona_ind+pMapParques+pMapRenta+pMapVenta+p_bod1+p_bod2+p_bod3+p_ter+p_ind_concl+p_ind_concl2+p11;
   }
 
   // Estadísticas del municipio completo para comparativa en heatmaps
