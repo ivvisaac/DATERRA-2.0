@@ -4345,69 +4345,105 @@ function generarReporte(){
     p3+='</div>';
 
     // ────────── PÁGINA 4: Estructura de Edad ──────────
-    var p4='<div class="report-page">';
-    p4+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p4+='<div class="rpt-meta">'+munPrincipal+' · Perfil por Edad · '+fecha+'</div>';
-    p4+='<div class="rpt-section">Estructura de Edad y Perfil Laboral · Zona vs '+munPrincipal+' vs '+(GEO&&GEO.estado||'Estado')+'*</div>';
-    p4+='<div class="rpt-chart-full"><div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm">';
-    var eGrupos=[
-      ['0-14 años',pct014,munPct014,estPct014,'#3eb8f0',true,'Indica renovación generacional · menor % = zona consolidada, fuerza laboral más madura'],
-      ['15-24 años',pct1524,munPct1524,est.pct_15_24||0,'#5ddba8',true,'Trabajadores entrantes — operativos y técnicos en formación · alto = bono joven disponible'],
-      ['25-59 años',pct2559,munPct2559,est.pct_25_59||0,'#a78bfa',true,'Franja laboral productiva clave — operadores, técnicos y mandos medios · mayor % = mayor pool laboral'],
-      ['60+ años',pct60,munPct60,estPct60,'#f0b840',false,'Menor disponibilidad laboral activa · alto % indica plaza con menor renovación de fuerza de trabajo']
-    ];
-    eGrupos.forEach(function(eg){
-      var s2=sem(eg[1],eg[2],eg[5],true);
-      p4+='<div>';
-      p4+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5mm">';
-      p4+='<span style="font-size:8pt;color:#334155;font-weight:600">'+eg[0]+'</span>';
-      p4+='<span style="font-size:7pt;color:'+s2.color+';font-family:IBM Plex Mono,monospace">'+s2.icon+' '+s2.label+'</span>';
-      p4+='</div>';
-      ['Zona','Mun.',(GEO&&GEO.estado||'Est.').substring(0,5)+'.'].forEach(function(lbl,li){
-        var v=[eg[1],eg[2],eg[3]][li];
-        var col=[eg[4],'#94a3b8','#cbd5e1'][li];
-        var maxE=Math.max(eg[1],eg[2],eg[3],0.1);
-        p4+='<div style="display:flex;align-items:center;gap:2mm;margin-bottom:0.8mm">';
-        p4+='<span style="width:30px;font-size:7pt;color:#94a3b8;font-family:IBM Plex Mono,monospace;text-align:right;flex-shrink:0">'+lbl+'</span>';
-        p4+='<div style="flex:1;height:'+(li===0?10:li===1?7:5)+'px;background:#f1f5f9;border-radius:2px;overflow:hidden"><div style="width:'+Math.min(95,v/maxE*92)+'%;height:100%;background:'+col+'"></div></div>';
-        p4+='<span style="width:30px;font-size:7pt;font-family:IBM Plex Mono,monospace;font-weight:'+(li===0?'700':'400')+';color:'+(li===0?'#0a0c12':'#94a3b8')+'">'+v.toFixed(1)+'%</span>';
-        p4+='</div>';
-      });
-      p4+='<div style="font-size:6.5pt;color:#94a3b8;margin-top:1mm;font-style:italic">'+eg[6]+'</div>';
-      p4+='</div>';
-    });
-    p4+='</div></div>';
-    // Pirámide de edades — distribución estimada M/F
-    var _pyMax4=Math.max(pct014,pct1524,pct2559,pct60,0.1);
-    var _pyMasF=totPob>0?totMas/totPob:0.49, _pyFemF=totPob>0?totFem/totPob:0.51;
-    p4+='<div style="margin-top:3mm;padding:2.5mm 4mm;background:#f8fafc;border-radius:5px;border:1px solid #e2e8f0">';
-    p4+='<div style="font-size:6.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1.5mm;text-align:center">Pirámide de Edad · Zona analizada</div>';
-    p4+='<div style="display:grid;grid-template-columns:1fr 36px 1fr;margin-bottom:1mm">';
-    p4+='<div style="text-align:right;font-size:5.5pt;color:#94a3b8;font-family:IBM Plex Mono,monospace">Masculino (est. '+P1(_pyMasF*100)+')</div>';
-    p4+='<div></div>';
-    p4+='<div style="font-size:5.5pt;color:#94a3b8;font-family:IBM Plex Mono,monospace">Femenino (est. '+P1(_pyFemF*100)+')</div>';
-    p4+='</div>';
-    [['60+','#f0b840',pct60],['25–59','#a78bfa',pct2559],['15–24','#5ddba8',pct1524],['0–14','#3eb8f0',pct014]].forEach(function(g){
-      var masV=Math.min(46,g[2]*_pyMasF/_pyMax4*46);
-      var femV=Math.min(46,g[2]*_pyFemF/_pyMax4*46);
-      p4+='<div style="display:grid;grid-template-columns:1fr 36px 1fr;align-items:center;gap:0;margin-bottom:1.5mm">';
-      p4+='<div style="display:flex;justify-content:flex-end"><div style="height:9px;width:'+masV+'%;background:'+g[1]+';opacity:.8;border-radius:2px 0 0 2px"></div></div>';
-      p4+='<div style="text-align:center;font-size:5.5pt;color:#334155;font-family:IBM Plex Mono,monospace;line-height:1">'+g[0]+'</div>';
-      p4+='<div><div style="height:9px;width:'+femV+'%;background:'+g[1]+';opacity:.95;border-radius:0 2px 2px 0"></div></div>';
-      p4+='</div>';
-    });
-    p4+='<div style="font-size:5pt;color:#94a3b8;text-align:center;margin-top:1mm;font-style:italic">Distribución M/F estimada en base a proporción total de la zona · INEGI Censo 2020</div>';
-    p4+='</div>';
-    var _p4wf='';
+    // ────────── PÁGINA 5: Pool Laboral Disponible (fusión p4 + p_dem_ind) ──────────
+    var _zmPctPea=47; // referencia ZM La Laguna aprox (Censo 2020)
+    var _zmAvgEsc=10.2;
+    var _zmPct2559=45;
+    var _zmPctAlto=28; // % AB+C+ ZM
+    function _kpiBench(v,lbl,ref,refLbl,col){
+      var vn=parseFloat(v),rn=parseFloat(ref),delta=isNaN(vn)||isNaN(rn)?null:vn-rn;
+      var dCol=delta===null?'#64748b':delta>0?'#059669':'#dc2626',dStr=delta===null?'':''+(delta>0?'+':'')+delta.toFixed(1);
+      return '<div style="background:#f8fafc;border:1px solid '+col+'44;border-radius:5px;padding:2.5mm 3mm;border-top:3px solid '+col+'">'
+        +'<div style="font-size:13pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">'+v+'</div>'
+        +'<div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">'+lbl+'</div>'
+        +'<div style="font-size:6pt;color:#94a3b8;margin-top:.5mm">Ref ZM: '+ref+' '+refLbl+'</div>'
+        +(delta!==null?'<div style="font-size:6.5pt;color:'+dCol+';font-weight:700">'+dStr+' pts vs ZM</div>':'')+'</div>';
+    }
+    function _benchRow(lbl,zona,mun2,zm,unit,higher_is_better){
+      var zn=parseFloat(zona),zmn=parseFloat(zm);
+      var zCol=isNaN(zn)||isNaN(zmn)?'#64748b':higher_is_better?(zn>=zmn?'#059669':'#dc2626'):(zn<=zmn?'#059669':'#dc2626');
+      return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:1mm;padding:1.5mm 0;border-bottom:1px solid #f1f5f9;font-size:6pt">'
+        +'<div style="color:#374151;font-weight:500">'+lbl+'</div>'
+        +'<div style="text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:'+zCol+'">'+zona+unit+'</div>'
+        +'<div style="text-align:right;font-family:IBM Plex Mono,monospace;color:#475569">'+mun2+unit+'</div>'
+        +'<div style="text-align:right;font-family:IBM Plex Mono,monospace;color:#94a3b8">~'+zm+unit+'</div></div>';
+    }
+    function _barEd3(lbl,pct,color,bold){return '<div style="display:flex;align-items:center;gap:1mm;margin-bottom:.5mm"><div style="font-size:5.5pt;color:'+(bold?'#0369a1':'#64748b')+';font-weight:'+(bold?'700':'400')+';width:16mm;flex-shrink:0">'+lbl+'</div><div style="flex:1;height:4px;background:#e2e8f0;border-radius:2px;overflow:hidden"><div style="height:100%;width:'+Math.min(pct*2.2,100)+'%;background:'+color+'"></div></div><div style="font-size:5.5pt;font-family:IBM Plex Mono,monospace;color:'+(bold?'#0369a1':'#374151')+';font-weight:'+(bold?'700':'400')+';width:8mm;text-align:right">'+P1(pct)+'</div></div>';}
     var _workerPct=pct1524+pct2559;
     var _munWorkerPct=(munPct1524||0)+(munPct2559||0);
-    if(_workerPct>60){_p4wf=insight('La zona concentra <strong>'+P1(_workerPct)+'</strong> de su población en edad económicamente activa (15-59 años), superando al municipio ('+P1(_munWorkerPct)+'). <strong>Pool laboral abundante</strong> — atractivo para industria manufacturera y logística que requiere captación masiva de operativos.','pos');}
-    else if(_workerPct>50){_p4wf=insight('El <strong>'+P1(_workerPct)+'</strong> de la población está en franja laboral (15-59 años) — comparable al municipio ('+P1(_munWorkerPct)+'). Disponibilidad de mano de obra estable para operaciones industriales estándar.','neutral');}
-    else{_p4wf=insight('La franja laboral (15-59 años) representa <strong>'+P1(_workerPct)+'</strong> de la población — por debajo del municipio ('+P1(_munWorkerPct)+'). Zona con mayor proporción de personas fuera de edad productiva; evaluar transporte de personal desde zonas aledañas.','warn');}
-    if(pct1524>(munPct1524||0)+3){_p4wf+=insight('Alta presencia de jóvenes 15-24 años (<strong>'+P1(pct1524)+'</strong> vs mun. '+P1(munPct1524||0)+'). Ideal para operaciones de manufactura ligera, ensamble y centros de distribución que requieren operativos en formación con alta capacidad de aprendizaje.','pos');}
-    p4+=_p4wf;
+    var _munNseAltoB=(_munNseTotExec>0?((_munNseAbExec+_munNseCmasExec)/_munNseTotExec*100):0);
+    var _munNseAltoBDisp=(_munNseAltoB===0||isNaN(_munNseAltoB))?'n/d':P1(_munNseAltoB);
+    var _munDesocPct=(mun.desocupados||0)/(mun.pea||1)*100;
+    var _munDesocDisp=(_munDesocPct===0||isNaN(_munDesocPct))?'n/d':P1(_munDesocPct);
+    var p4='<div class="report-page">';
+    p4+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    p4+='<div style="border-bottom:3px solid #0369a1;padding-bottom:2mm;margin-bottom:2.5mm">';
+    p4+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Pool Laboral Disponible</div>';
+    p4+='<div style="font-size:7pt;color:#0369a1;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Demografía para análisis industrial · Zona vs ZM La Laguna</div>';
+    p4+='</div>';
+    // KPIs top row — 3 indicadores clave
+    p4+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2mm;margin-bottom:3mm">';
+    p4+=_kpiBench(P1(pctPea),'% PEA activa',_zmPctPea+'%','ref.',pctPea>_zmPctPea?'#059669':'#64748b');
+    p4+=_kpiBench(N(avgEsc,1)+' años','años escolaridad promedio',_zmAvgEsc+' años','ref.',avgEsc>_zmAvgEsc?'#059669':'#64748b');
+    var _nseKpiCol={'A/B':'#6d28d9','C+':'#1d4ed8','C':'#0891b2','C-':'#16a34a','D+':'#ca8a04','D':'#ea580c','E':'#dc2626'}[nsePredZona]||'#64748b';
+    p4+='<div style="background:#f8fafc;border:1px solid '+_nseKpiCol+'44;border-radius:5px;padding:2.5mm 3mm;border-top:3px solid '+_nseKpiCol+'">'
+      +'<div style="font-size:13pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">'+nsePredZona+'</div>'
+      +'<div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">NSE predominante zona</div>'
+      +'<div style="font-size:6pt;color:#94a3b8;margin-top:.5mm">'+(NSE_LABELS[nsePredZona]||nsePredZona)+'</div>'
+      +'</div>';
+    p4+='</div>';
+    // Tabla comparativa + columna derecha (implicación)
+    p4+='<div style="display:grid;grid-template-columns:55% 43%;gap:3mm">';
+    // --- columna izquierda: tabla benchmarks ---
+    p4+='<div>';
+    p4+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:2mm">Benchmarks · Zona vs Municipio vs ZM La Laguna</div>';
+    p4+='<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:1mm;padding:.5mm 0;font-size:5pt;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px"><div>Indicador</div><div style="text-align:right">Zona</div><div style="text-align:right">'+munPrincipal.slice(0,8)+'</div><div style="text-align:right">ZM Lag.</div></div>';
+    p4+=_benchRow('Población total',N(totPob),N(mun.pob_total||0),'>400k','',true);
+    p4+=_benchRow('% edad 15-59 (productiva)',P1(_workerPct),P1(_munWorkerPct),_zmPct2559+5+'','%',true);
+    p4+=_benchRow('% PEA activa',P1(pctPea),P1(munPctPea||0),_zmPctPea+'','%',true);
+    p4+=_benchRow('Escolaridad prom.',N(avgEsc,1),N(munAvgEsc||0,1),_zmAvgEsc,'a',true);
+    p4+=_benchRow('% NSE AB+C+ (alta capac.)',P1(pNseAlto),_munNseAltoBDisp,_zmPctAlto+'','%',true);
+    p4+=_benchRow('% desocupados/PEA',(_pctDes>0?P1(_pctDes):'n/d'),_munDesocDisp,'4.2','%',false);
+    p4+='</div>';
+    // --- columna derecha: estructura de edad + implicación industrial ---
+    p4+='<div>';
+    // Sub-bloque: estructura de edades simplificada
+    p4+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:2mm;margin-bottom:2mm">';
+    p4+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:1.5mm">Estructura de edades · Pool productivo</div>';
+    // 3 celdas: 0-14 | 15-59 productivo | 60+
+    p4+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1mm;margin-bottom:1.5mm">';
+    p4+='<div style="text-align:center;background:#f1f5f9;border-radius:3px;padding:1.5mm"><div style="font-size:8pt;font-weight:700;color:#94a3b8;font-family:IBM Plex Mono,monospace">'+P1(pct014)+'</div><div style="font-size:4.5pt;color:#94a3b8;text-transform:uppercase;margin-top:.3mm">0-14 años</div></div>';
+    p4+='<div style="text-align:center;background:#dcfce7;border:1px solid #86efac;border-radius:3px;padding:1.5mm"><div style="font-size:8pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace">'+P1(_workerPct)+'</div><div style="font-size:4.5pt;color:#16a34a;text-transform:uppercase;margin-top:.3mm;font-weight:700">15-59 productivo</div></div>';
+    p4+='<div style="text-align:center;background:#f1f5f9;border-radius:3px;padding:1.5mm"><div style="font-size:8pt;font-weight:700;color:#94a3b8;font-family:IBM Plex Mono,monospace">'+P1(pct60)+'</div><div style="font-size:4.5pt;color:#94a3b8;text-transform:uppercase;margin-top:.3mm">60+ años</div></div>';
+    p4+='</div>';
+    p4+=_barEd3('0-14 años',pct014,'#93c5fd',false);
+    p4+=_barEd3('15-24 años',pct1524,'#6ee7b7',false);
+    p4+=_barEd3('25-59 años',pct2559,'#818cf8',true);
+    p4+=_barEd3('60+ años',pct60,'#fbbf24',false);
+    // Frase de insight
+    var _poolTipo=_workerPct>60?'abundante':_workerPct>50?'moderado':'limitado';
+    var _mfgTipo=avgEsc>=11?'manufactura avanzada y logística':avgEsc>=9?'manufactura estándar y logística':'manufactura básica e intensiva';
+    p4+='<div style="font-size:5.5pt;color:#374151;line-height:1.5;margin-top:1mm;font-style:italic">El <strong>'+P1(_workerPct)+'</strong> de la población está en edad productiva, con <strong>'+N(avgEsc,1)+' años</strong> de escolaridad — perfil adecuado para '+_mfgTipo+'.</div>';
+    p4+='</div>';
+    // Sub-bloque: implicación industrial
+    var _peaIns2=pctPea>52?'<strong>PEA alta ('+P1(pctPea)+')</strong>: Disponibilidad de mano de obra activa.':pctPea>44?'<strong>PEA media ('+P1(pctPea)+')</strong>: Suficiente para operaciones estándar.':'<strong>PEA baja ('+P1(pctPea)+')</strong>: Considerar captación desde zonas aledañas.';
+    var _escIns2=avgEsc>11?'Escolaridad <strong>'+N(avgEsc,1)+' años</strong> — perfil técnico-universitario (manufactura de precisión, automotriz, electrónica).':avgEsc>9?'Escolaridad <strong>'+N(avgEsc,1)+' años</strong> — adecuado para manufactura estándar y logística.':'Escolaridad <strong>'+N(avgEsc,1)+' años</strong> — operaciones básicas; considerar plan de capacitación interna.';
+    var _nseIns2=pNseAlto>35?'NSE <strong>'+nsePredZona+'</strong> — apto para parques corporativos y tenants internacionales.':pNseAlto>20?'NSE <strong>'+nsePredZona+'</strong> — mezcla técnico-operativa. Flexible para distintos tipos industriales.':'NSE <strong>'+nsePredZona+'</strong> — costos laborales competitivos; ideal para manufactura y distribución.';
+    p4+='<div style="border:1px solid #bae6fd;background:#f0f9ff;border-radius:4px;padding:2mm">';
+    p4+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #7c3aed;padding-bottom:1mm;margin-bottom:1.5mm">Implicación industrial</div>';
+    [
+      'Pool laboral <strong>'+_poolTipo+'</strong> para operaciones industriales de '+(_workerPct>60?'gran escala':_workerPct>50?'escala media':'escala reducida o mixta')+'.',
+      _peaIns2,
+      _escIns2,
+      _nseIns2
+    ].forEach(function(ins){
+      p4+='<div style="background:#fff;border-left:3px solid #0369a1;padding:1.5mm 2mm;margin-bottom:1.5mm;border-radius:0 4px 4px 0;font-size:5.5pt;color:#0f172a;line-height:1.5">'+ins+'</div>';
+    });
+    p4+='</div>';
+    p4+='</div>';
+    p4+='</div>';
     p4+=DISC;
-    p4+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 6 / 14</span><span>'+fecha+'</span></div>';
+    p4+='<div class="rpt-footer"><span>DATERRA · '+munPrincipal+' · Pool Laboral · Censo INEGI 2020</span><span>Pag. 5 / 21</span><span>'+fecha+'</span></div>';
     p4+='</div>';
 
     // ────────── PÁGINA 5: Composición del Parque Habitacional ──────────
@@ -4591,76 +4627,8 @@ function generarReporte(){
     p9+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pag. 11 / 14</span><span>'+fecha+'</span></div>';
     p9+='</div>';
 
-    // ── PÁGINA: Perfil Laboral de la Zona ──────────────────────────────
-    var _zmPctPea=47; // referencia ZM La Laguna aprox (Censo 2020)
-    var _zmAvgEsc=10.2;
-    var _zmPct2559=45;
-    var _zmPctAlto=28; // % AB+C+ ZM
-    var p_dem_ind='<div class="report-page">';
-    p_dem_ind+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p_dem_ind+='<div style="border-bottom:3px solid #0369a1;padding-bottom:2mm;margin-bottom:2.5mm">';
-    p_dem_ind+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Perfil Laboral de la Zona · Potencial de Fuerza de Trabajo</div>';
-    p_dem_ind+='<div style="font-size:7pt;color:#0369a1;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Demografía clave para decisiones industriales · Zona vs Municipio '+munPrincipal+' vs ZM La Laguna</div>';
-    p_dem_ind+='</div>';
-    function _kpiBench(v,lbl,ref,refLbl,col){
-      var vn=parseFloat(v),rn=parseFloat(ref),delta=isNaN(vn)||isNaN(rn)?null:vn-rn;
-      var dCol=delta===null?'#64748b':delta>0?'#059669':'#dc2626',dStr=delta===null?'':''+(delta>0?'+':'')+delta.toFixed(1);
-      return '<div style="background:#f8fafc;border:1px solid '+col+'44;border-radius:5px;padding:2.5mm 3mm;border-top:3px solid '+col+'">'
-        +'<div style="font-size:13pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">'+v+'</div>'
-        +'<div style="font-size:5.5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">'+lbl+'</div>'
-        +'<div style="font-size:6pt;color:#94a3b8;margin-top:.5mm">Ref ZM: '+ref+' '+refLbl+'</div>'
-        +(delta!==null?'<div style="font-size:6.5pt;color:'+dCol+';font-weight:700">'+dStr+' pts vs ZM</div>':'')+'</div>';
-    }
-    p_dem_ind+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:3mm">';
-    p_dem_ind+=_kpiBench(P1(pctPea),'% PEA activa',_zmPctPea+'%','ref.',pctPea>_zmPctPea?'#059669':'#64748b');
-    p_dem_ind+=_kpiBench(N(avgEsc,1)+' años','Escolaridad prom.',_zmAvgEsc+' años','ref.',avgEsc>_zmAvgEsc?'#059669':'#64748b');
-    p_dem_ind+=_kpiBench(P1(pct2559),'% Edad productiva 25-59',_zmPct2559+'%','ref.',pct2559>_zmPct2559?'#059669':'#64748b');
-    p_dem_ind+=_kpiBench(P1(pNseAlto),'% NSE AB+C+',_zmPctAlto+'%','ref.',pNseAlto>_zmPctAlto?'#059669':'#64748b');
-    p_dem_ind+='</div>';
-    p_dem_ind+='<div style="display:grid;grid-template-columns:55% 43%;gap:3mm">';
-    p_dem_ind+='<div>';
-    p_dem_ind+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:2mm">Benchmarks · Zona vs Municipio vs ZM</div>';
-    function _benchRow(lbl,zona,mun2,zm,unit,higher_is_better){
-      var zn=parseFloat(zona),zmn=parseFloat(zm);
-      var zCol=isNaN(zn)||isNaN(zmn)?'#64748b':higher_is_better?(zn>=zmn?'#059669':'#dc2626'):(zn<=zmn?'#059669':'#dc2626');
-      return '<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:1mm;padding:1.5mm 0;border-bottom:1px solid #f1f5f9;font-size:6pt">'
-        +'<div style="color:#374151;font-weight:500">'+lbl+'</div>'
-        +'<div style="text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:'+zCol+'">'+zona+unit+'</div>'
-        +'<div style="text-align:right;font-family:IBM Plex Mono,monospace;color:#475569">'+mun2+unit+'</div>'
-        +'<div style="text-align:right;font-family:IBM Plex Mono,monospace;color:#94a3b8">~'+zm+unit+'</div></div>';
-    }
-    p_dem_ind+='<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:1mm;padding:.5mm 0;font-size:5pt;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px"><div>Indicador</div><div style="text-align:right">Zona</div><div style="text-align:right">'+munPrincipal.slice(0,8)+'</div><div style="text-align:right">ZM Lag.</div></div>';
-    p_dem_ind+=_benchRow('% PEA activa',P1(pctPea),P1(munPctPea||0),_zmPctPea+'','%',true);
-    p_dem_ind+=_benchRow('Escolaridad prom.',N(avgEsc,1),N(munAvgEsc||0,1),_zmAvgEsc,'a',true);
-    p_dem_ind+=_benchRow('% edad 25-59 (productiva)',P1(pct2559),P1(mun.pct_25_59||0),_zmPct2559+'','%',true);
-    p_dem_ind+=_benchRow('% edad 0-14 (futura fuerza)',P1(pct014),P1(mun.pct_0_14||0),'22','%',false);
-    var _munNseAltoB=(_munNseTotExec>0?((_munNseAbExec+_munNseCmasExec)/_munNseTotExec*100):0);
-    var _munNseAltoBDisp=(_munNseAltoB===0||isNaN(_munNseAltoB))?'n/d':P1(_munNseAltoB);
-    p_dem_ind+=_benchRow('% NSE AB+C+ (alta capac.)',P1(pNseAlto),_munNseAltoBDisp,_zmPctAlto+'','%',true);
-    var _munDesocPct=(mun.desocupados||0)/(mun.pea||1)*100;
-    var _munDesocDisp=(_munDesocPct===0||isNaN(_munDesocPct))?'n/d':P1(_munDesocPct);
-    p_dem_ind+=_benchRow('% desocupados/PEA',P1(_pctDes),_munDesocDisp,'4.2','%',false);
-    p_dem_ind+='</div>';
-    p_dem_ind+='<div>';
-    p_dem_ind+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #7c3aed;padding-bottom:1mm;margin-bottom:1.5mm">¿Qué significa para la industria?</div>';
-    var _peaIns=pctPea>52?'<strong>PEA alta ('+P1(pctPea)+')</strong>: Zona con alta participación laboral. Disponibilidad de mano de obra activa y arraigo económico sólido. Favorece instalación de manufactura intensiva.':pctPea>44?'<strong>PEA media ('+P1(pctPea)+')</strong>: Participación laboral comparable a la ZM. Suficiente para operaciones estándar; considerar programa de capacitación para posiciones técnicas.':'<strong>PEA baja ('+P1(pctPea)+')</strong>: Zona con menor participación laboral. Revisar si hay alta informalidad o inactividad voluntaria. Puede requerir atracción de trabajadores de otras zonas.';
-    var _escIns=avgEsc>11?'<strong>Escolaridad alta ('+N(avgEsc,1)+' años)</strong>: Perfil técnico-universitario. Ideal para manufactura de precisión, automotriz, electrónica o logística avanzada. Menor rotación y mayor productividad.':avgEsc>9?'<strong>Escolaridad media ('+N(avgEsc,1)+' años)</strong>: Equivalente a secundaria-bachillerato. Adecuado para manufactura estándar y logística. Posibilidad de capacitación técnica interna.':'<strong>Escolaridad básica ('+N(avgEsc,1)+' años)</strong>: Zona con menor nivel educativo promedio. Industrias que requieren alta capacitación pueden enfrentar mayor inversión en RRHH.';
-    var _nseIns=pNseAlto>35?'<strong>NSE alto en zona ('+P1(pNseAlto)+'% AB+C+)</strong>: Entorno premium. Apto para parques corporativos, oficinas industriales y tenants internacionales exigentes.':pNseAlto>20?'<strong>NSE mixto ('+P1(pNseAlto)+'% AB+C+)</strong>: Zona diversa. Mercado laboral con buena mezcla de perfiles técnicos y operativos. Flexible para distintos tipos de uso industrial.':'<strong>NSE popular ('+P1(pNseAlto)+'% AB+C+)</strong>: Entorno de trabajo predominantemente operativo. Costos laborales competitivos; ideal para manufactura y distribución de costos eficientes.';
-    [_peaIns,_escIns,_nseIns].forEach(function(ins){
-      p_dem_ind+='<div style="background:#f0f9ff;border-left:3px solid #0369a1;padding:1.5mm 2mm;margin-bottom:1.5mm;border-radius:0 4px 4px 0;font-size:5.5pt;color:#0f172a;line-height:1.5">'+ins+'</div>';
-    });
-    p_dem_ind+='<div style="margin-top:2mm;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:1.5mm 2mm">';
-    p_dem_ind+='<div style="font-size:5pt;font-weight:700;color:#374151;text-transform:uppercase;margin-bottom:1mm">Estructura de Edad · Zona</div>';
-    function _barEd3(lbl,pct,color,bold){return '<div style="display:flex;align-items:center;gap:1mm;margin-bottom:.5mm"><div style="font-size:5.5pt;color:'+(bold?'#0369a1':'#64748b')+';font-weight:'+(bold?'700':'400')+';width:16mm;flex-shrink:0">'+lbl+'</div><div style="flex:1;height:4px;background:#e2e8f0;border-radius:2px;overflow:hidden"><div style="height:100%;width:'+Math.min(pct*2.2,100)+'%;background:'+color+'"></div></div><div style="font-size:5.5pt;font-family:IBM Plex Mono,monospace;color:'+(bold?'#0369a1':'#374151')+';font-weight:'+(bold?'700':'400')+';width:8mm;text-align:right">'+P1(pct)+'</div></div>';}
-    p_dem_ind+=_barEd3('0-14 años',pct014,'#93c5fd',false);
-    p_dem_ind+=_barEd3('15-24 años',pct1524,'#6ee7b7',false);
-    p_dem_ind+=_barEd3('25-59 años',pct2559,'#818cf8',true);
-    p_dem_ind+=_barEd3('60+ años',pct60,'#fbbf24',false);
-    p_dem_ind+='</div>';
-    p_dem_ind+='</div>';
-    p_dem_ind+='</div>';
-    p_dem_ind+='<div class="rpt-footer"><span>DATERRA · '+munPrincipal+' · Perfil Laboral · Censo INEGI 2020</span><span>Pag. Industrial</span><span>'+fecha+'</span></div>';
-    p_dem_ind+='</div>';
+    // ── p_dem_ind: fusionado en p4 (Pool Laboral Disponible) — vaciado ──
+    var p_dem_ind='';
 
     // ── Mapa: Parques Industriales ZM Laguna ──
     var pMapParques='<div class="report-page">';
@@ -5053,9 +5021,9 @@ function generarReporte(){
     pIdx+=_idxRow('3','Contexto de Zona','Mapa zona · características geográficas e infraestructura');
     pIdx+=_idxRow('4','Índice','Estructura del reporte y guía de contenidos');
     pIdx+=_idxSection('POOL LABORAL Y DEMOGRAFÍA','#0369a1');
-    pIdx+=_idxRow('5-6','Pool Laboral y Demografía','Estructura de edades · franja activa 15-59 · PEA, escolaridad · indicadores vs ZM');
-    pIdx+=_idxRow('7','Actividad Económica y NSE','PEA activa · distribución NSE AMAI · perfil de tenants y mano de obra');
-    pIdx+=_idxRow('8','Distribución NSE por AGEB','Heatmap categórico NSE · concentración de nivel socioeconómico por zona');
+    pIdx+=_idxRow('5','Pool Laboral Disponible','PEA activa · escolaridad · benchmarks ZM · estructura de edades · implicación industrial');
+    pIdx+=_idxRow('6','Actividad Económica y NSE','PEA activa · distribución NSE AMAI · perfil de tenants y mano de obra');
+    pIdx+=_idxRow('7','Distribución NSE por AGEB','Heatmap categórico NSE · concentración de nivel socioeconómico por zona');
     pIdx+=_idxSection('PANORAMA ECONÓMICO INDUSTRIAL','#ea580c');
     pIdx+=_idxRow('9','Panorama Económico 2018→2023','Manufactura · Comercio · Logística — empleos, valor agregado, inversión, remuneraciones ZM');
     pIdx+=_idxRow('10','Top Industrias ZM La Laguna','Ranking sectorial por empleo y VA · crecimiento intercensal · qué pide cada sector');
