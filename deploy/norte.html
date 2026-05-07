@@ -4181,11 +4181,8 @@ function generarReporte(){
     p1+='<div style="margin-bottom:3mm">';
     p1+='<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:3mm">';
     p1+='<div><div class="rpt-title">Reporte de Zona de Influencia</div>';
-    p1+='<div style="font-size:9pt;font-weight:700;color:'+(_pxScoreColor||'#16a34a')+';margin-top:1.5mm;letter-spacing:.3px">¿Qué oportunidad hay en la zona analizada?</div></div>';
-    p1+='<div style="text-align:center;background:'+(_pxScoreColor||'#16a34a')+'18;border:2px solid '+(_pxScoreColor||'#16a34a')+';border-radius:6px;padding:2mm 4mm;flex-shrink:0">';
-    p1+='<div style="font-size:18pt;font-weight:700;color:'+(_pxScoreColor||'#16a34a')+';font-family:IBM Plex Mono,monospace;line-height:1">'+(_pxScore||0)+'<span style="font-size:7pt;opacity:.7">/8</span></div>';
-    p1+='<div style="font-size:5.5pt;font-weight:700;color:'+(_pxScoreColor||'#16a34a')+';text-transform:uppercase;letter-spacing:.5px;margin-top:.5mm">'+(_pxScoreLbl||'SCORE')+'</div>';
-    p1+='</div></div>';
+    p1+='<div style="font-size:9pt;font-weight:700;color:#16a34a;margin-top:1.5mm;letter-spacing:.3px">Zona de influencia · Gómez Palacio · ZM La Laguna</div></div>';
+    p1+='</div>';
     p1+='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:3mm;margin-top:2mm">';
     p1+='<span class="zona-badge '+tipoBadge+'">'+tipoNombre+'</span>';
     if(herramientaDetalle) p1+='<span style="font-size:8pt;color:#64748b;font-family:IBM Plex Mono,monospace">'+herramientaDetalle+'</span>';
@@ -4244,6 +4241,22 @@ function generarReporte(){
     p1+='<div class="rpt-kpi"><div class="rpt-kpi-val">'+P1(pctPea)+'</div><div class="rpt-kpi-lbl">% PEA / poblacion</div>';
     p1+='<div class="rpt-kpi-delta"><span style="color:'+sPea.color+'">'+sPea.icon+' '+sPea.label+'</span></div></div>';
     p1+='</div></div>';
+
+    // Mini tabla de contenidos en portada
+    p1+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm;margin-top:4mm;margin-bottom:3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p1+='<div style="background:#0f172a;border-radius:5px;padding:3mm 3.5mm;text-align:center">';
+    p1+='<div style="font-size:7pt;font-weight:800;color:#4ade80;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1mm">1. La Oportunidad</div>';
+    p1+='<div style="font-size:6pt;color:#94a3b8;line-height:1.4">Veredicto · Contexto · Hallazgos · Recomendación</div>';
+    p1+='</div>';
+    p1+='<div style="background:#1e293b;border-radius:5px;padding:3mm 3.5mm;text-align:center">';
+    p1+='<div style="font-size:7pt;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1mm">2. Sustento</div>';
+    p1+='<div style="font-size:6pt;color:#64748b;line-height:1.4">Demanda · Pool laboral · NSE · Vocación · Clusters</div>';
+    p1+='</div>';
+    p1+='<div style="background:#1e293b;border-radius:5px;padding:3mm 3.5mm;text-align:center">';
+    p1+='<div style="font-size:7pt;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1mm">3. Inventario</div>';
+    p1+='<div style="font-size:6pt;color:#64748b;line-height:1.4">Zona industrial · Parques · Rentas · Ventas · Terrenos</div>';
+    p1+='</div>';
+    p1+='</div>';
 
     p1+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pag. 1 / 14</span><span>'+fecha+'</span></div>';
     p1+='</div>';
@@ -4445,39 +4458,67 @@ function generarReporte(){
     var pExec='<div class="report-page">';
     pExec+='<div class="rpt-header">'+RPT_LOGO+'</div>';
 
-    // ── BLOQUE HERO: pregunta + score ──────────────────────────────
+    // ── BLOQUE HERO: oportunidad vs mercados comparables ──────────────
     pExec+='<div style="background:#0f172a;padding:4mm 5mm 3.5mm;margin:-1mm -1mm 3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
-    pExec+='<div style="font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:2mm">¿Qué oportunidad hay en la zona analizada?</div>';
-    pExec+='<div style="display:flex;align-items:center;justify-content:space-between;gap:4mm">';
-    pExec+='<div style="font-size:7.5pt;color:#94a3b8;line-height:1.4">'+munPrincipal+' · '+tipoNombre+' · '+n+' AGEBs · '+fecha+'</div>';
-    pExec+='<div style="background:'+_pxScoreColor+'22;border:2px solid '+_pxScoreColor+';border-radius:6px;padding:2mm 5mm;text-align:center;flex-shrink:0">';
-    pExec+='<div style="font-size:22pt;font-weight:700;color:'+_pxScoreColor+';font-family:IBM Plex Mono,monospace;line-height:1">'+_pxScore+'<span style="font-size:9pt;opacity:.7">/8</span></div>';
-    pExec+='<div style="font-size:6pt;font-weight:700;color:'+_pxScoreColor+';text-transform:uppercase;letter-spacing:1px;margin-top:1mm">'+_pxScoreLbl+'</div>';
-    pExec+='</div></div></div>';
+    pExec+='<div style="font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.5mm">¿Qué oportunidad hay en la zona analizada?</div>';
+    pExec+='<div style="font-size:7.5pt;color:#94a3b8;line-height:1.4">La Laguna vs mercados alternativos · '+fecha+'</div>';
+    pExec+='</div>';
+
+    // ── OPPORTUNITY VERDICT BOX: 3 mercados comparables ───────────────
+    pExec+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm;margin-bottom:3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    // Col 1 — Norte General
+    pExec+='<div style="background:#fef2f2;border-top:4px solid #94a3b8;border-radius:0 0 5px 5px;padding:2.5mm 3mm">';
+    pExec+='<div style="font-size:6pt;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Norte General</div>';
+    pExec+='<div style="font-size:13pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1">6.9%</div>';
+    pExec+='<div style="font-size:5.5pt;color:#64748b;margin-top:.5mm;margin-bottom:.5mm">vacancia · $5.75 USD/m²/mes</div>';
+    pExec+='<div style="font-size:6pt;color:#475569;font-style:italic;margin-bottom:1.5mm">Estabilización post-pico</div>';
+    pExec+='<div style="display:inline-block;background:#94a3b822;color:#64748b;font-size:5.5pt;font-weight:700;font-family:IBM Plex Mono,monospace;padding:.5mm 2mm;border-radius:3px;text-transform:uppercase;letter-spacing:.5px">ENFRIÁNDOSE</div>';
+    pExec+='</div>';
+    // Col 2 — Saltillo
+    pExec+='<div style="background:#fff7ed;border-top:4px solid #d97706;border-radius:0 0 5px 5px;padding:2.5mm 3mm">';
+    pExec+='<div style="font-size:6pt;font-weight:700;color:#d97706;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Saltillo (benchmark)</div>';
+    pExec+='<div style="font-size:13pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1">3.8%↑</div>';
+    pExec+='<div style="font-size:5.5pt;color:#64748b;margin-top:.5mm;margin-bottom:.5mm">vacancia · $6.50 USD/m²/mes</div>';
+    pExec+='<div style="font-size:6pt;color:#475569;font-style:italic;margin-bottom:1.5mm">Riesgo de saturación</div>';
+    pExec+='<div style="display:inline-block;background:#d9770622;color:#d97706;font-size:5.5pt;font-weight:700;font-family:IBM Plex Mono,monospace;padding:.5mm 2mm;border-radius:3px;text-transform:uppercase;letter-spacing:.5px">SATURÁNDOSE</div>';
+    pExec+='</div>';
+    // Col 3 — La Laguna (THIS MARKET)
+    pExec+='<div style="background:#f0fdf4;border-top:4px solid #16a34a;border-radius:0 0 5px 5px;padding:2.5mm 3mm">';
+    pExec+='<div style="font-size:6pt;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">La Laguna · Este mercado</div>';
+    pExec+='<div style="font-size:13pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1">6.2%</div>';
+    pExec+='<div style="font-size:5.5pt;color:#64748b;margin-top:.5mm;margin-bottom:.5mm">vacancia · $6.71 USD +17%↑</div>';
+    pExec+='<div style="font-size:6pt;color:#475569;font-style:italic;margin-bottom:1.5mm">Absorción +34.6%</div>';
+    pExec+='<div style="display:inline-block;background:#16a34a22;color:#16a34a;font-size:5.5pt;font-weight:800;font-family:IBM Plex Mono,monospace;padding:.5mm 2mm;border-radius:3px;text-transform:uppercase;letter-spacing:.5px">ENTRADA ACTIVA</div>';
+    pExec+='</div>';
+    pExec+='</div>';
+
+    // Quote estratégica
+    pExec+='<div style="background:#0f172a;padding:3mm 4mm;border-radius:4px;margin-bottom:3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    pExec+='<div style="font-size:7.5pt;color:#fff;font-style:italic;line-height:1.6;margin-bottom:1mm">"Mientras los polos tradicionales del norte se enfrían, La Laguna está en su momento de entrada de inversión."</div>';
+    pExec+='<div style="font-size:6pt;color:#94a3b8">Newmark La Laguna 2S25 · CBRE Saltillo Q4 2024 / 1T 2026</div>';
+    pExec+='</div>';
 
     // ── BLOQUE TESIS ───────────────────────────────────────────────
     pExec+='<div style="background:#fff;border-left:4px solid #16a34a;padding:3mm 4mm;margin:0 0 3mm">';
     pExec+='<div style="font-size:7pt;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.5mm">Tesis</div>';
-    pExec+='<div style="font-size:7.5pt;color:#1e293b;line-height:1.6">'+_pxTesisPara+'</div>';
+    pExec+='<div style="font-size:7.5pt;color:#1e293b;line-height:1.6">'+_pxTesisPara+' Comparado con Saltillo (vacancia subiendo, renta estancada) y el mercado norte en general (construcción -20% YoY), La Laguna muestra la mejor dinámica de absorción y precio del norte del país en 2025.</div>';
     pExec+='</div>';
 
-    // ── SECCIÓN "POR QUÉ LO DECIMOS" — 6 celdas ──────────────────
+    // ── SECCIÓN "POR QUÉ LO DECIMOS" — 5 hallazgos ───────────────
     pExec+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Por qué lo decimos</div>';
-    pExec+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2mm;margin-bottom:3mm">';
-    var _kpiH=[
-      [N(_pxTotE23),'empleos registrados','Demanda laboral activa','#0f172a','#fff'],
-      [(_pxEmpCrecPct>=0?'+':'')+_pxEmpCrecPct.toFixed(1)+'%','crecimiento 2018-23','Economía en expansión','#0f172a','#f8fafc'],
-      ['6.2%','Disponibilidad ZM','Equilibrio de mercado','#d97706','#fff7ed'],
-      [_pxMedRenta?'$'+_pxMedRenta.toFixed(0):'S/D','MXN/m²/mes · Zona','Punto de entrada accesible','#0f172a','#f8fafc'],
-      [P1(pctPea),'PEA activa zona','Pool laboral disponible','#0f172a','#fff'],
-      [_clCount+' clusters','micro-zonas identificadas','C'+_clBest+': '+(_clNames[_clBest]||'zona óptima'),'#0f172a','#f8fafc']
+    pExec+='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2mm;margin-bottom:3mm">';
+    var _kpiH5=[
+      ['74,703','empleos sector industrial ZM','Motor: manufactura','#0f172a','#fff'],
+      ['$6.71 USD','precio salida La Laguna','+17% en 12 meses','#16a34a','#f0fdf4'],
+      ['73,200 m²','absorción bruta 2025','+34.6% vs 2024','#0f172a','#f8fafc'],
+      ['6.2%','vacancia La Laguna','vs 6.9% norte general','#d97706','#fff7ed'],
+      ['~11.5%','cap rate zona estimado','vs 6.5-8% Saltillo pico','#0f172a','#fff']
     ];
-    _kpiH.forEach(function(c,i){
+    _kpiH5.forEach(function(c){
       pExec+='<div style="background:'+c[4]+';border:1px solid #e2e8f0;border-radius:4px;padding:2.5mm 3mm">';
-      pExec+='<div style="font-size:18px;font-weight:700;color:'+c[3]+';font-family:IBM Plex Mono,monospace;line-height:1.1">'+c[0]+'</div>';
+      pExec+='<div style="font-size:14px;font-weight:700;color:'+c[3]+';font-family:IBM Plex Mono,monospace;line-height:1.1">'+c[0]+'</div>';
       pExec+='<div style="font-size:6pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.6mm">'+c[1]+'</div>';
       pExec+='<div style="font-size:6pt;color:#475569;margin-top:.4mm;font-style:italic">'+c[2]+'</div>';
-      if(i===3&&_pxMedRenta){pExec+='<div style="font-size:5.5pt;color:#94a3b8;margin-top:.3mm;font-family:IBM Plex Mono,monospace">Ref ZM: USD $6.71/m²/mes</div>';}
       pExec+='</div>';
     });
     pExec+='</div>';
@@ -4486,9 +4527,9 @@ function generarReporte(){
     pExec+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Riesgos Principales</div>';
     pExec+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2mm;margin-bottom:3mm">';
     var _pxRiesgosDef=[
-      ['Aranceles y T-MEC','Revisión T-MEC 2026 puede afectar decisiones de nearshoring','MEDIO','#d97706'],
-      ['Sobreoferta especulativa','58,100 m² en construcción + tasa disponibilidad 6.2% — mercado en absorción activa','MEDIO','#d97706'],
-      ['Mercado secundario','La Laguna compite con Saltillo y Mty por tenants Tier 1','BAJO','#16a34a']
+      ['Brecha de renta vs mediana','Renta objetivo $80-90 MXN está 33% sobre mediana zona ($65 MXN) — exige producto Clase B+ real, no B básico','ALTO','#dc2626'],
+      ['Nueva oferta spec entrando','58,100 m² en construcción — vacancia 6.2% por spec reciente, no por caída de demanda','MEDIO','#d97706'],
+      ['Competencia directa próxima','CG Park a $87 MXN/m² con producto ya operando — diferenciación de especificación es crítica','MEDIO','#d97706']
     ];
     _pxRiesgosDef.forEach(function(r){
       pExec+='<div style="border-left:4px solid '+r[3]+';background:#fff;border-top:1px solid #e2e8f0;border-right:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0;border-radius:0 4px 4px 0;padding:2mm 2.5mm">';
@@ -6167,8 +6208,161 @@ function generarReporte(){
     p_ind_concl2+=_rptFooterInd('Concl. 2/2');
     p_ind_concl2+='</div>';
 
+    // ────────── PÁGINA CONTEXTO: Mercado industrial México ────────
+    var p_contexto='<div class="report-page">';
+    p_contexto+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    p_contexto+='<div style="background:#0f172a;padding:4mm 5mm 3.5mm;margin:-1mm -1mm 3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_contexto+='<div style="font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1mm">Contexto de mercado industrial México</div>';
+    p_contexto+='<div style="font-size:7.5pt;color:#94a3b8">Por qué La Laguna ahora · 1T 2026</div>';
+    p_contexto+='</div>';
+    p_contexto+='<div style="font-size:7.5pt;color:#64748b;font-style:italic;margin-bottom:3mm;line-height:1.5">Antes de los datos de zona, el contexto nacional define si el timing es correcto.</div>';
+
+    // Benchmark table
+    p_contexto+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Comparativo de mercados industriales norte de México</div>';
+    p_contexto+='<table style="width:100%;border-collapse:collapse;font-size:6.5pt;margin-bottom:3mm">';
+    p_contexto+='<thead><tr style="background:#0f172a;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_contexto+='<th style="color:#94a3b8;font-weight:700;padding:2mm 2.5mm;text-align:left;font-family:IBM Plex Mono,monospace;font-size:5.5pt;text-transform:uppercase">Indicador</th>';
+    p_contexto+='<th style="color:#94a3b8;font-weight:700;padding:2mm 2.5mm;text-align:center;font-family:IBM Plex Mono,monospace;font-size:5.5pt;text-transform:uppercase">Norte General (1T26)</th>';
+    p_contexto+='<th style="color:#d97706;font-weight:700;padding:2mm 2.5mm;text-align:center;font-family:IBM Plex Mono,monospace;font-size:5.5pt;text-transform:uppercase">Saltillo (1T26)</th>';
+    p_contexto+='<th style="color:#4ade80;font-weight:700;padding:2mm 2.5mm;text-align:center;border-left:3px solid #16a34a;font-family:IBM Plex Mono,monospace;font-size:5.5pt;text-transform:uppercase">La Laguna (2S25)</th>';
+    p_contexto+='<th style="color:#94a3b8;font-weight:700;padding:2mm 2.5mm;text-align:left;font-family:IBM Plex Mono,monospace;font-size:5.5pt;text-transform:uppercase">Lectura</th>';
+    p_contexto+='</tr></thead><tbody>';
+    var _ctxRows=[
+      ['Vacancia','6.9% (↑)','3.8% (↑)','6.2% (nueva oferta)','La Laguna: sube por supply, no demand'],
+      ['Renta USD/m²/mes','~$5.75','~$6.50','$6.71 +17% YoY','La Laguna: único mercado con renta al alza'],
+      ['Absorción bruta','Bajo promedio','22,000 m² (1T)','73,200 m² 2025','La Laguna supera todo el año 2024'],
+      ['Construcción','-20% YoY','58,000 m² (cayó)','58,100 m² (↓↓ vs 122,400)','Todos en ajuste']
+    ];
+    _ctxRows.forEach(function(r,i){
+      var bg=i%2===0?'#fff':'#f8fafc';
+      p_contexto+='<tr style="background:'+bg+'">';
+      p_contexto+='<td style="padding:2mm 2.5mm;font-weight:600;color:#0f172a;border-bottom:1px solid #e2e8f0">'+r[0]+'</td>';
+      p_contexto+='<td style="padding:2mm 2.5mm;text-align:center;color:#475569;border-bottom:1px solid #e2e8f0;font-family:IBM Plex Mono,monospace">'+r[1]+'</td>';
+      p_contexto+='<td style="padding:2mm 2.5mm;text-align:center;color:#d97706;border-bottom:1px solid #e2e8f0;font-family:IBM Plex Mono,monospace;font-weight:600">'+r[2]+'</td>';
+      p_contexto+='<td style="padding:2mm 2.5mm;text-align:center;color:#16a34a;border-bottom:1px solid #e2e8f0;font-family:IBM Plex Mono,monospace;font-weight:700;border-left:3px solid #16a34a">'+r[3]+'</td>';
+      p_contexto+='<td style="padding:2mm 2.5mm;color:#64748b;border-bottom:1px solid #e2e8f0;font-style:italic">'+r[4]+'</td>';
+      p_contexto+='</tr>';
+    });
+    // Fila "Lectura" con color-coding
+    p_contexto+='<tr style="background:#f1f5f9;font-weight:700">';
+    p_contexto+='<td style="padding:2mm 2.5mm;font-weight:700;color:#0f172a">Lectura</td>';
+    p_contexto+='<td style="padding:2mm 2.5mm;text-align:center;color:#64748b">Estabilización post-pico</td>';
+    p_contexto+='<td style="padding:2mm 2.5mm;text-align:center;color:#d97706">Saturándose</td>';
+    p_contexto+='<td style="padding:2mm 2.5mm;text-align:center;color:#16a34a;font-weight:800;border-left:3px solid #16a34a">Crecimiento activo</td>';
+    p_contexto+='<td style="padding:2mm 2.5mm;color:#0f172a;font-weight:800;font-size:7pt;text-transform:uppercase;letter-spacing:.5px">WINDOW OF ENTRY</td>';
+    p_contexto+='</tr>';
+    p_contexto+='</tbody></table>';
+
+    // Pipeline de demanda + Implicación
+    p_contexto+='<div style="display:grid;grid-template-columns:3fr 2fr;gap:3mm;margin-bottom:3mm">';
+    p_contexto+='<div>';
+    p_contexto+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Pipeline de demanda confirmada en La Laguna</div>';
+    var _pipelineEmpresas=[
+      ['ECI (Electrical Components International)','$600 MDP · 1,200 empleos · Torreón, nov 2025'],
+      ['Pilgrim\'s Pride','$145 MDD · complejo agroindustrial · Gómez Palacio'],
+      ['Flowserve','$40 MDD · centro tecnología · Torreón'],
+      ['Good Mark (Milwaukee Tools)','planta en zona Mieleras · manufactura'],
+      ['Pipeline general','25-35 empresas en evaluación (Sec. Economía Coahuila)']
+    ];
+    _pipelineEmpresas.forEach(function(e){
+      p_contexto+='<div style="display:flex;gap:2mm;align-items:flex-start;padding:1.5mm 0;border-bottom:1px solid #f1f5f9">';
+      p_contexto+='<span style="color:#16a34a;font-size:8pt;flex-shrink:0;margin-top:.3mm">▸</span>';
+      p_contexto+='<div><span style="font-size:7pt;font-weight:700;color:#0f172a">'+e[0]+'</span><br><span style="font-size:6pt;color:#64748b;font-family:IBM Plex Mono,monospace">'+e[1]+'</span></div>';
+      p_contexto+='</div>';
+    });
+    p_contexto+='</div>';
+    p_contexto+='<div>';
+    p_contexto+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Implicación</div>';
+    p_contexto+='<div style="background:#f0fdf4;border:1.5px solid #16a34a;border-radius:5px;padding:3mm 3.5mm">';
+    p_contexto+='<div style="font-size:7pt;color:#166534;line-height:1.6">La demanda no es hipótesis — está documentada en prensa especializada y anuncios oficiales de los últimos 6 meses. Para un proyecto spec, esto reduce significativamente el riesgo de absorción vs construir en un mercado sin pipeline visible.</div>';
+    p_contexto+='</div>';
+    p_contexto+='</div>';
+    p_contexto+='</div>';
+
+    p_contexto+='<div style="font-size:5.5pt;color:#94a3b8;line-height:1.5;border-top:1px solid #e2e8f0;padding-top:1.5mm">Fuentes: Newmark México 2S25 · CBRE México Q4 2024 · Vanguardia · El Siglo de Torreón · Proyectos Torreón · PLAYERS of Life · Inmobiliare · Sec. Economía Coahuila</div>';
+    p_contexto+=_rptFooterInd('Contexto');
+    p_contexto+='</div>';
+
+    // ────────── PÁGINA HALLAZGOS: 5 hallazgos que mueven la decisión ──
+    var p_hallazgos='<div class="report-page">';
+    p_hallazgos+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    p_hallazgos+='<div style="background:#0f172a;padding:4mm 5mm 3.5mm;margin:-1mm -1mm 3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_hallazgos+='<div style="font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1mm">Los 5 hallazgos que definen la tesis</div>';
+    p_hallazgos+='<div style="font-size:7.5pt;color:#94a3b8">Zona de influencia · DATERRA · Lo que mueve la decisión</div>';
+    p_hallazgos+='</div>';
+    p_hallazgos+='<div style="font-size:7.5pt;color:#64748b;font-style:italic;margin-bottom:3mm;line-height:1.5">Dado el contexto favorable de La Laguna, estos son los hallazgos de la zona específica que confirman o condicionan la tesis.</div>';
+
+    var _hallazgosData=[
+      {
+        n:'1',title:'Motor económico: manufactura, no logística',
+        data:'74,703 empleos industriales ZM · Sector líder: fabricación equipo transporte (17,962 emp) · Manufactura 50,004 emp vs Logística 2,965 emp',
+        imp:'El tenant objetivo es manufactura ligera y proveeduría automotriz/textil — no CEDIS de e-commerce ni big-box logístico. Define especificación de nave: altura 8-10m, piso 5-7 ton/m², no dock de 40 andenes.'
+      },
+      {
+        n:'2',title:'Oferta competitiva amplia — cuartil superior exige diferenciación',
+        data:'120 bodegas catalogadas · rango $35-130 MXN/m²/mes · mediana GP: $65 MXN/m²/mes',
+        imp:'Renta objetivo $80-90 MXN está 23-38% sobre la mediana. Solo se sostiene con producto Clase B+ real: altura ≥9m, piso 7 ton/m², andenes dobles, subestación, oficinas premium. Sin diferenciación de especificación, no hay justificación de renta.'
+      },
+      {
+        n:'3',title:'Pool laboral adecuado para manufactura ligera',
+        data:''+P1(pct1524+pct2559)+' población en edad productiva · Escolaridad promedio '+N(avgEsc,1)+' años · NSE '+nsePredZona+' predominante',
+        imp:'El perfil laboral encaja con manufactura ligera y almacenaje — justamente la demanda de naves Clase B. No es un riesgo, es un activo.'
+      },
+      {
+        n:'4',title:'Absorción y precio en crecimiento',
+        data:'73,200 m² absorción 2025 (+34.6% vs 2024) · precio salida $6.71 USD (+17% YoY)',
+        imp:'La vacancia del 6.2% no refleja caída de demanda — refleja nueva oferta spec entrando al mercado. El precio sube, la absorción crece: señales de mercado saludable, no de sobreoferta estructural.'
+      },
+      {
+        n:'5',title:'Mercado de yield, no de capital appreciation',
+        data:'Cap rate zona estimado ~11.5% · Saltillo en su pico: 6.5-8% · Prima de riesgo: 300-400 pbs',
+        imp:'La Laguna paga más rendimiento corriente que los mercados institucionales del norte. La estrategia debe ser arrendar + estabilizar + vender a comprador regional/local en horizonte 5-7 años. No esperar salida a FIBRA Prologis o Vesta.'
+      }
+    ];
+    _hallazgosData.forEach(function(h){
+      p_hallazgos+='<div style="background:#fff;border-left:3px solid #0f172a;padding:2.5mm 3mm;margin-bottom:2.5mm;border-radius:0 4px 4px 0;border-top:1px solid #e2e8f0;border-right:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">';
+      p_hallazgos+='<div style="display:flex;align-items:flex-start;gap:2.5mm">';
+      p_hallazgos+='<div style="width:22px;height:22px;border-radius:50%;background:#0f172a;display:flex;align-items:center;justify-content:center;flex-shrink:0;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+      p_hallazgos+='<span style="color:#fff;font-size:8pt;font-weight:700;font-family:IBM Plex Mono,monospace">'+h.n+'</span>';
+      p_hallazgos+='</div>';
+      p_hallazgos+='<div style="flex:1">';
+      p_hallazgos+='<div style="font-size:8pt;font-weight:700;color:#0f172a;margin-bottom:1mm">#'+h.n+' · '+h.title+'</div>';
+      p_hallazgos+='<div style="font-size:6.5pt;color:#475569;font-family:IBM Plex Mono,monospace;line-height:1.5;margin-bottom:1.5mm">'+h.data+'</div>';
+      p_hallazgos+='<div style="font-size:6.5pt;color:#475569;line-height:1.5"><span style="color:#16a34a;font-weight:700;font-style:italic">Implicación: </span><span style="font-style:italic">'+h.imp+'</span></div>';
+      p_hallazgos+='</div></div></div>';
+    });
+    p_hallazgos+=_rptFooterInd('Hallazgos');
+    p_hallazgos+='</div>';
+
+    // Section dividers
+    var _secEvidence='<div class="report-page" style="background:#0f172a;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:200px;-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+      +'<div style="color:#94a3b8;font-size:9px;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Sección 2</div>'
+      +'<div style="color:#fff;font-size:18px;font-weight:900;text-align:center">Sustento y evidencia</div>'
+      +'<div style="color:#64748b;font-size:9px;margin-top:8px;text-align:center">Datos que respaldan la tesis</div>'
+      +'</div>';
+
+    var _secInventario='<div class="report-page" style="background:#1e293b;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:200px;-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+      +'<div style="color:#94a3b8;font-size:9px;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Sección 3</div>'
+      +'<div style="color:#fff;font-size:18px;font-weight:900;text-align:center">Inventario de mercado</div>'
+      +'<div style="color:#64748b;font-size:9px;margin-top:8px;text-align:center">Bodegas · Parques · Terrenos disponibles</div>'
+      +'</div>';
+
         // Orden narrativa comercial: conclusión primero, evidencia después
-        return p1+pExec+p3+pIdx+p4+p_dem_ind+p_nse+p_ind1+p_ind2+p_demanda+p_zona_ind+p_clusters+p_clusters2+pMapParques+pMapRenta+pMapVenta+p_bod1+p_bod2+p_bod3+p_ter+p_ind_concl+p_ind_concl2+p11;
+        return p1
+          // ── SECCIÓN 1: LA OPORTUNIDAD ──────────────────────────────────
+          + pExec          // hero: oportunidad vs mercados comparables
+          + p_contexto     // contexto nacional: Norte vs Saltillo vs La Laguna
+          + p_hallazgos    // 5 hallazgos que mueven la decisión
+          + p_ind_concl    // recomendación como decisión (cap rate, clase, renta)
+          + p_ind_concl2   // especificaciones, metodología score
+          // ── SECCIÓN 2: SUSTENTO Y EVIDENCIA ────────────────────────────
+          + _secEvidence
+          + p_demanda + p4 + p_nse + p_ind1 + p_clusters + p_clusters2
+          // ── SECCIÓN 3: INVENTARIO ────────────────────────────────────────
+          + _secInventario
+          + p_zona_ind + p3 + pMapParques + pMapRenta + pMapVenta + p_bod1 + p_bod2 + p_bod3 + p_ter
+          // ── CIERRE ───────────────────────────────────────────────────────
+          + p11;
   }
 
   // Estadísticas del municipio completo para comparativa en heatmaps
