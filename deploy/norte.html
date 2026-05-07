@@ -4500,8 +4500,8 @@ function generarReporte(){
 
     // ── BLOQUE TESIS ───────────────────────────────────────────────
     pExec+='<div style="background:#fff;border-left:4px solid #16a34a;padding:3mm 4mm;margin:0 0 3mm">';
-    pExec+='<div style="font-size:7pt;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.5mm">Tesis</div>';
-    pExec+='<div style="font-size:7.5pt;color:#1e293b;line-height:1.6">'+_pxTesisPara+' Comparado con Saltillo (vacancia subiendo, renta estancada) y el mercado norte en general (construcción -20% YoY), La Laguna muestra la mejor dinámica de absorción y precio del norte del país en 2025.</div>';
+    pExec+='<div style="font-size:7pt;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.5mm">Veredicto · ZM La Laguna 2025</div>';
+    pExec+='<div style="font-size:7.5pt;color:#1e293b;line-height:1.6">La Laguna es el mercado industrial del norte con mejor relación precio–renta–vacancia en 2025. Mientras el norte general se estabiliza (construcción −20% YoY) y Saltillo enfrenta saturación (vacancia 3.8% subiendo), La Laguna registra absorción creciente (+34.6%), precio récord (+17% YoY) y un pipeline de inversión empresarial activo ($785 M USD comprometidos). <span style="color:#16a34a;font-weight:600">La recomendación de inversión para la zona específica analizada se presenta en la sección siguiente.</span></div>';
     pExec+='</div>';
 
     // ── SECCIÓN "POR QUÉ LO DECIMOS" — 5 hallazgos ───────────────
@@ -4636,7 +4636,7 @@ function generarReporte(){
     var _munDesocDisp=(_munDesocPct===0||isNaN(_munDesocPct))?'n/d':P1(_munDesocPct);
     var p4='<div class="report-page">';
     p4+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p4+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">Establecida la zona, analizamos el recurso humano disponible para operar una nave industrial.</div>';
+    p4+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">Analizados los datos de demanda a nivel ZM La Laguna, enfocamos ahora en el recurso humano disponible <strong>dentro de la zona analizada</strong> — el pool de trabajadores que operaría una nave industrial aquí.</div>';
     p4+='<div style="border-bottom:3px solid #0369a1;padding-bottom:2mm;margin-bottom:2.5mm">';
     p4+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Pool Laboral Disponible</div>';
     p4+='<div style="font-size:7pt;color:#0369a1;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Demografía para análisis industrial · Zona vs ZM La Laguna</div>';
@@ -5403,10 +5403,10 @@ function generarReporte(){
     // ══════════════════════════════════════════════════════════════
     var p_ind1='<div class="report-page">';
     p_ind1+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p_ind1+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">Con el perfil laboral claro, identificamos qué sectores económicos generan demanda de espacio industrial en esta zona.</div>';
+    p_ind1+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">Cerramos el sustento con los motores económicos que explican por qué hay demanda industrial en la ZM La Laguna. Estos datos son de la zona metropolitana completa — no sólo de los AGEBs analizados.</div>';
     p_ind1+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:2mm">';
-    p_ind1+='<div style="font-size:14pt;font-weight:700;color:#0f172a">Vocación económica de la zona</div>';
-    p_ind1+='<div style="font-size:7pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Sectores que generan demanda de espacio industrial · INEGI Censo Económico 2018→2023</div>';
+    p_ind1+='<div style="font-size:14pt;font-weight:700;color:#0f172a">Motores Económicos · ZM La Laguna</div>';
+    p_ind1+='<div style="font-size:7pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Sectores que generan demanda de espacio industrial en la ZM · INEGI Censo Económico 2018→2023</div>';
     p_ind1+='</div>';
     // Párrafo narrativo dinámico
     var _topSub=[].concat(_cM,_cC,_cT).filter(function(r){return r.e23>0;}).sort(function(a,b){return b.e23-a.e23;})[0];
@@ -5758,26 +5758,19 @@ function generarReporte(){
     var p_bod3='<div class="report-page">';
     p_bod3+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     p_bod3+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:3.5mm">';
-    p_bod3+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Recomendación de Bodega · '+munPrincipal+'</div>';
-    p_bod3+='<div style="font-size:7.5pt;color:#64748b;font-family:IBM Plex Mono,monospace;margin-top:1mm">Clase óptima · precio de entrada · tenant target · diferenciadores · análisis de competencia</div>';
+    p_bod3+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Análisis de Mercado · Bodega · Zona</div>';
+    p_bod3+='<div style="font-size:7.5pt;color:#64748b;font-family:IBM Plex Mono,monospace;margin-top:1mm">Cap rate · renta mediana · competencia directa en la zona · industrias demandantes</div>';
     p_bod3+='</div>';
 
     var _topInd=[].concat(_cM,_cC,_cT).sort(function(a,b){return b.e23-a.e23;}).slice(0,5);
 
-    // Fila 1: recomendación (izq) + factores (der)
+    p_bod3+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:2.5mm">';
+    p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #0f172a;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">'+_clsRec+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">Clase predom. zona</div></div>';
+    p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #16a34a;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace">'+(_capMed?_capMed.toFixed(1)+'%':'~11%')+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">Cap rate estimado</div></div>';
+    p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #0369a1;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+_precioRec+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">Renta mediana zona</div></div>';
+    p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #d97706;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#d97706;font-family:IBM Plex Mono,monospace">'+_bodsZona.length+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">Bodegas en zona</div></div>';
+    p_bod3+='</div>';
     p_bod3+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-bottom:2.5mm">';
-
-    // Clase recomendada
-    p_bod3+='<div style="background:#0f172a;border-radius:5px;padding:3mm;color:white">';
-    p_bod3+='<div style="font-size:5pt;font-weight:700;color:#c7d2fe;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Clase Recomendada · '+munPrincipal+'</div>';
-    p_bod3+='<div style="font-size:20pt;font-weight:700;line-height:1;margin-bottom:1mm">'+_clsRec+'</div>';
-    p_bod3+='<div style="font-size:5.5pt;color:#e0e7ff;line-height:1.4;margin-bottom:1.5mm">'+_clsDesc+'</div>';
-    p_bod3+='<div style="border-top:1px solid rgba(255,255,255,.2);padding-top:1.5mm"><div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5mm">';
-    p_bod3+='<div><div style="font-size:4.5pt;color:#a5b4fc;text-transform:uppercase">Precio sugerido</div><div style="font-size:7pt;font-weight:700;color:#fff;font-family:IBM Plex Mono,monospace">'+_precioRec+'</div></div>';
-    p_bod3+='<div><div style="font-size:4.5pt;color:#a5b4fc;text-transform:uppercase">Cap Rate estimado</div><div style="font-size:7pt;font-weight:700;color:#4ade80;font-family:IBM Plex Mono,monospace">'+(_capMed?_capMed.toFixed(1)+'%':'—')+'</div></div>';
-    p_bod3+='<div><div style="font-size:4.5pt;color:#a5b4fc;text-transform:uppercase">Competidores zona</div><div style="font-size:7pt;font-weight:700;color:#fff;font-family:IBM Plex Mono,monospace">'+_bodsZona.length+' bodegas</div></div>';
-    p_bod3+='<div><div style="font-size:4.5pt;color:#a5b4fc;text-transform:uppercase">NSE zona</div><div style="font-size:7pt;font-weight:700;color:#fff;font-family:IBM Plex Mono,monospace">'+nsePredZona+'</div></div>';
-    p_bod3+='</div></div></div>';
 
     // Factores de decisión
     p_bod3+='<div><div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:1.5mm">Factores de Decisión</div>';
@@ -6094,8 +6087,8 @@ function generarReporte(){
     var p_ind_concl2='<div class="report-page">';
     p_ind_concl2+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     p_ind_concl2+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:2.5mm">';
-    p_ind_concl2+='<div style="font-size:14pt;font-weight:700;color:#0f172a">Recomendaciones Estratégicas · '+munPrincipal+'</div>';
-    p_ind_concl2+='<div style="font-size:7pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Tipo de nave recomendada · Pros & Contras · Infraestructura · Sectores objetivo</div>';
+    p_ind_concl2+='<div style="font-size:14pt;font-weight:700;color:#0f172a">Especificaciones Técnicas · Sectores Objetivo</div>';
+    p_ind_concl2+='<div style="font-size:7pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Especificaciones óptimas de nave · Factores positivos y de riesgo · Sectores industriales objetivo</div>';
     p_ind_concl2+='</div>';
 
     // ── Síntesis del entorno: economía + demografía + mercado ──────
@@ -6119,13 +6112,6 @@ function generarReporte(){
     else{_indRisks.push('NSE del entorno limitado — orientar producto a precio competitivo');}
     var _indScoreColor=_indScore>=5?'#16a34a':_indScore>=3?'#d97706':'#dc2626';
     var _indScoreLbl=_indScore>=5?'ENTORNO INDUSTRIAL FAVORABLE':_indScore>=3?'ENTORNO MODERADO — DIFERENCIACIÓN CLAVE':'ENTORNO RETADOR — NICHO ESPECÍFICO';
-    p_ind_concl2+='<div style="background:'+_indScoreColor+';color:#fff;border-radius:5px;padding:2.5mm 4mm;margin-bottom:2.5mm;display:flex;align-items:center;gap:3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
-    p_ind_concl2+='<span style="font-size:20pt;font-weight:700;font-family:IBM Plex Mono,monospace;line-height:1">'+_indScore+'<span style="font-size:8pt;opacity:.75">/7</span></span>';
-    p_ind_concl2+='<div><div style="font-size:9pt;font-weight:700;letter-spacing:.3px">'+_indScoreLbl+'</div><div style="font-size:6.5pt;opacity:.85;margin-top:.3mm">'+n+' AGEBs · Empleo + Demografía + Mercado + NSE</div></div>';
-    p_ind_concl2+='</div>';
-    p_ind_concl2+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:1.5mm 2mm;margin-bottom:2mm;font-size:4pt;color:#64748b;line-height:1.6">';
-    p_ind_concl2+='<strong style="color:#475569">Metodología score (0–7 pts):</strong> (1) Crecimiento empleo 2018-23 ×2, (2) Pool laboral en edad activa + escolaridad ×2, (3) Oferta disponible en zona ×2, (4) NSE predominante del entorno ×1. Fuentes: Censo Económico INEGI 2023 · Inventario COEZA 2025 · Censo Demográfico INEGI 2020.';
-    p_ind_concl2+='</div>';
 
     // ── Tipo de nave recomendada ──────────────────────────────────
     var _naveRec='',_naveDesc='',_naveColor='#0369a1';
@@ -6147,17 +6133,10 @@ function generarReporte(){
       _naveDesc='Entorno NSE popular con alta oferta — posicionarse en segmento precio-volumen para PyMEs locales, almacenaje, comercio mayorista y distribución regional de bajo costo.';
       _competenciaDesc=_bodsZona.length+' bodegas en zona. Alta oferta relativa — precio competitivo indispensable.';
     }
-    p_ind_concl2+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:2.5mm;margin-bottom:2.5mm">';
-    // Nave recomendada
-    p_ind_concl2+='<div style="border:2px solid '+_naveColor+';border-radius:5px;padding:2.5mm;background:'+_naveColor+'0d">';
-    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:'+_naveColor+';font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">▶ Tipo de Nave Recomendada</div>';
-    p_ind_concl2+='<div style="font-size:11pt;font-weight:700;color:'+_naveColor+';font-family:IBM Plex Mono,monospace;margin-bottom:1.5mm">'+_naveRec+'</div>';
-    p_ind_concl2+='<div style="font-size:5.5pt;color:#334155;line-height:1.55">'+_naveDesc+'</div>';
-    p_ind_concl2+='<div style="margin-top:1.5mm;font-size:5pt;color:#64748b;font-style:italic">Competencia: '+_competenciaDesc+'</div>';
-    p_ind_concl2+='</div>';
-    // Precio y especificaciones
+    p_ind_concl2+='<div style="margin-bottom:2.5mm">';
+    // Precio y especificaciones (full width)
     p_ind_concl2+='<div style="border:1px solid #e2e8f0;border-radius:5px;padding:2.5mm;background:#f8fafc">';
-    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Especificaciones Técnicas Recomendadas</div>';
+    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Especificaciones Técnicas Recomendadas · Clase '+_naveRec+'</div>';
     var _specAltura=_nseScore>=6?'12-14 m':_nseScore>=4?'9-12 m':'7-9 m';
     var _specPiso=_nseScore>=6?'8-10 ton/m²':_nseScore>=4?'6-7 ton/m²':'4-5 ton/m²';
     var _specKva=_nseScore>=6?'≥500 kVA':_nseScore>=4?'150-300 kVA':'100-150 kVA';
@@ -6331,6 +6310,7 @@ function generarReporte(){
       p_hallazgos+='<div style="font-size:6.5pt;color:#475569;line-height:1.5"><span style="color:#16a34a;font-weight:700;font-style:italic">Implicación: </span><span style="font-style:italic">'+h.imp+'</span></div>';
       p_hallazgos+='</div></div></div>';
     });
+    p_hallazgos+='<div style="margin-top:2mm;padding:2mm 2.5mm;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;font-size:5pt;color:#166534;line-height:1.5"><strong>Nota:</strong> Los datos 1–4 son de ZM La Laguna (mercado completo). El análisis de clusters, pool laboral y cap rate en las secciones siguientes se enfoca en la zona específica seleccionada.</div>';
     p_hallazgos+=_rptFooterInd('Hallazgos');
     p_hallazgos+='</div>';
 
@@ -6357,10 +6337,10 @@ function generarReporte(){
           + p_ind_concl2   // especificaciones, metodología score
           // ── SECCIÓN 2: SUSTENTO Y EVIDENCIA ────────────────────────────
           + _secEvidence
-          + p_demanda + p4 + p_nse + p_ind1 + p_clusters + p_clusters2
+          + p_demanda + p4 + p3 + p_nse + p_ind1 + p_clusters + p_clusters2
           // ── SECCIÓN 3: INVENTARIO ────────────────────────────────────────
           + _secInventario
-          + p_zona_ind + p3 + pMapParques + pMapRenta + pMapVenta + p_bod1 + p_bod2 + p_bod3 + p_ter
+          + p_zona_ind + pMapParques + pMapRenta + pMapVenta + p_bod1 + p_bod2 + p_bod3 + p_ter
           // ── CIERRE ───────────────────────────────────────────────────────
           + p11;
   }
@@ -6580,57 +6560,73 @@ function calcularBBoxZona(){
 function generarClusterMapRpt(clPts,clLabels,clNames,W,H,cb){
   var canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
   var ctx=canvas.getContext('2d');
-  // Background
-  ctx.fillStyle='#f1f5f9';ctx.fillRect(0,0,W,H);
-  // Geographic bounds with padding
-  var minLat=25.43,maxLat=25.64,minLon=-103.57,maxLon=-103.20;
-  function toX(lon){return(lon-minLon)/(maxLon-minLon)*W;}
-  function toY(lat){return H-(lat-minLat)/(maxLat-minLat)*H;}
-  // Cluster colors
-  var clColors=['#0369a1','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#ea580c','#84cc16'];
-  // Draw cluster halos (large semi-transparent circles per cluster centroid)
-  var clusterCentroids={};
-  clPts.forEach(function(p,i){
-    var lbl=clLabels[i];if(lbl<=0)return;
-    if(!clusterCentroids[lbl])clusterCentroids[lbl]={sumLat:0,sumLon:0,n:0};
-    clusterCentroids[lbl].sumLat+=p.lat;clusterCentroids[lbl].sumLon+=p.lon;clusterCentroids[lbl].n++;
+  // Compute center from all asset points
+  var allLats=clPts.map(function(p){return p.lat;}),allLons=clPts.map(function(p){return p.lon;});
+  var cLat=(Math.min.apply(null,allLats)+Math.max.apply(null,allLats))/2||25.54;
+  var cLon=(Math.min.apply(null,allLons)+Math.max.apply(null,allLons))/2||(-103.41);
+  var zoom=11;
+  // Load CartoCDN tiles as background, then draw clusters on top
+  cargarTilesRpt(canvas,ctx,cLat,cLon,zoom,function(){
+    var clColors=['#0369a1','#16a34a','#d97706','#dc2626','#7c3aed','#0891b2','#ea580c','#84cc16'];
+    // Cluster centroids
+    var clusterCentroids={};
+    clPts.forEach(function(p,i){
+      var lbl=clLabels[i];if(lbl<=0)return;
+      if(!clusterCentroids[lbl])clusterCentroids[lbl]={sumLat:0,sumLon:0,n:0};
+      clusterCentroids[lbl].sumLat+=p.lat;clusterCentroids[lbl].sumLon+=p.lon;clusterCentroids[lbl].n++;
+    });
+    // Draw halos
+    Object.keys(clusterCentroids).forEach(function(lbl,idx){
+      var c=clusterCentroids[lbl];
+      var pt=ll2canvas(c.sumLat/c.n,c.sumLon/c.n,cLat,cLon,zoom,W,H);
+      var col=clColors[(parseInt(lbl)-1)%clColors.length];
+      ctx.beginPath();ctx.arc(pt[0],pt[1],55,0,2*Math.PI);
+      ctx.fillStyle=col+'28';ctx.fill();
+      ctx.strokeStyle=col;ctx.lineWidth=2;ctx.setLineDash([6,3]);ctx.stroke();ctx.setLineDash([]);
+    });
+    // Draw assets
+    clPts.forEach(function(p,i){
+      var lbl=clLabels[i];
+      var pt=ll2canvas(p.lat,p.lon,cLat,cLon,zoom,W,H);
+      var col=lbl>0?clColors[(parseInt(lbl)-1)%clColors.length]:'#94a3b8';
+      var r=p._type==='parque'?7:p._type==='terreno'?5:4;
+      ctx.beginPath();ctx.arc(pt[0],pt[1],r,0,2*Math.PI);
+      ctx.fillStyle=col;ctx.fill();
+      ctx.strokeStyle='#fff';ctx.lineWidth=1.2;ctx.stroke();
+    });
+    // Draw cluster labels with background pill
+    Object.keys(clusterCentroids).forEach(function(lbl,idx){
+      var c=clusterCentroids[lbl];
+      var pt=ll2canvas(c.sumLat/c.n,c.sumLon/c.n,cLat,cLon,zoom,W,H);
+      var col=clColors[(parseInt(lbl)-1)%clColors.length];
+      var name=clNames[lbl]||('C'+lbl);
+      var shortName=name.length>18?name.substring(0,18)+'…':name;
+      var labelY=pt[1]-60;
+      // pill background
+      ctx.font='bold 9px Arial';
+      var tw=ctx.measureText('C'+lbl).width;
+      ctx.fillStyle=col;
+      ctx.fillRect(pt[0]-tw/2-5,labelY-11,tw+10,15);
+      ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText('C'+lbl,pt[0],labelY);
+      // zone name below pill
+      ctx.font='7px Arial';ctx.fillStyle='#0f172a';
+      ctx.fillStyle='rgba(255,255,255,0.85)';
+      var nw=ctx.measureText(shortName).width;
+      ctx.fillRect(pt[0]-nw/2-3,labelY+3,nw+6,11);
+      ctx.fillStyle='#334155';ctx.fillText(shortName,pt[0],labelY+12);
+    });
+    // Legend
+    var ly=H-58;
+    ctx.fillStyle='rgba(255,255,255,0.9)';ctx.fillRect(8,ly-13,170,54);
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.strokeRect(8,ly-13,170,54);
+    ctx.fillStyle='#0f172a';ctx.font='bold 8px Arial';ctx.textAlign='left';ctx.fillText('Tipos de activo',14,ly);
+    [{col:'#0369a1',label:'Parque industrial ('+clPts.filter(function(p){return p._type==='parque';}).length+')',r:6},{col:'#16a34a',label:'Bodega ('+clPts.filter(function(p){return p._type==='bodega';}).length+')',r:4},{col:'#d97706',label:'Terreno ('+clPts.filter(function(p){return p._type==='terreno';}).length+')',r:5}].forEach(function(it,i){
+      ctx.beginPath();ctx.arc(18,ly+10+i*13,it.r,0,2*Math.PI);ctx.fillStyle=it.col;ctx.fill();
+      ctx.strokeStyle='#fff';ctx.lineWidth=0.8;ctx.stroke();
+      ctx.fillStyle='#475569';ctx.font='7px Arial';ctx.fillText(it.label,30,ly+14+i*13);
+    });
+    cb(canvas.toDataURL('image/png'));
   });
-  Object.keys(clusterCentroids).forEach(function(lbl,idx){
-    var c=clusterCentroids[lbl];
-    var cx=toX(c.sumLon/c.n),cy=toY(c.sumLat/c.n);
-    var col=clColors[(parseInt(lbl)-1)%clColors.length];
-    ctx.beginPath();ctx.arc(cx,cy,45,0,2*Math.PI);
-    ctx.fillStyle=col+'22';ctx.fill();
-    ctx.strokeStyle=col+'66';ctx.lineWidth=1.5;ctx.stroke();
-  });
-  // Draw assets
-  clPts.forEach(function(p,i){
-    var lbl=clLabels[i];
-    var x=toX(p.lon),y=toY(p.lat);
-    var col=lbl>0?clColors[(parseInt(lbl)-1)%clColors.length]:'#94a3b8';
-    var r=p._type==='parque'?5:p._type==='terreno'?4:3;
-    ctx.beginPath();ctx.arc(x,y,r,0,2*Math.PI);
-    ctx.fillStyle=col;ctx.fill();
-    ctx.strokeStyle='#fff';ctx.lineWidth=0.8;ctx.stroke();
-  });
-  // Draw cluster labels
-  Object.keys(clusterCentroids).forEach(function(lbl,idx){
-    var c=clusterCentroids[lbl];
-    var cx=toX(c.sumLon/c.n),cy=toY(c.sumLat/c.n)-52;
-    var col=clColors[(parseInt(lbl)-1)%clColors.length];
-    ctx.fillStyle=col;ctx.font='bold 10px Arial';ctx.textAlign='center';
-    ctx.fillText('C'+lbl,cx,cy);
-  });
-  // Legend (bottom left)
-  var ly=H-55;
-  ctx.fillStyle='rgba(255,255,255,0.85)';ctx.fillRect(8,ly-12,160,50);
-  ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.strokeRect(8,ly-12,160,50);
-  ctx.fillStyle='#0f172a';ctx.font='bold 8px Arial';ctx.textAlign='left';ctx.fillText('Tipos de activo',14,ly);
-  [{col:'#0369a1',label:'Parque industrial',r:5},{col:'#16a34a',label:'Bodega',r:3},{col:'#d97706',label:'Terreno industrial',r:4}].forEach(function(it,i){
-    ctx.beginPath();ctx.arc(18,ly+10+i*12,it.r,0,2*Math.PI);ctx.fillStyle=it.col;ctx.fill();
-    ctx.fillStyle='#475569';ctx.font='7px Arial';ctx.fillText(it.label,28,ly+13+i*12);
-  });
-  cb(canvas.toDataURL('image/png'));
 }
 
 function capturarMapaRpt(callback){
