@@ -134,7 +134,7 @@ select option{background:var(--s2)}
 #topbar .tbtn.ind-act{background:rgba(0,226,224,0.18)!important;color:#00e2e0!important;border-color:rgba(0,226,224,0.45)!important}
 #topbar .tbtn.ind-act-r{background:rgba(74,222,128,0.18)!important;color:#4ade80!important;border-color:rgba(74,222,128,0.45)!important}
 #topbar .tbtn.ind-act-v{background:rgba(240,184,64,0.18)!important;color:#f0b840!important;border-color:rgba(240,184,64,0.45)!important}
-#topbar .tbtn.ind-act-t{background:rgba(251,146,60,0.18)!important;color:#fb923c!important;border-color:rgba(251,146,60,0.45)!important}
+#topbar .tbtn.ind-act-t{background:rgba(251,146,60,0.18)!important;color:#d97706!important;border-color:rgba(251,146,60,0.45)!important}
 #ind-panel{border-top:1px solid var(--bd);padding:11px 13px;flex-shrink:0;background:rgba(0,226,224,0.02)}
 #ind-panel .ind-hdr{display:flex;align-items:center;gap:7px;margin-bottom:8px}
 #ind-panel .ind-hdr-ico{font-size:14px}
@@ -149,7 +149,7 @@ select option{background:var(--s2)}
 #ind-panel .ind-tgl.on-p{background:rgba(0,226,224,0.15);border-color:rgba(0,226,224,0.5);color:#00e2e0}
 #ind-panel .ind-tgl.on-r{background:rgba(74,222,128,0.15);border-color:rgba(74,222,128,0.5);color:#4ade80}
 #ind-panel .ind-tgl.on-v{background:rgba(240,184,64,0.15);border-color:rgba(240,184,64,0.5);color:#f0b840}
-#ind-panel .ind-tgl.on-t{background:rgba(251,146,60,0.15);border-color:rgba(251,146,60,0.5);color:#fb923c}
+#ind-panel .ind-tgl.on-t{background:rgba(251,146,60,0.15);border-color:rgba(251,146,60,0.5);color:#d97706}
 #ind-zona{margin-top:6px;padding-top:7px;border-top:1px solid var(--bd)}
 #ind-zona .ind-zona-ttl{font-family:var(--mono);font-size:9px;font-weight:700;color:var(--m1);text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
 #ind-zona .ind-bod-row{display:flex;align-items:center;gap:5px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:9.5px}
@@ -1264,7 +1264,7 @@ body.mob-ui #help-card{max-height:85vh!important}
   <button class="mob-tool-btn" id="mob-ind-parques" onclick="toggleIndLayer('parques')">&#127981; Parques</button>
   <button class="mob-tool-btn" id="mob-ind-renta" onclick="toggleIndLayer('renta')" style="color:#4ade80">&#11044; Renta</button>
   <button class="mob-tool-btn" id="mob-ind-venta" onclick="toggleIndLayer('venta')" style="color:#f0b840">&#11044; Venta</button>
-  <button class="mob-tool-btn" id="mob-ind-terrenos" onclick="toggleIndLayer('terrenos')" style="color:#fb923c">&#9726; Terrenos</button>
+  <button class="mob-tool-btn" id="mob-ind-terrenos" onclick="toggleIndLayer('terrenos')" style="color:#d97706">&#9726; Terrenos</button>
 </div>
 
 <!-- ── BARRA INFERIOR MÓVIL ── -->
@@ -4055,10 +4055,10 @@ function generarReporte(){
     var _escV=function(s){return s==='pos'?2:s==='mod'?1:0;};
     var _execScore=_escV(_esc1)+_escV(_esc2)+_escV(_esc3)+_escV(_esc4)+_escV(_esc5);
     var _execScoreDisp=_execScore;
-    // Sin rojo: peor color = naranja (#ea580c). Label "CON OPORTUNIDAD" en vez de "DESFAVORABLE".
-    var _execColor=_execScore>=7?'#16a34a':_execScore>=4?'#d97706':'#ea580c';
-    var _execBg=_execScore>=7?'rgba(22,163,74,0.08)':_execScore>=4?'rgba(217,119,6,0.08)':'rgba(234,88,12,0.08)';
-    var _execBorder=_execScore>=7?'rgba(22,163,74,0.3)':_execScore>=4?'rgba(217,119,6,0.3)':'rgba(234,88,12,0.3)';
+    // Sin rojo: peor color = naranja (#d97706). Label "CON OPORTUNIDAD" en vez de "DESFAVORABLE".
+    var _execColor=_execScore>=7?'#16a34a':_execScore>=4?'#d97706':'#dc2626';
+    var _execBg=_execScore>=7?'rgba(22,163,74,0.08)':_execScore>=4?'rgba(217,119,6,0.08)':'rgba(220,38,38,0.08)';
+    var _execBorder=_execScore>=7?'rgba(22,163,74,0.3)':_execScore>=4?'rgba(217,119,6,0.3)':'rgba(220,38,38,0.3)';
     var _execLbl=_execScore>=7?'FAVORABLE':_execScore>=4?'MODERADO':'CON OPORTUNIDAD';
 
     // NSE y segmento de producto (sin precio — orientación cualitativa)
@@ -4135,12 +4135,12 @@ function generarReporte(){
     else _signals+=_sig('✓','<strong>Sin vocación vacacional ('+P1(pctVivTemp)+')</strong> — la demanda es de residencia permanente. Sin distorsión de uso temporal en el parque habitacional.','#059669');
 
     // 2. Densidad de ocupación por vivienda — siempre muestra una de tres variantes
-    if(avgHpV>munAvgHpV+0.3) _signals+=_sig('★','<strong>Alta ocupación por vivienda: '+N(avgHpV,2)+' personas/viv</strong> vs '+N(munAvgHpV,2)+' en el municipio. Más personas comparten cada vivienda que el promedio — señal de demanda no satisfecha. Oportunidad para producto accesible o crédito INFONAVIT.','#7c3aed');
+    if(avgHpV>munAvgHpV+0.3) _signals+=_sig('★','<strong>Alta ocupación por vivienda: '+N(avgHpV,2)+' personas/viv</strong> vs '+N(munAvgHpV,2)+' en el municipio. Más personas comparten cada vivienda que el promedio — señal de demanda no satisfecha. Oportunidad para producto accesible o crédito INFONAVIT.','#0369a1');
     else if(avgHpV<munAvgHpV-0.3) _signals+=_sig('✓','<strong>Ocupación por vivienda baja: '+N(avgHpV,2)+' personas/viv</strong> (municipio: '+N(munAvgHpV,2)+'). Familias más pequeñas o mayor disponibilidad de espacio — compatible con producto de mayor ticket o viviendas compactas de calidad.','#059669');
     else _signals+=_sig('◑','<strong>Ocupación por vivienda estándar: '+N(avgHpV,2)+' personas/viv</strong> (municipio: '+N(munAvgHpV,2)+'). Densidad habitacional alineada con la media — sin presión extrema ni exceso de espacio. Perfil de demanda equilibrada.','#64748b');
 
     // 3. Demanda proyectada 2030 — siempre muestra una de tres variantes
-    if(_vivNecesarias>100) _signals+=_sig('★','<strong>~'+N(_vivNecesarias)+' viviendas a 2030</strong> para absorber +'+N(_demanda2030)+' hab. proyectados — ventana de oportunidad activa en los próximos 5–7 años.','#7c3aed');
+    if(_vivNecesarias>100) _signals+=_sig('★','<strong>~'+N(_vivNecesarias)+' viviendas a 2030</strong> para absorber +'+N(_demanda2030)+' hab. proyectados — ventana de oportunidad activa en los próximos 5–7 años.','#0369a1');
     else if(_demanda2030>0) _signals+=_sig('◑','<strong>Demanda moderada 2030: ~'+N(_vivNecesarias)+' viviendas</strong> para +'+N(_demanda2030)+' hab. Crecimiento pausado — evaluar escala del proyecto.','#0369a1');
     else _signals+=_sig('◑','<strong>Sin crecimiento proyectado a 2030.</strong> Demanda de nueva vivienda limitada — evaluar producto de reemplazo o rehabilitación.','#64748b');
 
@@ -4203,7 +4203,7 @@ function generarReporte(){
     else _pxRisks.push('NSE del entorno limitado — orientar producto a precio competitivo');
     if(!_pxOps.length)_pxOps.push('Zona con potencial industrial identificado');
     if(!_pxRisks.length)_pxRisks.push('Confirmar viabilidad con estudio de absorción y broker industrial');
-    var _pxScoreColor=_pxScore>=6?'#16a34a':_pxScore>=3?'#d97706':'#ea580c';
+    var _pxScoreColor=_pxScore>=6?'#16a34a':_pxScore>=3?'#d97706':'#dc2626';
     var _pxScoreLbl=_pxScore>=6?'ENTORNO FAVORABLE':_pxScore>=3?'ENTORNO MODERADO':'ENTORNO RETADOR';
     var _pxConcl=_pxScore>=6
       ?'La zona presenta un <strong>entorno industrial favorable ('+_pxScore+'/8)</strong>: la ZM La Laguna registra crecimiento sostenido de empleo manufacturero y logístico, la demografía local ofrece un pool laboral de calidad con escolaridad de '+N(avgEsc,1)+' años, y el NSE del entorno ('+nsePredZona+') es compatible con tenants de '+_pxClsRec+'. La inversión estimada en la ZM alcanza $'+(_pxZmInv>=1000?(_pxZmInv/1000).toFixed(1)+'B':_pxZmInv.toFixed(0))+' MDP (2023), señal de confianza del sector privado. <strong>Se recomienda avanzar con estudios de absorción</strong> para confirmar demanda efectiva y definir especificaciones técnicas óptimas.'
@@ -4325,6 +4325,7 @@ function generarReporte(){
     // ────────── PÁGINA 3: Crecimiento Comparativo ──────────
     var p3='<div class="report-page">';
     p3+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    p3+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">El siguiente mapa delimita la zona de análisis y su contexto urbano-industrial.</div>';
     p3+='<div class="rpt-meta">'+munPrincipal+' · Analisis Comparativo · '+fecha+'</div>';
     p3+='<div class="rpt-section">Crecimiento Comparativo 2010-2020 · Zona vs '+munPrincipal+' vs '+(GEO&&GEO.estado||'Estado')+'*</div>';
     p3+='<div class="rpt-charts">';
@@ -4377,6 +4378,7 @@ function generarReporte(){
     var _munDesocDisp=(_munDesocPct===0||isNaN(_munDesocPct))?'n/d':P1(_munDesocPct);
     var p4='<div class="report-page">';
     p4+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    p4+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">Establecida la zona, analizamos el recurso humano disponible para operar una nave industrial.</div>';
     p4+='<div style="border-bottom:3px solid #0369a1;padding-bottom:2mm;margin-bottom:2.5mm">';
     p4+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Pool Laboral Disponible</div>';
     p4+='<div style="font-size:7pt;color:#0369a1;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Demografía para análisis industrial · Zona vs ZM La Laguna</div>';
@@ -4430,7 +4432,7 @@ function generarReporte(){
     var _escIns2=avgEsc>11?'Escolaridad <strong>'+N(avgEsc,1)+' años</strong> — perfil técnico-universitario (manufactura de precisión, automotriz, electrónica).':avgEsc>9?'Escolaridad <strong>'+N(avgEsc,1)+' años</strong> — adecuado para manufactura estándar y logística.':'Escolaridad <strong>'+N(avgEsc,1)+' años</strong> — operaciones básicas; considerar plan de capacitación interna.';
     var _nseIns2=pNseAlto>35?'NSE <strong>'+nsePredZona+'</strong> — apto para parques corporativos y tenants internacionales.':pNseAlto>20?'NSE <strong>'+nsePredZona+'</strong> — mezcla técnico-operativa. Flexible para distintos tipos industriales.':'NSE <strong>'+nsePredZona+'</strong> — costos laborales competitivos; ideal para manufactura y distribución.';
     p4+='<div style="border:1px solid #bae6fd;background:#f0f9ff;border-radius:4px;padding:2mm">';
-    p4+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #7c3aed;padding-bottom:1mm;margin-bottom:1.5mm">Implicación industrial</div>';
+    p4+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:1.5mm">Implicación industrial</div>';
     [
       'Pool laboral <strong>'+_poolTipo+'</strong> para operaciones industriales de '+(_workerPct>60?'gran escala':_workerPct>50?'escala media':'escala reducida o mixta')+'.',
       _peaIns2,
@@ -4639,7 +4641,7 @@ function generarReporte(){
     else pMapParques+='<div style="width:100%;height:120mm;background:#f0f4f8;border:1px solid #e2e8f0;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#94a3b8;margin-bottom:3mm">Sin mapa disponible</div>';
     pMapParques+='<table style="width:100%;border-collapse:collapse;font-size:6.5pt"><thead><tr style="background:#ecfeff"><th style="padding:1mm 1.5mm;text-align:center;color:#0e7490;width:6mm">#</th><th style="padding:1mm 1.5mm;text-align:left;color:#0e7490">Parque</th><th style="padding:1mm 1.5mm;text-align:center;color:#0e7490">Mun.</th><th style="padding:1mm 1.5mm;text-align:center;color:#0e7490">Cls</th><th style="padding:1mm 1.5mm;text-align:right;color:#0e7490">ha</th><th style="padding:1mm 1.5mm;text-align:right;color:#0e7490">Renta MXN</th><th style="padding:1mm 1.5mm;text-align:right;color:#0e7490">Renta USD</th><th style="padding:1mm 1.5mm;text-align:left;color:#0e7490">Ocupación</th></tr></thead><tbody>';
     INDUSTRIAL.parques.forEach(function(p2,i){
-      var clsC=p2.cls==='A'?'#6d28d9':p2.cls==='B'?'#16a34a':'#78716c';
+      var clsC=p2.cls==='A'?'#0f172a':p2.cls==='B'?'#16a34a':'#78716c';
       pMapParques+='<tr style="border-bottom:1px solid #cffafe;'+(i%2?'background:#f0fdff':'')+'"><td style="padding:.8mm 1.5mm;text-align:center;font-family:IBM Plex Mono,monospace;font-weight:700;color:#00e2e0">'+(i+1)+'</td>';
       pMapParques+='<td style="padding:.8mm 1.5mm;font-weight:600;color:#0f172a">'+p2.nom+'</td>';
       pMapParques+='<td style="padding:.8mm 1.5mm;text-align:center;color:#475569">'+p2.mun+'</td>';
@@ -4688,22 +4690,22 @@ function generarReporte(){
     var pMapVenta='<div class="report-page">';
     pMapVenta+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     pMapVenta+='<div class="rpt-title" style="font-size:13pt;margin-bottom:1.5mm">Bodegas en Venta & Terrenos Industriales · ZM La Laguna</div>';
-    pMapVenta+='<div style="font-size:8pt;color:#64748b;margin-bottom:3mm">'+_bodsVentaMap.length+' bodegas en venta · '+_terAllMap.length+' terrenos · <span style="color:#f0b840;font-weight:600">●</span> Venta &nbsp;|&nbsp; <span style="color:#fb923c;font-weight:600">▪</span> Terreno &nbsp;|&nbsp; <span style="color:#f0b840;font-weight:600">✛</span> Zona analizada</div>';
+    pMapVenta+='<div style="font-size:8pt;color:#64748b;margin-bottom:3mm">'+_bodsVentaMap.length+' bodegas en venta · '+_terAllMap.length+' terrenos · <span style="color:#f0b840;font-weight:600">●</span> Venta &nbsp;|&nbsp; <span style="color:#d97706;font-weight:600">▪</span> Terreno &nbsp;|&nbsp; <span style="color:#f0b840;font-weight:600">✛</span> Zona analizada</div>';
     if(mVentMap){pMapVenta+='<img src="'+mVentMap+'" style="width:100%;height:auto;border-radius:5px;border:1px solid #e2e8f0;display:block;margin-bottom:2mm"/>';}
     else pMapVenta+='<div style="width:100%;height:110mm;background:#f0f4f8;border:1px solid #e2e8f0;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#94a3b8;margin-bottom:2mm">Sin mapa disponible</div>';
     pMapVenta+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm">';
     pMapVenta+='<div><div style="font-size:6pt;font-weight:700;color:#92400e;font-family:IBM Plex Mono,monospace;text-transform:uppercase;border-bottom:1.5px solid #f0b840;padding-bottom:.5mm;margin-bottom:1mm">Bodegas en Venta</div>';
     pMapVenta+='<table style="width:100%;border-collapse:collapse;font-size:5.5pt"><thead><tr style="background:#fffbeb"><th style="padding:.5mm;text-align:left;color:#92400e">Zona</th><th style="padding:.5mm;text-align:right;color:#92400e">m²</th><th style="padding:.5mm;text-align:right;color:#92400e">$/m²</th><th style="padding:.5mm;text-align:center;color:#92400e">Cls</th></tr></thead><tbody>';
     _bodsVentaMap.forEach(function(b,i){
-      var clsC=b.cls==='A'?'#6d28d9':b.cls==='B+'?'#0891b2':b.cls==='B'?'#16a34a':'#78716c';
+      var clsC=b.cls==='A'?'#0f172a':b.cls==='B+'?'#0369a1':b.cls==='B'?'#16a34a':'#78716c';
       pMapVenta+='<tr style="border-bottom:1px solid #fef3c7;'+(i%2?'background:#fffbf0':'')+'"><td style="padding:.4mm .5mm;font-size:5pt">'+b.zona.slice(0,22)+'</td><td style="padding:.4mm .5mm;text-align:right;font-family:IBM Plex Mono,monospace">'+Math.round(b.m2)+'</td><td style="padding:.4mm .5mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#92400e">$'+(b.vta_m2||'—')+'</td><td style="padding:.4mm .5mm;text-align:center"><span style="background:'+clsC+';color:#fff;border-radius:1px;padding:0 2px;font-weight:700;font-size:4.5pt">'+b.cls+'</span></td></tr>';
     });
     if(!_bodsVentaMap.length) pMapVenta+='<tr><td colspan="4" style="padding:2mm;text-align:center;color:#94a3b8">Sin bodegas en venta catalogadas</td></tr>';
     pMapVenta+='</tbody></table></div>';
-    pMapVenta+='<div><div style="font-size:6pt;font-weight:700;color:#7c2d12;font-family:IBM Plex Mono,monospace;text-transform:uppercase;border-bottom:1.5px solid #fb923c;padding-bottom:.5mm;margin-bottom:1mm">Terrenos Industriales</div>';
+    pMapVenta+='<div><div style="font-size:6pt;font-weight:700;color:#1e293b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;border-bottom:1.5px solid #0f172a;padding-bottom:.5mm;margin-bottom:1mm">Terrenos Industriales</div>';
     pMapVenta+='<table style="width:100%;border-collapse:collapse;font-size:5.5pt"><thead><tr style="background:#fff7ed"><th style="padding:.5mm;text-align:left;color:#7c2d12">Zona</th><th style="padding:.5mm;text-align:right;color:#7c2d12">ha</th><th style="padding:.5mm;text-align:right;color:#7c2d12">$/m²</th><th style="padding:.5mm;text-align:center;color:#7c2d12">Cls</th></tr></thead><tbody>';
     _terAllMap.forEach(function(t,i){
-      var clsC=t.cls==='A'?'#6d28d9':t.cls==='A/B'?'#1d4ed8':t.cls==='B+'?'#0891b2':t.cls==='B'?'#16a34a':'#78716c';
+      var clsC=t.cls==='A'?'#0f172a':t.cls==='A/B'?'#1e293b':t.cls==='B+'?'#0369a1':t.cls==='B'?'#16a34a':'#78716c';
       pMapVenta+='<tr style="border-bottom:1px solid #fed7aa;'+(i%2?'background:#fff7f0':'')+'"><td style="padding:.4mm .5mm;font-size:5pt">'+t.zona.slice(0,20)+'</td><td style="padding:.4mm .5mm;text-align:right;font-family:IBM Plex Mono,monospace">'+t.ha+'</td><td style="padding:.4mm .5mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#7c2d12">$'+t.precio_m2+'</td><td style="padding:.4mm .5mm;text-align:center"><span style="background:'+clsC+';color:#fff;border-radius:1px;padding:0 2px;font-weight:700;font-size:4.5pt">'+t.cls+'</span></td></tr>';
     });
     pMapVenta+='</tbody></table></div>';
@@ -4714,6 +4716,7 @@ function generarReporte(){
     // ── PÁGINA 11: Mapa de calor NSE (AMAI) ────────────────────
     var p_nse='<div class="report-page">';
     p_nse+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    p_nse+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">La distribución socioeconómica por AGEB define la calidad del pool laboral por subzona.</div>';
     p_nse+='<div class="rpt-title" style="font-size:14pt;margin-bottom:2mm">Nivel Socioeconómico por AGEB · '+munPrincipal+'</div>';
     p_nse+='<div style="font-size:9pt;color:#64748b;margin-bottom:2mm">'+((munNAgebs||0))+' AGEBs urbanos · <span style="color:#f0b840;font-weight:600">●</span> Zona analizada &nbsp;|&nbsp; Coloreo según NSE predominante AMAI por AGEB</div>';
     // Leyenda de colores NSE
@@ -4788,7 +4791,7 @@ function generarReporte(){
     var _scVal=function(s){return s==='pos'?2:s==='mod'?1:0;};
     var scorePos=_scVal(sc1)+_scVal(sc2)+_scVal(sc3)+_scVal(sc4)+_scVal(sc5);
     // Sin rojo: naranja como peor caso; "CON OPORTUNIDAD" en vez de "DESFAVORABLE"
-    var scoreColor=scorePos>=7?'#16a34a':scorePos>=4?'#d97706':'#ea580c';
+    var scoreColor=scorePos>=7?'#16a34a':scorePos>=4?'#d97706':'#dc2626';
     var scoreLbl=scorePos>=7?'FAVORABLE':scorePos>=4?'MODERADO':'CON OPORTUNIDAD';
     var scoreDisp=scorePos;
     p10+='<div style="background:'+scoreColor+';color:#fff;border-radius:6px;padding:3mm 5mm;margin-bottom:3mm;display:flex;align-items:center;gap:4mm">';
@@ -4796,9 +4799,9 @@ function generarReporte(){
     p10+='<div><div style="font-size:10.5pt;font-weight:700;letter-spacing:.5px">Entorno de Mercado · '+scoreLbl+'</div>';
     p10+='<div style="font-size:7.5pt;opacity:.85;margin-top:0.5mm">'+n+' AGEBs analizados · <span style="opacity:.7">≥7=Favorable · 4–6=Moderado · &lt;4=Con Oportunidad · moderado=1pt</span></div></div></div>';
     function scRow(status,label,val,bench,posDesc,modDesc,negDesc){
-      var c=status==='pos'?'#16a34a':status==='mod'?'#d97706':'#ea580c';
+      var c=status==='pos'?'#16a34a':status==='mod'?'#d97706':'#dc2626';
       var bg=status==='pos'?'#f0fdf4':status==='mod'?'#fffbeb':'#fff8f5';
-      var bd=status==='pos'?'#bbf7d0':status==='mod'?'#fde68a':'#fed7aa';
+      var bd=status==='pos'?'#bbf7d0':status==='mod'?'#fde68a':'#fecaca';
       var ic=status==='pos'?'✓':status==='mod'?'◑':'✗';
       var desc=status==='pos'?posDesc:status==='mod'?modDesc:negDesc;
       return '<div style="display:flex;align-items:flex-start;gap:2mm;padding:2mm 2.5mm;border-radius:3px;background:'+bg+';border:1px solid '+bd+'">'
@@ -4919,8 +4922,8 @@ function generarReporte(){
     _dualOps.forEach(function(t){ p10+='<div style="font-size:6.5pt;color:#166534;line-height:1.4;margin-bottom:1mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#16a34a">▸</span>'+t+'</div>'; });
     p10+='</div>';
     p10+='<div style="border:1.5px solid #fed7aa;border-radius:5px;padding:2.5mm 3mm;background:#fff8f5">';
-    p10+='<div style="font-size:6.5pt;font-weight:700;color:#ea580c;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2mm">⚠ Aspectos a considerar</div>';
-    _dualRisks.forEach(function(t){ p10+='<div style="font-size:6.5pt;color:#9a3412;line-height:1.4;margin-bottom:1mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#ea580c">▸</span>'+t+'</div>'; });
+    p10+='<div style="font-size:6.5pt;font-weight:700;color:#dc2626;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2mm">⚠ Aspectos a considerar</div>';
+    _dualRisks.forEach(function(t){ p10+='<div style="font-size:6.5pt;color:#9a3412;line-height:1.4;margin-bottom:1mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#dc2626">▸</span>'+t+'</div>'; });
     p10+='</div>';
     p10+='</div>';
 
@@ -5024,12 +5027,11 @@ function generarReporte(){
     pIdx+=_idxRow('5','Pool Laboral Disponible','PEA activa · escolaridad · benchmarks ZM · estructura de edades · implicación industrial');
     pIdx+=_idxRow('6','Actividad Económica y NSE','PEA activa · distribución NSE AMAI · perfil de tenants y mano de obra');
     pIdx+=_idxRow('7','Distribución NSE por AGEB','Heatmap categórico NSE · concentración de nivel socioeconómico por zona');
-    pIdx+=_idxSection('PANORAMA ECONÓMICO INDUSTRIAL','#ea580c');
-    pIdx+=_idxRow('9','Panorama Económico 2018→2023','Manufactura · Comercio · Logística — empleos, valor agregado, inversión, remuneraciones ZM');
-    pIdx+=_idxRow('10','Top Industrias ZM La Laguna','Ranking sectorial por empleo y VA · crecimiento intercensal · qué pide cada sector');
-    pIdx+=_idxRow('11','Demanda Actual del Mercado','Inventario ZM · absorción bruta 2025 · disponibilidad 6.2% · proyección 2026 · Fuente: Newmark 2S25');
-    pIdx+=_idxRow('12','Análisis Zona Industrial','Mercado de la zona analizada · competencia directa · recomendación de clase y precio');
-    pIdx+=_idxSection('MAPAS E INVENTARIO INDUSTRIAL','#7c3aed');
+    pIdx+=_idxSection('PANORAMA ECONÓMICO INDUSTRIAL','#0369a1');
+    pIdx+=_idxRow('9','Vocación económica · Sectores y demanda','Manufactura · Logística · Comercio — empleos, crecimiento intercensal, VA y demanda de bodega por sector');
+    pIdx+=_idxRow('10','Demanda Actual del Mercado','Inventario ZM · absorción bruta 2025 · disponibilidad 6.2% · proyección 2026 · Fuente: Newmark 2S25');
+    pIdx+=_idxRow('11','Análisis Zona Industrial','Mercado de la zona analizada · competencia directa · recomendación de clase y precio');
+    pIdx+=_idxSection('MAPAS E INVENTARIO INDUSTRIAL','#0f172a');
     pIdx+=_idxRow('13','Mapa Parques Industriales','Ubicación de parques industriales en ZM · distancia al terreno analizado · infraestructura');
     pIdx+=_idxRow('14','Mapa Inventario en Renta','Distribución geográfica de bodegas en renta · concentración por zona · precios asking');
     pIdx+=_idxRow('15','Mapa Inventario en Venta y Terrenos','Bodegas en venta + terrenos industriales disponibles · precio/m² por zona');
@@ -5099,7 +5101,7 @@ function generarReporte(){
     var _precioRec=_nseScore>=6?'$80-120 MXN/m²/mes':(_nseScore>=4?'$55-80 MXN/m²/mes':'$35-60 MXN/m²/mes');
     var _clsDesc=_nseScore>=6?'NSE alto → tenants exigentes. Spec institucional o BTS premium.':(_nseScore>=4?'NSE medio → manufactura ligera, logística y distribución regional.':'NSE bajo-medio → PyMEs locales, almacenaje y operaciones de menor escala.');
     var _allSubs=[].concat(_cM,_cC,_cT).filter(function(r){return r.e23>50;});
-    var _clsCols={'A':'#7c3aed','A-':'#4f46e5','B+':'#2563eb','B':'#0891b2','B-':'#0d9488','C+':'#16a34a','C':'#65a30d'};
+    var _clsCols={'A':'#0f172a','A-':'#1e293b','B+':'#0369a1','B':'#0369a1','B-':'#475569','C+':'#16a34a','C':'#94a3b8'};
 
     // ── Computaciones ampliadas (haversine · cap rate · bandas · VA) ──────────
     function _hav(lat1,lon1,lat2,lon2){var R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180,a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
@@ -5137,236 +5139,101 @@ function generarReporte(){
     var _tVA23=_sumC(_cT,'va23'),_tInv23=_sumC(_cT,'inv23'),_tRem23=_sumC(_cT,'rem23');
 
     // ══════════════════════════════════════════════════════════════
-    // PAG IND-1 · Panorama Económico 2018→2023
+    // PAG IND-1 · Vocación económica de la zona (fusión IND-1 + IND-2)
     // ══════════════════════════════════════════════════════════════
     var p_ind1='<div class="report-page">';
     p_ind1+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p_ind1+='<div style="border-bottom:3px solid #f97316;padding-bottom:2mm;margin-bottom:2mm;display:flex;align-items:baseline;gap:3mm">';
-    p_ind1+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Panorama Económico · ZM La Laguna</div>';
-    p_ind1+='<div style="font-size:7pt;color:#f97316;font-family:IBM Plex Mono,monospace;font-weight:700">Manufactura · Comercio · Logística · Censo INEGI 2018→2023</div>';
+    p_ind1+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">Con el perfil laboral claro, identificamos qué sectores económicos generan demanda de espacio industrial en esta zona.</div>';
+    p_ind1+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:2mm">';
+    p_ind1+='<div style="font-size:14pt;font-weight:700;color:#0f172a">Vocación económica de la zona</div>';
+    p_ind1+='<div style="font-size:7pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Sectores que generan demanda de espacio industrial · INEGI Censo Económico 2018→2023</div>';
     p_ind1+='</div>';
-    // KPI strip — 5 métricas ZM
-    p_ind1+='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1.5mm;margin-bottom:2mm">';
-    p_ind1+=_kpiBod2(_N2(_totE23),'Empleos ZM 2023','#092c3b');
-    p_ind1+=_kpiBod2('$'+_N2(_zmVA,0)+' M','Valor agregado','#ea580c');
-    p_ind1+=_kpiBod2('$'+_N2(_zmRem,0)+' M','Remuneraciones','#2563eb');
-    p_ind1+=_kpiBod2('$'+_N2(_zmInv,0)+' M','Inversión 2023','#7c3aed');
-    p_ind1+=_kpiBod2(_actSubs.length+' subsect.','Con actividad','#0891b2');
+    // Párrafo narrativo dinámico
+    var _topSub=[].concat(_cM,_cC,_cT).filter(function(r){return r.e23>0;}).sort(function(a,b){return b.e23-a.e23;})[0];
+    var _topSect=_topSub?_topSub.sub.substring(0,40):('Manufactura');
+    var _topE23=_topSub?_topSub.e23:0;
+    var _topDe=(_topSub&&_topSub.e18>0)?((_topSub.e23-_topSub.e18)/_topSub.e18*100):0;
+    var _vocTipo=_mE23>=_cE23&&_mE23>=_tE23?'manufacturera':(_tE23>=_cE23?'logística':'mixta');
+    var _deT=_totE18>0?((_totE23-_totE18)/_totE18*100):0;
+    p_ind1+='<div style="font-size:6.5pt;color:#1e293b;line-height:1.65;margin-bottom:3mm;padding:2mm 2.5mm;background:#f8fafc;border-left:3px solid #0f172a;border-radius:0 4px 4px 0">';
+    p_ind1+='La ZM La Laguna concentra <strong>'+_N2(_totE23)+'</strong> empleos en sectores industriales (2023), con un crecimiento de <strong>'+((_deT>=0?'▲':'▼')+Math.abs(_deT).toFixed(1)+'%')+'</strong> respecto a 2018. ';
+    p_ind1+='El sector líder es <strong>'+_topSect+'</strong> con '+_N2(_topE23)+' empleos y '+(_topDe>=0?'+':'')+_topDe.toFixed(0)+'% de crecimiento intercensal. ';
+    p_ind1+='Esta vocación <strong>'+_vocTipo+'</strong> define el tipo de tenant que demanda espacio en la zona.';
     p_ind1+='</div>';
 
-    // Grid: tabla (58%) + columna derecha (42%)
-    p_ind1+='<div style="display:grid;grid-template-columns:58% 42%;gap:3mm">';
+    // KPI strip — 4 métricas ZM
+    p_ind1+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5mm;margin-bottom:2.5mm">';
+    p_ind1+=_kpiBod2(_N2(_totE23),'Empleos ZM 2023','#0f172a');
+    p_ind1+=_kpiBod2('$'+_N2(_zmVA,0)+' M','Valor agregado','#0369a1');
+    p_ind1+=_kpiBod2('$'+_N2(_zmInv,0)+' M','Inversión 2023','#0369a1');
+    p_ind1+=_kpiBod2(_actSubs.length+' subsect.','Con actividad','#475569');
+    p_ind1+='</div>';
 
-    // ── Col izquierda: tabla completa de subsectores
-    p_ind1+='<div>';
-    p_ind1+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #00e2e0;padding-bottom:1mm;margin-bottom:1.5mm">Todos los Subsectores · ZM La Laguna 2023 · SCIAN 2 dígitos</div>';
-    p_ind1+='<table style="width:100%;border-collapse:collapse;font-size:4.5pt"><thead><tr style="background:#f1f5f9">';
-    p_ind1+='<th style="padding:.5mm .7mm;text-align:left;color:#64748b;font-weight:600">Subsector</th>';
-    p_ind1+='<th style="padding:.5mm .7mm;text-align:right;color:#064e3b;font-weight:600">Emp 23</th>';
-    p_ind1+='<th style="padding:.5mm .7mm;text-align:right;color:#64748b;font-weight:600">Δ%</th>';
-    p_ind1+='<th style="padding:.5mm .7mm;text-align:right;color:#ea580c;font-weight:600">VA MDP</th>';
-    p_ind1+='<th style="padding:.5mm .7mm;text-align:right;color:#2563eb;font-weight:600">Rem MDP</th>';
-    p_ind1+='<th style="padding:.5mm .7mm;text-align:right;color:#7c3aed;font-weight:600">Inv MDP</th>';
-    p_ind1+='<th style="padding:.5mm .7mm;text-align:right;color:#0891b2;font-weight:600">VA/emp</th>';
+    // Top 5 sectores tabla
+    var _top5=[].concat(_cM,_cC,_cT).filter(function(r){return r.e23>0;}).sort(function(a,b){return b.e23-a.e23;}).slice(0,5);
+    var _demBod={'31':'Nave media 1,500–4,000 m²','32':'Nave media 1,500–4,000 m²','33':'Nave alta 4,000–12,000 m²','43':'Almacén distribución','48':'Terminal logística B+','49':'Terminal logística B+'};
+    p_ind1+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e2e8f0;padding-bottom:1mm;margin-bottom:1.5mm">Top 5 Sectores · Empleos y Demanda de Bodega</div>';
+    p_ind1+='<table style="width:100%;border-collapse:collapse;font-size:5pt;margin-bottom:3mm"><thead><tr style="background:#f1f5f9">';
+    p_ind1+='<th style="padding:.6mm .8mm;text-align:left;color:#475569;font-weight:600">Sector</th>';
+    p_ind1+='<th style="padding:.6mm .8mm;text-align:right;color:#0f172a;font-weight:600">Empleos 2023</th>';
+    p_ind1+='<th style="padding:.6mm .8mm;text-align:right;color:#475569;font-weight:600">Crec. 2018–23</th>';
+    p_ind1+='<th style="padding:.6mm .8mm;text-align:right;color:#0369a1;font-weight:600">VA 2023 ($M)</th>';
+    p_ind1+='<th style="padding:.6mm .8mm;text-align:left;color:#475569;font-weight:600">Demanda de bodega</th>';
     p_ind1+='</tr></thead><tbody>';
-    _actSubs.forEach(function(r,i){
-      var col=_scol[r.sec_n+'']||'#64748b',nm=r.sub.length>36?r.sub.substring(0,36)+'…':r.sub;
-      var deCol=r.d_e>0?'#16a34a':'#dc2626',deTxt=r.e18>0?(r.d_e>=0?'▲':'▼')+Math.abs(r.d_e).toFixed(0)+'%':'nuevo';
-      var vaEmp=r.e23>0&&r.va23>0?(r.va23*1e6/r.e23/1000).toFixed(0)+'k':'—';
-      p_ind1+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .7mm"><span style="width:4px;height:4px;border-radius:50%;background:'+col+';display:inline-block;margin-right:1.5px;vertical-align:middle"></span>'+nm+'</td>';
-      p_ind1+='<td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#064e3b">'+_N2(r.e23)+'</td>';
-      p_ind1+='<td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;color:'+deCol+'">'+deTxt+'</td>';
-      p_ind1+='<td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#ea580c">'+(r.va23>0?'$'+_N2(r.va23,0):'—')+'</td>';
-      p_ind1+='<td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#2563eb">'+(r.rem23>0?'$'+_N2(r.rem23,0):'—')+'</td>';
-      p_ind1+='<td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#7c3aed">'+(r.inv23>0?'$'+_N2(r.inv23,0):'—')+'</td>';
-      p_ind1+='<td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#0891b2">'+vaEmp+'</td>';
+    _top5.forEach(function(r,i){
+      var nm=r.sub.length>38?r.sub.substring(0,38)+'…':r.sub;
+      var deCol=r.d_e>=0?'#16a34a':'#dc2626';
+      var deTxt=r.e18>0?(r.d_e>=0?'▲':'▼')+Math.abs(r.d_e).toFixed(0)+'%':'nuevo';
+      var demTxt=_demBod[r.sec_n+'']||'Nave estándar';
+      p_ind1+='<tr style="border-bottom:1px solid #e2e8f0;'+(i%2?'background:#f8fafc':'background:#fff')+'"><td style="padding:.6mm .8mm;color:#1e293b">'+nm+'</td>';
+      p_ind1+='<td style="padding:.6mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#0f172a">'+_N2(r.e23)+'</td>';
+      p_ind1+='<td style="padding:.6mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:'+deCol+'">'+deTxt+'</td>';
+      p_ind1+='<td style="padding:.6mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#0369a1">'+(r.va23>0?'$'+_N2(r.va23,0):'—')+'</td>';
+      p_ind1+='<td style="padding:.6mm .8mm;color:#475569;font-size:4.5pt">'+demTxt+'</td>';
       p_ind1+='</tr>';
     });
     p_ind1+='</tbody></table>';
-    p_ind1+='<div style="font-size:3.8pt;color:#94a3b8;margin-top:.5mm">Censo Económico INEGI 2023 · ZM La Laguna · Valores en millones de pesos corrientes · VA/emp = $pesos/empleado</div>';
+
+    // 3 columnas categoría — Manufactura · Logística · Comercio
+    var _mDe=_mE18>0?((_mE23-_mE18)/_mE18*100):0;
+    var _tDe2=_tE18>0?((_tE23-_tE18)/_tE18*100):0;
+    var _cDe=_cE18>0?((_cE23-_cE18)/_cE18*100):0;
+    var _totInd=_mE23+_tE23+_cE23||1;
+    p_ind1+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.5mm;margin-bottom:2.5mm">';
+
+    // Col 1 — Manufactura (blue left border)
+    p_ind1+='<div style="border-left:3px solid #0369a1;border-radius:0 4px 4px 0;background:#f8fafc;padding:2mm 2.5mm">';
+    p_ind1+='<div style="font-size:5.5pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1.5mm">Manufactura (31–33)</div>';
+    p_ind1+='<div style="font-size:12pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1;margin-bottom:.5mm">'+_N2(_mE23)+'</div>';
+    p_ind1+='<div style="font-size:4.8pt;color:#475569;margin-bottom:.8mm">'+(_mE23/_totInd*100).toFixed(0)+'% del total · crec. <span style="color:'+(_mDe>=0?'#16a34a':'#dc2626')+';font-weight:700">'+(_mDe>=0?'▲':'▼')+Math.abs(_mDe).toFixed(0)+'%</span></div>';
+    p_ind1+='<div style="font-size:4.5pt;color:#1e293b;line-height:1.5">Motor principal de la zona. Requiere naves con altura libre 8–12 m, pisos 5–7 ton/m² y potencia trifásica.</div>';
     p_ind1+='</div>';
 
-    // ── Col derecha
-    p_ind1+='<div>';
-    // Helper _miniSec
-    function _miniSec(tit,col,bg,brd,e18,e23,va23,rem23){
-      var de=e18>0?((e23-e18)/e18*100):0;
-      var vae=e23>0&&va23>0?(va23*1e6/e23/1000).toFixed(0)+'k':'—';
-      var s='<div style="border:1.5px solid '+brd+';border-radius:4px;padding:1.5mm 2mm;background:'+bg+';margin-bottom:1.5mm">';
-      s+='<div style="font-size:5pt;font-weight:700;color:'+col+';font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1mm">'+tit+'</div>';
-      s+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.8mm">';
-      s+='<div><div style="font-size:4pt;color:#64748b">Empleos</div><div style="font-size:8pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;line-height:1">'+_N2(e23)+'</div><div style="font-size:4pt;color:'+(de>=0?'#16a34a':'#dc2626')+'">'+(de>=0?'▲':'▼')+Math.abs(de).toFixed(0)+'%</div></div>';
-      s+='<div><div style="font-size:4pt;color:#64748b">VA (MDP)</div><div style="font-size:7pt;font-weight:700;color:#ea580c;font-family:IBM Plex Mono,monospace;line-height:1">$'+_N2(va23,0)+'</div><div style="font-size:4pt;color:#64748b"></div></div>';
-      s+='<div><div style="font-size:4pt;color:#64748b">Rem (MDP)</div><div style="font-size:7pt;font-weight:700;color:#2563eb;font-family:IBM Plex Mono,monospace;line-height:1">$'+_N2(rem23,0)+'</div><div style="font-size:4pt;color:#64748b"></div></div>';
-      s+='<div><div style="font-size:4pt;color:#64748b">VA/emp</div><div style="font-size:7pt;font-weight:700;color:#0891b2;font-family:IBM Plex Mono,monospace;line-height:1">'+vae+'</div><div style="font-size:4pt;color:#64748b">$/trab.</div></div>';
-      s+='</div></div>';
-      return s;
-    }
-    p_ind1+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #f97316;padding-bottom:1mm;margin-bottom:1.5mm">Sectores · ZM La Laguna</div>';
-    p_ind1+=_miniSec('Manufactura','#ea580c','#fff7ed','#fed7aa',_mE18,_mE23,_mVA23,_mRem23);
-    p_ind1+=_miniSec('Comercio al por Mayor','#2563eb','#eff6ff','#bfdbfe',_cE18,_cE23,_cVA23,_cRem23);
-    p_ind1+=_miniSec('Transporte & Logística','#7c3aed','#f5f3ff','#ddd6fe',_tE18,_tE23,_tVA23,_tRem23);
-
-    // ── ZM → Municipio benchmark
-    var _munBodsPct=(function(){var n=INDUSTRIAL.bodegas.filter(function(b){return b.mun===munPrincipal;}).length;return INDUSTRIAL.bodegas.length>0?(n/INDUSTRIAL.bodegas.length*100):0;})();
-    var _munPqsN=INDUSTRIAL.parques.filter(function(p){return p.mun===munPrincipal;}).length;
-    var _munPqsPct=INDUSTRIAL.parques.length>0?(_munPqsN/INDUSTRIAL.parques.length*100):0;
-    var _munRentaL=INDUSTRIAL.bodegas.filter(function(b){return b.mun===munPrincipal&&b.op==='Renta'&&b.rent_m2>0;}).map(function(b){return b.rent_m2;}).sort(function(a,b){return a-b;});
-    var _munMedRentaL=_munRentaL.length?_munRentaL[Math.floor(_munRentaL.length/2)]:null;
-    var _escConc=_munBodsPct>=60?'concentración dominante':(_munBodsPct>=35?'concentración relevante':'participación moderada');
-    p_ind1+='<div style="border:1.5px solid #fed7aa;border-radius:4px;padding:1.5mm;background:#fff7ed;margin-bottom:1.5mm">';
-    p_ind1+='<div style="font-size:5pt;font-weight:700;color:#c2410c;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1mm">ZM La Laguna → '+munPrincipal+' · Concentración</div>';
-    p_ind1+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1mm;margin-bottom:1mm">';
-    p_ind1+='<div style="text-align:center;background:#fff;border:1px solid #fed7aa;border-radius:3px;padding:1mm"><div style="font-size:9pt;font-weight:700;color:#c2410c;font-family:IBM Plex Mono,monospace;line-height:1">'+_munBodsPct.toFixed(0)+'%</div><div style="font-size:3.8pt;color:#92400e">del inventario ZM</div><div style="font-size:3.5pt;color:#b45309">bodegas en mpio.</div></div>';
-    p_ind1+='<div style="text-align:center;background:#fff;border:1px solid #fed7aa;border-radius:3px;padding:1mm"><div style="font-size:9pt;font-weight:700;color:#c2410c;font-family:IBM Plex Mono,monospace;line-height:1">'+_munPqsN+'/30</div><div style="font-size:3.8pt;color:#92400e">parques industriales</div><div style="font-size:3.5pt;color:#b45309">'+_munPqsPct.toFixed(0)+'% de la ZM</div></div>';
-    p_ind1+='<div style="text-align:center;background:#fff;border:1px solid #fed7aa;border-radius:3px;padding:1mm"><div style="font-size:9pt;font-weight:700;color:#c2410c;font-family:IBM Plex Mono,monospace;line-height:1">$'+(_munMedRentaL?_munMedRentaL.toFixed(0):_medGR.toFixed(0))+'</div><div style="font-size:3.8pt;color:#92400e">renta med MXN/m²</div><div style="font-size:3.5pt;color:#b45309">ZM med: $'+_medGR.toFixed(0)+'</div></div>';
-    p_ind1+='</div>';
-    p_ind1+='<div style="font-size:4.5pt;color:#92400e;line-height:1.4">'+munPrincipal+' presenta <strong>'+_escConc+'</strong> con el '+_munBodsPct.toFixed(0)+'% del inventario ZM. '+(_munBodsPct>=50?'Posición dominante: mayor demanda industrial pero también mayor competencia en segmentos B/B-.':'Demanda balanceada entre municipios; menor presión competitiva favorece rentas sostenidas.')+'</div>';
+    // Col 2 — Logística (purple → dark navy per palette)
+    p_ind1+='<div style="border-left:3px solid #0f172a;border-radius:0 4px 4px 0;background:#f8fafc;padding:2mm 2.5mm">';
+    p_ind1+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1.5mm">Logística (48–49)</div>';
+    p_ind1+='<div style="font-size:12pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1;margin-bottom:.5mm">'+_N2(_tE23)+'</div>';
+    p_ind1+='<div style="font-size:4.8pt;color:#475569;margin-bottom:.8mm">'+(_tE23/_totInd*100).toFixed(0)+'% del total · crec. <span style="color:'+(_tDe2>=0?'#16a34a':'#dc2626')+';font-weight:700">'+(_tDe2>=0?'▲':'▼')+Math.abs(_tDe2).toFixed(0)+'%</span></div>';
+    p_ind1+='<div style="font-size:4.5pt;color:#1e293b;line-height:1.5">Posición geográfica La Laguna como cruce de corredores. Demanda terminales B+ con patio semirremolques.</div>';
     p_ind1+='</div>';
 
-    // ── Insights de inversión y subsectores
-    p_ind1+='<div style="background:#f0f9ff;border-left:2.5px solid #0284c7;border-radius:3px;padding:1.5mm;margin-bottom:1.5mm">';
-    p_ind1+='<div style="font-size:4.8pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.8mm">¿Qué significa esta inversión?</div>';
-    p_ind1+='<div style="font-size:4.5pt;color:#1e293b;line-height:1.5">La inversión fija bruta de $'+_N2(_zmInv,0)+' MDP registrada en la ZM La Laguna representa compromisos de largo plazo en equipo, maquinaria e infraestructura. Para una zona industrial esto indica <strong>expansión productiva real</strong>, no especulativa: las empresas están ampliando capacidad instalada. Una inversión alta relativa al número de unidades económicas señala operaciones intensivas en capital, típicas de manufactura pesada y logística.</div>';
+    // Col 3 — Comercio mayoreo (green)
+    p_ind1+='<div style="border-left:3px solid #16a34a;border-radius:0 4px 4px 0;background:#f8fafc;padding:2mm 2.5mm">';
+    p_ind1+='<div style="font-size:5.5pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1.5mm">Comercio mayoreo (43)</div>';
+    p_ind1+='<div style="font-size:12pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1;margin-bottom:.5mm">'+_N2(_cE23)+'</div>';
+    p_ind1+='<div style="font-size:4.8pt;color:#475569;margin-bottom:.8mm">'+(_cE23/_totInd*100).toFixed(0)+'% del total · crec. <span style="color:'+(_cDe>=0?'#16a34a':'#dc2626')+';font-weight:700">'+(_cDe>=0?'▲':'▼')+Math.abs(_cDe).toFixed(0)+'%</span></div>';
+    p_ind1+='<div style="font-size:4.5pt;color:#1e293b;line-height:1.5">CEDIS regionales con andenes múltiples, cross-docking y acceso a vías primarias. Plazos 1–3 años.</div>';
     p_ind1+='</div>';
-    p_ind1+='<div style="background:#fefce8;border-left:2.5px solid #ca8a04;border-radius:3px;padding:1.5mm;margin-bottom:1.5mm">';
-    p_ind1+='<div style="font-size:4.8pt;font-weight:700;color:#a16207;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.8mm">Subsectores más atractivos para bodega</div>';
-    p_ind1+='<div style="font-size:4.5pt;color:#1e293b;line-height:1.5">Los sectores 31–33 (Manufactura) concentran el mayor valor agregado de la zona, con subsectores como fabricación de prendas, alimentos procesados y autopartes mostrando crecimiento constante. El sector 48–49 (Transporte y Logística) gana peso por la posición geográfica de La Laguna como cruce de corredores nacionales. Para bodega industrial: <strong>manufactura ligera y distribución regional son los arrendatarios más estables</strong>.</div>';
-    p_ind1+='</div>';
-    p_ind1+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1mm">';
-    p_ind1+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;padding:1mm;text-align:center"><div style="font-size:4.3pt;color:#64748b;margin-bottom:.3mm">Torreón</div><div style="font-size:6.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">Hub principal</div><div style="font-size:3.8pt;color:#94a3b8">mayor inventario formal</div></div>';
-    p_ind1+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;padding:1mm;text-align:center"><div style="font-size:4.3pt;color:#64748b;margin-bottom:.3mm">Gómez Palacio</div><div style="font-size:6.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">Zona en expansión</div><div style="font-size:3.8pt;color:#94a3b8">menor costo de suelo</div></div>';
-    p_ind1+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:3px;padding:1mm;text-align:center"><div style="font-size:4.3pt;color:#64748b;margin-bottom:.3mm">Lerdo</div><div style="font-size:6.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">Corredor Norte</div><div style="font-size:3.8pt;color:#94a3b8">parques industriales activos</div></div>';
-    p_ind1+='</div>';
-    p_ind1+='<div style="font-size:4.3pt;color:#64748b;line-height:1.45;margin-top:1mm">Gómez Palacio ofrece ventajas competitivas en costo de suelo frente a Torreón (estimado 15–25% menor en zonas industriales equivalentes), con acceso directo a la carretera México–Juárez. El Parque Industrial Lagunero y la Zona Industrial Lerdo completan el inventario formal de la ZM. La demanda más dinámica proviene de operadores logísticos 3PL y manufactura de exportación hacia la frontera norte.</div>';
 
-    p_ind1+='</div></div>'; // cierra col derecha + grid
+    p_ind1+='</div>'; // cierra grid 3 cols
 
-    // Footer strip
-    var _deT=_totE18>0?((_totE23-_totE18)/_totE18*100):0;
-    p_ind1+='<div style="margin-top:1.5mm;background:#092c3b;border-radius:4px;padding:1.5mm 3mm;display:flex;gap:5mm;align-items:center">';
-    p_ind1+='<div style="font-size:5pt;font-weight:700;color:#b2f0ef;font-family:IBM Plex Mono,monospace;text-transform:uppercase;flex-shrink:0">ZM La Laguna · '+_actSubs.length+' subsectores</div>';
-    p_ind1+='<div style="text-align:center"><div style="font-size:10pt;font-weight:700;color:#00e2e0;font-family:IBM Plex Mono,monospace">'+_N2(_totE23)+'</div><div style="font-size:4pt;color:#7dd3d2">empleos 2023</div></div>';
-    p_ind1+='<div style="text-align:center"><div style="font-size:7.5pt;font-weight:700;color:'+(_deT>=0?'#4ade80':'#f87171')+';font-family:IBM Plex Mono,monospace">'+(_deT>=0?'▲':'▼')+Math.abs(_deT).toFixed(1)+'%</div><div style="font-size:4pt;color:#7dd3d2">vs 2018</div></div>';
-    p_ind1+='<div style="text-align:center"><div style="font-size:7.5pt;font-weight:700;color:#f0b840;font-family:IBM Plex Mono,monospace">$'+_N2(_zmVA,0)+' M</div><div style="font-size:4pt;color:#7dd3d2">valor agregado</div></div>';
-    p_ind1+='<div style="text-align:center"><div style="font-size:7.5pt;font-weight:700;color:#29ebb9;font-family:IBM Plex Mono,monospace">$'+_N2(_zmRem,0)+' M</div><div style="font-size:4pt;color:#7dd3d2">remuneraciones</div></div>';
-    p_ind1+='<div style="text-align:center"><div style="font-size:7.5pt;font-weight:700;color:#a78bfa;font-family:IBM Plex Mono,monospace">$'+_N2(_zmInv,0)+' M</div><div style="font-size:4pt;color:#7dd3d2">inversión</div></div>';
-    p_ind1+='<div style="text-align:center"><div style="font-size:7.5pt;font-weight:700;color:#e2e8f0;font-family:IBM Plex Mono,monospace">'+_N2(_totE23-_totE18)+'</div><div style="font-size:4pt;color:#7dd3d2">empleos netos</div></div>';
-    p_ind1+='</div>';
     p_ind1+=_rptFooterInd(1);
     p_ind1+='</div>';
 
     // ══════════════════════════════════════════════════════════════
-    // PAG IND-2 · Top Industrias 2023 — ranking, VA/emp, inversión, crecimiento
+    // PAG IND-2 · VACÍO — fusionado en p_ind1
     // ══════════════════════════════════════════════════════════════
-    var p_ind2='<div class="report-page">';
-    p_ind2+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p_ind2+='<div style="border-bottom:3px solid #f97316;padding-bottom:2mm;margin-bottom:2mm">';
-    p_ind2+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Top Industrias · ZM La Laguna 2023</div>';
-    p_ind2+='<div style="font-size:7pt;color:#64748b;font-family:IBM Plex Mono,monospace;margin-top:1mm">Ranking por empleo · VA/empleado · inversión · crecimiento · implicaciones para bodegas y parques</div>';
-    p_ind2+='</div>';
-
-    var _top20=[].concat(_cM,_cC,_cT).filter(function(r){return r.e23>0;}).sort(function(a,b){return b.e23-a.e23;}).slice(0,20);
-    var _maxE23=_top20.length?_top20[0].e23:1;
-    // Top 5 por crecimiento relativo (min 500 empleos en 2018)
-    var _topCrec=[].concat(_cM,_cC,_cT).filter(function(r){return r.e18>=500&&r.d_e!==null;}).sort(function(a,b){return b.d_e-a.d_e;}).slice(0,5);
-    // Top 5 por VA/empleado
-    var _topVAe=[].concat(_cM,_cC,_cT).filter(function(r){return r.e23>0&&r.va23>0;}).sort(function(a,b){return (b.va23/b.e23)-(a.va23/a.e23);}).slice(0,5);
-
-    p_ind2+='<div style="display:grid;grid-template-columns:56% 44%;gap:3mm">';
-
-    // ── Col izquierda: tabla top 20 con VA/emp + inv
-    p_ind2+='<div>';
-    p_ind2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #00e2e0;padding-bottom:1mm;margin-bottom:1.5mm">Top 20 por Empleos 2023 · SCIAN 2 dígitos</div>';
-    p_ind2+='<table style="width:100%;border-collapse:collapse;font-size:4.5pt"><thead><tr style="background:#f1f5f9">';
-    p_ind2+='<th style="padding:.5mm .6mm;text-align:center;color:#64748b;font-weight:600;width:3.5mm">#</th>';
-    p_ind2+='<th style="padding:.5mm .6mm;text-align:left;color:#64748b;font-weight:600">Subsector</th>';
-    p_ind2+='<th style="padding:.5mm .6mm;text-align:right;color:#064e3b;font-weight:600">Emp 23</th>';
-    p_ind2+='<th style="padding:.5mm .6mm;text-align:right;color:#64748b;font-weight:600">Δ%</th>';
-    p_ind2+='<th style="padding:.5mm .6mm;text-align:right;color:#ea580c;font-weight:600">VA MDP</th>';
-    p_ind2+='<th style="padding:.5mm .6mm;text-align:right;color:#0891b2;font-weight:600">VA/emp</th>';
-    p_ind2+='<th style="padding:.5mm .6mm;text-align:right;color:#7c3aed;font-weight:600">Inv MDP</th>';
-    p_ind2+='</tr></thead><tbody>';
-    _top20.forEach(function(r,i){
-      var col=_scol[r.sec_n+'']||'#64748b',nm=r.sub.length>32?r.sub.substring(0,32)+'…':r.sub;
-      var deCol=r.d_e>=0?'#16a34a':'#dc2626',deTxt=r.e18>0?(r.d_e>=0?'▲':'▼')+Math.abs(r.d_e).toFixed(0)+'%':'nuevo';
-      var vaEmp=r.e23>0&&r.va23>0?(r.va23*1e6/r.e23/1000).toFixed(0)+'k':'—';
-      // color VA/emp por productividad: >400k=verde, >150k=azul, else gris
-      var vaCol=r.e23>0&&r.va23>0?(r.va23*1e6/r.e23>400000?'#059669':r.va23*1e6/r.e23>150000?'#0891b2':'#94a3b8'):'#94a3b8';
-      p_ind2+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .6mm;text-align:center;color:#94a3b8;font-family:IBM Plex Mono,monospace">'+(i+1)+'</td>';
-      p_ind2+='<td style="padding:.5mm .6mm"><span style="width:3.5px;height:3.5px;border-radius:50%;background:'+col+';display:inline-block;margin-right:1px;vertical-align:middle"></span>'+nm+'</td>';
-      p_ind2+='<td style="padding:.5mm .6mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#064e3b">'+_N2(r.e23)+'</td>';
-      p_ind2+='<td style="padding:.5mm .6mm;text-align:right;font-family:IBM Plex Mono,monospace;color:'+deCol+'">'+deTxt+'</td>';
-      p_ind2+='<td style="padding:.5mm .6mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#ea580c">'+(r.va23>0?'$'+_N2(r.va23,0):'—')+'</td>';
-      p_ind2+='<td style="padding:.5mm .6mm;text-align:right;font-family:IBM Plex Mono,monospace;color:'+vaCol+'">'+vaEmp+'</td>';
-      p_ind2+='<td style="padding:.5mm .6mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#7c3aed">'+(r.inv23>0?'$'+_N2(r.inv23,0):'—')+'</td>';
-      p_ind2+='</tr>';
-    });
-    p_ind2+='</tbody></table>';
-    p_ind2+='<div style="font-size:3.8pt;color:#94a3b8;margin-top:.5mm">INEGI Censo 2023 · Valores MDP corrientes · VA/emp = pesos por trabajador · verde >$400k/emp, azul >$150k/emp</div>';
-    p_ind2+='</div>';
-
-    // ── Col derecha: barras + rankings secundarios + implicaciones
-    p_ind2+='<div>';
-    p_ind2+='<div style="font-size:5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #f97316;padding-bottom:1mm;margin-bottom:1.5mm">Distribución · Top 8 por Empleo</div>';
-    _top20.slice(0,8).forEach(function(r){p_ind2+=_bar3h(r.sub,r.e23,_maxE23,_scol[r.sec_n+'']||'#64748b');});
-
-    // Top crecimiento
-    p_ind2+='<div style="border-top:1px solid #e2e8f0;margin-top:1.5mm;padding-top:1.5mm">';
-    p_ind2+='<div style="font-size:5pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1mm">▲ Top 5 Crecimiento 2018→2023</div>';
-    _topCrec.forEach(function(r){
-      var nm=r.sub.length>30?r.sub.substring(0,30)+'…':r.sub;
-      p_ind2+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8mm;padding:.5mm;background:#f0fdf4;border-radius:2px;border-left:2px solid #4ade80">';
-      p_ind2+='<div style="font-size:4.5pt;color:#064e3b;line-height:1.2;flex:1">'+nm+'</div>';
-      p_ind2+='<div style="font-size:5.5pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace;flex-shrink:0;margin-left:2mm">▲'+r.d_e.toFixed(0)+'%</div>';
-      p_ind2+='</div>';
-    });
-    p_ind2+='</div>';
-
-    // Implicaciones estructuradas
-    p_ind2+='<div style="border-top:1px solid #e2e8f0;margin-top:1.5mm;padding-top:1.5mm">';
-    p_ind2+='<div style="font-size:5pt;font-weight:700;color:#4338ca;font-family:IBM Plex Mono,monospace;text-transform:uppercase;margin-bottom:1mm">Qué piden al mercado de bodegas</div>';
-    var _impl2=[
-      {s:'Fab. equipo transporte',c:'#ea580c',t:'Nave A/A-, 5k–20k m², altura 10-12m, SCI ESFR, 500+ kVA, piso 7 ton/m². Contrato 5-10 años.'},
-      {s:'Prendas de vestir / nearshoring',c:'#ea580c',t:'Nave B+, 2k-8k m², mezzanine oficinas, A/C, dock nivelador, certificación ambiental.'},
-      {s:'Comercio mayor / abarrotes',c:'#2563eb',t:'CEDIS B, 1k-5k m², báscula, patio trailers, cuarto frío, acceso carretera. Rentas presionadas.'},
-      {s:'Autotransporte & logística',c:'#7c3aed',t:'Terminal B+ con patio semirremolques, acceso 24h, vigilancia. Alta inversión en infraestructura.'}
-    ];
-    _impl2.forEach(function(x){
-      p_ind2+='<div style="margin-bottom:1mm;padding:.7mm;background:#f8fafc;border-radius:3px;border-left:2.5px solid '+x.c+'">';
-      p_ind2+='<div style="font-size:4.5pt;font-weight:700;color:'+x.c+';line-height:1.2;margin-bottom:.2mm">'+x.s+'</div>';
-      p_ind2+='<div style="font-size:4.3pt;color:#334155;line-height:1.35">'+x.t+'</div></div>';
-    });
-    p_ind2+='</div>';
-
-    // Recuadro VA e inversión
-    var _maxVAe=_topVAe.length?_topVAe[0]:null;
-    p_ind2+='<div style="background:#fef9c3;border:1px solid #fde68a;border-radius:3px;padding:1.5mm;margin-top:1.5mm">';
-    p_ind2+='<div style="font-size:4.5pt;color:#92400e;line-height:1.45">';
-    p_ind2+='<strong>VA/empleado:</strong> sector con mayor productividad = '+(_maxVAe?_maxVAe.sub.substring(0,28)+'…':'manufactura avanzada')+' con $'+(_maxVAe?(_maxVAe.va23*1e6/_maxVAe.e23/1000).toFixed(0)+'k':'—')+'/trab. Estos tenants justifican Clase A. ';
-    p_ind2+='<strong>Inversión:</strong> Alta inversión fija (maquinaria, activos) correlaciona con contratos BTS largos y especificaciones premium. Subsectores con inv23 >$500 MDP = oportunidad de desarrollo a la medida.';
-    p_ind2+='</div></div>';
-
-    p_ind2+='</div></div>'; // cierra col derecha + grid
-
-    // ── Insight Gómez Palacio + requerimientos por sector
-    p_ind2+='<div style="background:#7c3aed;color:#fff;padding:1.5mm 2mm;border-radius:4px;margin-top:2mm">';
-    p_ind2+='<div style="font-weight:700;font-size:5pt;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.8mm">Ventaja Gómez Palacio · Subsector Logística</div>';
-    p_ind2+='<div style="font-size:4.5pt;line-height:1.5">Gómez Palacio concentra el mayor corredor logístico del sur de Coahuila–Durango. La combinación de nodo ferroviario (CPKC), autopista 40 y proximidad al aeropuerto regional posiciona al municipio como <strong>hub natural de distribución</strong> para el norte del país. Los arrendatarios de bodegas en esta zona son predominantemente operadores 3PL, empresas de comercio exterior y distribuidores de consumo masivo.</div>';
-    p_ind2+='</div>';
-    p_ind2+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;margin-top:1.5mm">';
-    p_ind2+='<div style="border:1px solid #e2e8f0;padding:1.5mm;border-radius:3px;background:#f8fafc">';
-    p_ind2+='<div style="font-weight:700;font-size:4.8pt;color:#1e293b;margin-bottom:.5mm">Manufactura ligera (31–33)</div>';
-    p_ind2+='<div style="font-size:4.3pt;color:#475569;line-height:1.45">Requiere bodegas con altura libre 8–12 m, pisos industriales 5 ton/m², potencia eléctrica trifásica. Plazo típico de arrendamiento: 3–5 años. Perfil ideal para Clase B en zonas periféricas con buena conectividad vial.</div>';
-    p_ind2+='</div>';
-    p_ind2+='<div style="border:1px solid #e2e8f0;padding:1.5mm;border-radius:3px;background:#f8fafc">';
-    p_ind2+='<div style="font-weight:700;font-size:4.8pt;color:#1e293b;margin-bottom:.5mm">Comercio al por mayor (43)</div>';
-    p_ind2+='<div style="font-size:4.3pt;color:#475569;line-height:1.45">Demanda andenes de descarga múltiples (mín. 4), áreas de cross-docking, oficinas integradas. Plazos más cortos (1–3 años) pero rotación baja. Prefieren ubicaciones próximas a vías principales con estacionamiento de tráileres.</div>';
-    p_ind2+='</div>';
-    p_ind2+='</div>';
-
-    p_ind2+=_rptFooterInd(2);
-    p_ind2+='</div>';
+    var p_ind2='';
 
     // ══════════════════════════════════════════════════════════════
     // PAG DEMANDA · Demanda Actual del Mercado — Newmark 2S25
@@ -5405,22 +5272,22 @@ function generarReporte(){
 
     // Left column
     p_demanda+='<div>';
-    p_demanda+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #f97316;padding-bottom:1mm;margin-bottom:2mm">Dinámica de absorción</div>';
+    p_demanda+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e2e8f0;padding-bottom:1mm;margin-bottom:2mm">Dinámica de absorción</div>';
     p_demanda+='<div style="font-size:6pt;color:#334155;line-height:1.6;margin-bottom:1.5mm">La absorción bruta acumulada 2025 fue de <strong>73,200 m²</strong>, superando los 54,400 m² del año anterior (<strong>+34.6%</strong>). El mercado mostró mayor dinamismo en 2S25 con 43,300 m² absorbidos.</div>';
     p_demanda+='<div style="font-size:6pt;color:#334155;line-height:1.6;margin-bottom:2.5mm">La absorción neta acumulada fue de <strong>−12,300 m²</strong>, producto de la finalización de proyectos especulativos. Esta cifra no indica retiro de demanda — refleja entrega de inventario nuevo en proceso de colocación.</div>';
 
-    p_demanda+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #f97316;padding-bottom:1mm;margin-bottom:2mm">Espacio en desarrollo</div>';
+    p_demanda+='<div style="font-size:7pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e2e8f0;padding-bottom:1mm;margin-bottom:2mm">Espacio en desarrollo</div>';
 
     // Barra spec vs BTS
     p_demanda+='<div style="margin-bottom:1.5mm">';
     p_demanda+='<div style="display:flex;justify-content:space-between;font-size:5.5pt;color:#475569;margin-bottom:1mm"><span>En construcción: <strong>58,100 m²</strong></span><span style="font-family:IBM Plex Mono,monospace;color:#0f172a;font-weight:700">76.6% Spec · 23.4% BTS</span></div>';
     p_demanda+='<div style="background:#e2e8f0;border-radius:3px;height:9px;overflow:hidden">';
     p_demanda+='<div style="display:flex;height:100%">';
-    p_demanda+='<div style="width:76.6%;background:#f97316;height:100%"></div>';
+    p_demanda+='<div style="width:76.6%;background:#0369a1;height:100%"></div>';
     p_demanda+='<div style="width:23.4%;background:#fde68a;height:100%;background:repeating-linear-gradient(45deg,#fde68a,#fde68a 2px,#fef9c3 2px,#fef9c3 5px)"></div>';
     p_demanda+='</div></div>';
     p_demanda+='<div style="display:flex;justify-content:space-between;font-size:5pt;color:#64748b;margin-top:.8mm">';
-    p_demanda+='<span style="color:#ea580c;font-weight:600">44,500 m² Especulativos</span>';
+    p_demanda+='<span style="color:#d97706;font-weight:600">44,500 m² Especulativos</span>';
     p_demanda+='<span style="color:#d97706;font-weight:600">13,600 m² Build-to-Suit</span>';
     p_demanda+='</div></div>';
 
@@ -5457,32 +5324,33 @@ function generarReporte(){
     // ══════════════════════════════════════════════════════════════
     var p_bod1='<div class="report-page">';
     p_bod1+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p_bod1+='<div style="border-bottom:3px solid #6366f1;padding-bottom:2mm;margin-bottom:2.5mm">';
-    p_bod1+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Inventario de Bodegas Industriales · ZM La Laguna</div>';
-    p_bod1+='<div style="font-size:7pt;color:#64748b;font-family:IBM Plex Mono,monospace;margin-top:1mm">'+_pxBodCount+' bodegas · '+_pxPqCount+' parques · 4 municipios · COEZA Real Estate Market Intelligence 2025</div>';
+    p_bod1+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">Conociendo la demanda, revisamos qué oferta existe hoy en el mercado y a qué precios.</div>';
+    p_bod1+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:2.5mm">';
+    p_bod1+='<div style="font-size:14pt;font-weight:700;color:#0f172a">Inventario de Bodegas Industriales · ZM La Laguna</div>';
+    p_bod1+='<div style="font-size:7pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:1mm">'+_pxBodCount+' bodegas · '+_pxPqCount+' parques · 4 municipios · COEZA Real Estate Market Intelligence 2025</div>';
     p_bod1+='</div>';
     // KPI strip
     p_bod1+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:2.5mm">';
-    p_bod1+=_kpiBod2(_pxBodCount+'','Bodegas totales','#6366f1');
-    p_bod1+=_kpiBod2(_pxPqCount+'','Parques industriales','#6366f1');
-    p_bod1+=_kpiBod2('$'+_medGR.toFixed(0)+'/m²','Renta mediana ZM','#ea580c');
-    p_bod1+=_kpiBod2(_N2(_medGM2)+' m²','Tamaño mediano','#2563eb');
+    p_bod1+=_kpiBod2(_pxBodCount+'','Bodegas totales','#0f172a');
+    p_bod1+=_kpiBod2(_pxPqCount+'','Parques industriales','#0f172a');
+    p_bod1+=_kpiBod2('$'+_medGR.toFixed(0)+'/m²','Renta mediana ZM','#d97706');
+    p_bod1+=_kpiBod2(_N2(_medGM2)+' m²','Tamaño mediano','#0369a1');
     p_bod1+='</div>';
 
     p_bod1+='<div style="display:grid;grid-template-columns:52% 48%;gap:3mm">';
 
     // Columna izquierda: tabla municipios + guía de clases
     p_bod1+='<div>';
-    p_bod1+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #6366f1;padding-bottom:1mm;margin-bottom:1.5mm">Por Municipio</div>';
+    p_bod1+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:1.5mm">Por Municipio</div>';
     p_bod1+='<table style="width:100%;border-collapse:collapse;font-size:5.5pt;margin-bottom:2.5mm"><thead><tr style="background:#f1f5f9"><th style="padding:.7mm 1mm;text-align:left;color:#64748b;font-weight:600">Municipio</th><th style="padding:.7mm 1mm;text-align:right;color:#64748b;font-weight:600">Bodegas</th><th style="padding:.7mm 1mm;text-align:right;color:#64748b;font-weight:600">Renta med MXN/m²</th><th style="padding:.7mm 1mm;text-align:right;color:#64748b;font-weight:600">USD/m²</th></tr></thead><tbody>';
     ['Torreón','Gómez Palacio','Lerdo','Matamoros (Coah)'].forEach(function(mun,i){
       var tab=INDUSTRIAL.tab.mun[mun]||{},cnt=INDUSTRIAL.bodegas.filter(function(b){return b.mun===mun;}).length;
-      p_bod1+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.7mm 1mm;font-weight:600;color:#092c3b">'+mun+'</td><td style="padding:.7mm 1mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#6366f1">'+cnt+'</td><td style="padding:.7mm 1mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#092c3b">$'+(tab.med||'—')+'</td><td style="padding:.7mm 1mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#64748b">$'+(tab.usd||'—')+'</td></tr>';
+      p_bod1+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.7mm 1mm;font-weight:600;color:#092c3b">'+mun+'</td><td style="padding:.7mm 1mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#0369a1">'+cnt+'</td><td style="padding:.7mm 1mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#092c3b">$'+(tab.med||'—')+'</td><td style="padding:.7mm 1mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#64748b">$'+(tab.usd||'—')+'</td></tr>';
     });
     p_bod1+='</tbody></table>';
 
     // Guía de clases
-    p_bod1+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #ea580c;padding-bottom:1mm;margin-bottom:1.5mm">Guía de Clases · ¿Qué incluye cada clase?</div>';
+    p_bod1+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e2e8f0;padding-bottom:1mm;margin-bottom:1.5mm">Guía de Clases · ¿Qué incluye cada clase?</div>';
     var _guiaClases=[
       {cls:'A',spec:'Tilt-up, altura 10-12m, SCI ESFR, subestación 500+ kVA, piso 7+ ton/m²',tenant:'Multinacional, nearshoring, BTS institucional'},
       {cls:'A-',spec:'Altura 9m+, piso fibra 7 ton/m², SCI, dock nivelador, oficinas 10%+',tenant:'Manufactura avanzada, logística regional'},
@@ -5492,17 +5360,17 @@ function generarReporte(){
       {cls:'C+',spec:'Altura <7m, construcción estándar, sin especificaciones avanzadas',tenant:'PyME chica, almacenaje urbano'},
       {cls:'C',spec:'Altura <6m, básica, sin muelle',tenant:'Almacenaje local, usos variados'}
     ];
-    p_bod1+='<table style="width:100%;border-collapse:collapse;font-size:4.8pt"><thead><tr style="background:#fff7ed"><th style="padding:.5mm .8mm;text-align:left;color:#64748b;font-weight:600">Clase</th><th style="padding:.5mm .8mm;text-align:right;color:#ea580c;font-weight:600">Med MXN</th><th style="padding:.5mm .8mm;text-align:left;color:#64748b;font-weight:600">Especificaciones típicas</th></tr></thead><tbody>';
+    p_bod1+='<table style="width:100%;border-collapse:collapse;font-size:4.8pt"><thead><tr style="background:#f8fafc"><th style="padding:.5mm .8mm;text-align:left;color:#64748b;font-weight:600">Clase</th><th style="padding:.5mm .8mm;text-align:right;color:#d97706;font-weight:600">Med MXN</th><th style="padding:.5mm .8mm;text-align:left;color:#64748b;font-weight:600">Especificaciones típicas</th></tr></thead><tbody>';
     _guiaClases.forEach(function(g,i){
       var t=INDUSTRIAL.tab.clase[g.cls]||{};
-      p_bod1+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .8mm"><span style="background:'+(_clsCols[g.cls]||'#64748b')+'22;border:1px solid '+(_clsCols[g.cls]||'#64748b')+'66;color:'+(_clsCols[g.cls]||'#64748b')+';font-weight:700;font-size:5pt;padding:1px 3px;border-radius:2px;font-family:IBM Plex Mono,monospace">'+g.cls+'</span></td><td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#ea580c">$'+(t.med||'—')+'</td><td style="padding:.5mm .8mm;color:#334155;line-height:1.3">'+g.spec+'<br/><span style="color:#94a3b8;font-size:4pt">'+g.tenant+'</span></td></tr>';
+      p_bod1+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .8mm"><span style="background:'+(_clsCols[g.cls]||'#64748b')+'22;border:1px solid '+(_clsCols[g.cls]||'#64748b')+'66;color:'+(_clsCols[g.cls]||'#64748b')+';font-weight:700;font-size:5pt;padding:1px 3px;border-radius:2px;font-family:IBM Plex Mono,monospace">'+g.cls+'</span></td><td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#d97706">$'+(t.med||'—')+'</td><td style="padding:.5mm .8mm;color:#334155;line-height:1.3">'+g.spec+'<br/><span style="color:#94a3b8;font-size:4pt">'+g.tenant+'</span></td></tr>';
     });
     p_bod1+='</tbody></table>';
     p_bod1+='</div>';
 
     // Columna derecha: parques ordenados por distancia desde la zona
     p_bod1+='<div>';
-    p_bod1+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #6366f1;padding-bottom:1mm;margin-bottom:1.5mm">Parques Industriales'+(puntoLat?' · Ordenados por Distancia desde la Zona':' · Principales por Clase')+'</div>';
+    p_bod1+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:1.5mm">Parques Industriales'+(puntoLat?' · Ordenados por Distancia desde la Zona':' · Principales por Clase')+'</div>';
     var _parquesMostrar=puntoLat?_pqDist.filter(function(p){return p.cls&&p.lat&&p.lon;}).slice(0,10):INDUSTRIAL.parques.filter(function(p){return p.cls&&['A','A-','B+','B'].indexOf(p.cls)!==-1;}).slice(0,10);
     _parquesMostrar.forEach(function(p,i){
       var esNearby=p._dist!==undefined&&p._dist<5,distTxt=p._dist!==undefined&&p._dist<99?p._dist.toFixed(1)+' km':'—';
@@ -5539,7 +5407,7 @@ function generarReporte(){
     var p_bod2='<div class="report-page">';
     p_bod2+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     var _bod2Titulo=puntoLat!==null&&window._radioParams?'Bodegas en Radio '+window._radioParams.km.toFixed(1)+' km · '+munPrincipal:'Bodegas en '+munPrincipal;
-    p_bod2+='<div style="border-bottom:3px solid #6366f1;padding-bottom:2mm;margin-bottom:3.5mm">';
+    p_bod2+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:3.5mm">';
     p_bod2+='<div style="font-size:14pt;font-weight:700;color:#092c3b">'+_bod2Titulo+'</div>';
     p_bod2+='<div style="font-size:7.5pt;color:#64748b;font-family:IBM Plex Mono,monospace;margin-top:1mm">Inventario filtrado para la zona analizada · comparativa vs ZM La Laguna</div>';
     p_bod2+='</div>';
@@ -5551,58 +5419,58 @@ function generarReporte(){
       p_bod2+='<div style="font-size:6pt;color:#15803d;line-height:1.6;max-width:120mm;margin:0 auto">El inventario COEZA cubre '+_pxBodCount+' bodegas en los principales corredores de ZM La Laguna. Esta zona no tiene listings activos — <strong>ventana de primer entrante</strong> con demanda potencial sin cubrir por la oferta formal.</div>';
       p_bod2+='</div>';
       // Bandas de referencia ZM
-      p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #ea580c;padding-bottom:1mm;margin-bottom:1.5mm">Renta de Referencia ZM · Por Banda de Tamaño</div>';
+      p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e2e8f0;padding-bottom:1mm;margin-bottom:1.5mm">Renta de Referencia ZM · Por Banda de Tamaño</div>';
       p_bod2+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2mm;margin-bottom:2.5mm">';
       var _bandaGlobal=[{l:'Pequeña (<1,000 m²)',mn:0,mx:999},{l:'Mediana (1,000–5,000 m²)',mn:1000,mx:4999},{l:'Grande (>5,000 m²)',mn:5000,mx:9e9}].map(function(b){var bs=INDUSTRIAL.bodegas.filter(function(x){return x.op==='Renta'&&x.rent_m2>0&&x.m2>=b.mn&&x.m2<=b.mx;});var rm=_medArr(bs.map(function(x){return x.rent_m2;}));return{l:b.l,n:bs.length,med:rm};});
-      _bandaGlobal.forEach(function(b){p_bod2+='<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:4px;padding:2mm;text-align:center"><div style="font-size:8.5pt;font-weight:700;color:#ea580c;font-family:IBM Plex Mono,monospace">'+(b.med?'$'+b.med.toFixed(0):'—')+'</div><div style="font-size:5pt;color:#92400e;font-weight:600">MXN/m²/mes</div><div style="font-size:4.5pt;color:#64748b;margin-top:.5mm">'+b.l+'<br/>'+b.n+' bodegas ZM</div></div>';});
+      _bandaGlobal.forEach(function(b){p_bod2+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:2mm;text-align:center"><div style="font-size:8.5pt;font-weight:700;color:#d97706;font-family:IBM Plex Mono,monospace">'+(b.med?'$'+b.med.toFixed(0):'—')+'</div><div style="font-size:5pt;color:#475569;font-weight:600">MXN/m²/mes</div><div style="font-size:4.5pt;color:#64748b;margin-top:.5mm">'+b.l+'<br/>'+b.n+' bodegas ZM</div></div>';});
       p_bod2+='</div>';
       // Parques más cercanos
-      p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #6366f1;padding-bottom:1mm;margin-bottom:1.5mm">Parques Industriales Más Cercanos</div>';
+      p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:1.5mm">Parques Industriales Más Cercanos</div>';
       _pqDist.filter(function(p){return p.lat&&p.lon&&p._dist<50;}).slice(0,5).forEach(function(p,i){
         p_bod2+='<div style="display:flex;gap:1.5mm;margin-bottom:1.5mm;padding:.8mm;background:'+(i%2?'#f8fafc':'#fff')+';border-radius:3px;border:1px solid #e2e8f0"><span style="background:'+(_clsCols[p.cls]||'#64748b')+'22;border:1px solid '+(_clsCols[p.cls]||'#64748b')+'66;color:'+(_clsCols[p.cls]||'#64748b')+';font-weight:700;font-size:5pt;padding:1px 3px;border-radius:2px;font-family:IBM Plex Mono,monospace;flex-shrink:0;align-self:flex-start">'+(p.cls||'?')+'</span>';
         p_bod2+='<div style="flex:1"><div style="font-size:5.5pt;font-weight:700;color:#092c3b">'+(p.nom||'Sin nombre')+'</div><div style="font-size:5pt;color:#64748b">'+(p.mun||'')+(p.ha?' · '+p.ha+' ha':'')+(p.rent_mxn?' · '+p.rent_mxn:'')+'</div></div>';
-        if(p._dist<99)p_bod2+='<div style="font-family:IBM Plex Mono,monospace;font-size:6pt;font-weight:700;color:#6366f1;flex-shrink:0;align-self:center">'+p._dist.toFixed(1)+' km</div>';
+        if(p._dist<99)p_bod2+='<div style="font-family:IBM Plex Mono,monospace;font-size:6pt;font-weight:700;color:#0369a1;flex-shrink:0;align-self:center">'+p._dist.toFixed(1)+' km</div>';
         p_bod2+='</div>';
       });
     } else {
       // Con bodegas en zona
       p_bod2+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:2.5mm">';
-      p_bod2+=_kpiBod2(_bodsZona.length,'En zona','#6366f1');
-      p_bod2+=_kpiBod2(_bodsRenta.length+' / '+_bodsVenta.length,'Renta / Venta','#2563eb');
-      p_bod2+=_kpiBod2(_medRenta2?'$'+_medRenta2.toFixed(0)+'/m²':'—','Renta med zona','#ea580c');
-      p_bod2+=_kpiBod2(_medM2?_N2(_medM2)+' m²':'—','Tamaño mediano','#0891b2');
+      p_bod2+=_kpiBod2(_bodsZona.length,'En zona','#0f172a');
+      p_bod2+=_kpiBod2(_bodsRenta.length+' / '+_bodsVenta.length,'Renta / Venta','#0369a1');
+      p_bod2+=_kpiBod2(_medRenta2?'$'+_medRenta2.toFixed(0)+'/m²':'—','Renta med zona','#d97706');
+      p_bod2+=_kpiBod2(_medM2?_N2(_medM2)+' m²':'—','Tamaño mediano','#475569');
       p_bod2+='</div>';
 
       p_bod2+='<div style="display:grid;grid-template-columns:48% 52%;gap:3mm;margin-bottom:2.5mm">';
 
       // Columna izquierda: por clase + bandas de tamaño
       p_bod2+='<div>';
-      p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #6366f1;padding-bottom:1mm;margin-bottom:1.5mm">Por Clase en la Zona</div>';
+      p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:1.5mm">Por Clase en la Zona</div>';
       p_bod2+='<table style="width:100%;border-collapse:collapse;font-size:5.5pt;margin-bottom:2mm"><thead><tr style="background:#f1f5f9"><th style="padding:.6mm .8mm;text-align:left;color:#64748b;font-weight:600">Clase</th><th style="padding:.6mm .8mm;text-align:right;color:#64748b;font-weight:600">N</th><th style="padding:.6mm .8mm;text-align:right;color:#64748b;font-weight:600">Renta med</th><th style="padding:.6mm .8mm;text-align:right;color:#64748b;font-weight:600">m² med</th></tr></thead><tbody>';
       _claseOrd.filter(function(c){return _claseCount[c];}).forEach(function(cls,i){
         var bR=_bodsRenta.filter(function(b){return b.cls===cls;});var mR=_medArr(bR.map(function(b){return b.rent_m2;}));
         var mM=_medArr(_bodsZona.filter(function(b){return b.cls===cls&&b.m2>0;}).map(function(b){return b.m2;}));
-        p_bod2+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.6mm .8mm"><span style="background:'+(_clsCols[cls]||'#64748b')+'22;border:1px solid '+(_clsCols[cls]||'#64748b')+'66;color:'+(_clsCols[cls]||'#64748b')+';font-weight:700;font-size:5.5pt;padding:1px 3px;border-radius:2px;font-family:IBM Plex Mono,monospace">'+cls+'</span></td><td style="padding:.6mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#6366f1">'+_claseCount[cls]+'</td><td style="padding:.6mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#092c3b">'+(mR?'$'+mR.toFixed(0):'—')+'</td><td style="padding:.6mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#64748b">'+(mM?_N2(mM)+' m²':'—')+'</td></tr>';
+        p_bod2+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.6mm .8mm"><span style="background:'+(_clsCols[cls]||'#64748b')+'22;border:1px solid '+(_clsCols[cls]||'#64748b')+'66;color:'+(_clsCols[cls]||'#64748b')+';font-weight:700;font-size:5.5pt;padding:1px 3px;border-radius:2px;font-family:IBM Plex Mono,monospace">'+cls+'</span></td><td style="padding:.6mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#0369a1">'+_claseCount[cls]+'</td><td style="padding:.6mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#092c3b">'+(mR?'$'+mR.toFixed(0):'—')+'</td><td style="padding:.6mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#64748b">'+(mM?_N2(mM)+' m²':'—')+'</td></tr>';
       });
       p_bod2+='</tbody></table>';
       // Comparativa zona vs municipio
       var _tabMun=INDUSTRIAL.tab.mun[munPrincipal]||{med:65,usd:3.21};
-      if(_medRenta2){var diff=((_medRenta2-_tabMun.med)/_tabMun.med*100);p_bod2+='<div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:4px;padding:1.5mm"><div style="font-size:5pt;font-weight:700;color:#4338ca;margin-bottom:.8mm">Zona vs '+munPrincipal+'</div><div style="display:flex;gap:2mm;justify-content:center;align-items:center"><div style="text-align:center"><div style="font-size:9pt;font-weight:700;color:#6366f1;font-family:IBM Plex Mono,monospace">$'+_medRenta2.toFixed(0)+'</div><div style="font-size:5pt;color:#64748b">Zona</div></div><div style="font-size:8pt;color:#94a3b8">→</div><div style="text-align:center"><div style="font-size:9pt;font-weight:700;color:#0891b2;font-family:IBM Plex Mono,monospace">$'+_tabMun.med+'</div><div style="font-size:5pt;color:#64748b">Mun. med.</div></div></div><div style="font-size:5pt;text-align:center;color:'+(diff>=0?'#16a34a':'#dc2626')+';font-weight:700;margin-top:.5mm">Zona '+(diff>=0?'▲'+Math.abs(diff).toFixed(0)+'% sobre':'▼'+Math.abs(diff).toFixed(0)+'% bajo')+' la mediana</div></div>';}
+      if(_medRenta2){var diff=((_medRenta2-_tabMun.med)/_tabMun.med*100);p_bod2+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:1.5mm"><div style="font-size:5pt;font-weight:700;color:#0369a1;margin-bottom:.8mm">Zona vs '+munPrincipal+'</div><div style="display:flex;gap:2mm;justify-content:center;align-items:center"><div style="text-align:center"><div style="font-size:9pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">$'+_medRenta2.toFixed(0)+'</div><div style="font-size:5pt;color:#64748b">Zona</div></div><div style="font-size:8pt;color:#94a3b8">→</div><div style="text-align:center"><div style="font-size:9pt;font-weight:700;color:#475569;font-family:IBM Plex Mono,monospace">$'+_tabMun.med+'</div><div style="font-size:5pt;color:#64748b">Mun. med.</div></div></div><div style="font-size:5pt;text-align:center;color:'+(diff>=0?'#16a34a':'#dc2626')+';font-weight:700;margin-top:.5mm">Zona '+(diff>=0?'▲'+Math.abs(diff).toFixed(0)+'% sobre':'▼'+Math.abs(diff).toFixed(0)+'% bajo')+' la mediana</div></div>';}
       p_bod2+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:1.5mm;margin-top:1.5mm;font-size:4.5pt;color:#166534;line-height:1.55"><strong>Benchmark nacional:</strong> Saltillo Clase A USD $6.50/m²/mes · Monterrey USD $7.00/m²/mes · La Laguna representa ~50% del costo de mercados Tier 1 — ventaja competitiva de entrada para tenants sensibles al costo.</div>';
       // Bandas de tamaño
-      p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #ea580c;padding-bottom:1mm;margin-bottom:1mm;margin-top:2mm">Renta por Banda de Tamaño</div>';
-      p_bod2+='<table style="width:100%;border-collapse:collapse;font-size:5pt"><thead><tr style="background:#fff7ed"><th style="padding:.5mm .8mm;text-align:left;color:#64748b;font-weight:600">Tamaño</th><th style="padding:.5mm .8mm;text-align:right;color:#64748b;font-weight:600">Bodegas</th><th style="padding:.5mm .8mm;text-align:right;color:#64748b;font-weight:600">Renta med MXN/m²</th></tr></thead><tbody>';
-      _bandaDat.forEach(function(b,i){p_bod2+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .8mm;color:#334155">'+b.l+'</td><td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#6366f1">'+b.n+'</td><td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#ea580c">'+(b.med?'$'+b.med.toFixed(0):'Sin datos')+'</td></tr>';});
+      p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e2e8f0;padding-bottom:1mm;margin-bottom:1mm;margin-top:2mm">Renta por Banda de Tamaño</div>';
+      p_bod2+='<table style="width:100%;border-collapse:collapse;font-size:5pt"><thead><tr style="background:#f8fafc"><th style="padding:.5mm .8mm;text-align:left;color:#64748b;font-weight:600">Tamaño</th><th style="padding:.5mm .8mm;text-align:right;color:#64748b;font-weight:600">Bodegas</th><th style="padding:.5mm .8mm;text-align:right;color:#64748b;font-weight:600">Renta med MXN/m²</th></tr></thead><tbody>';
+      _bandaDat.forEach(function(b,i){p_bod2+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .8mm;color:#334155">'+b.l+'</td><td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#0369a1">'+b.n+'</td><td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#d97706">'+(b.med?'$'+b.med.toFixed(0):'Sin datos')+'</td></tr>';});
       p_bod2+='</tbody></table>';
       p_bod2+='</div>';
 
       // Columna derecha: inventario detallado con distancia
-      p_bod2+='<div><div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #ea580c;padding-bottom:1mm;margin-bottom:1.5mm">Inventario Detallado'+(puntoLat?' · Con Distancia':'')+'</div>';
+      p_bod2+='<div><div style="font-size:5.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e2e8f0;padding-bottom:1mm;margin-bottom:1.5mm">Inventario Detallado'+(puntoLat?' · Con Distancia':'')+'</div>';
       var _hasDist=puntoLat&&_bodsZona.some(function(b){return b.lat&&b.lon;});
-      p_bod2+='<table style="width:100%;border-collapse:collapse;font-size:4.8pt"><thead><tr style="background:#fff7ed"><th style="padding:.5mm .7mm;text-align:left;color:#64748b;font-weight:600">Zona/Parque</th><th style="padding:.5mm .7mm;text-align:center;color:#64748b;font-weight:600">Op</th><th style="padding:.5mm .7mm;text-align:right;color:#64748b;font-weight:600">m²</th><th style="padding:.5mm .7mm;text-align:center;color:#64748b;font-weight:600">Cls</th><th style="padding:.5mm .7mm;text-align:right;color:#64748b;font-weight:600">MXN/m²</th>'+(_hasDist?'<th style="padding:.5mm .7mm;text-align:right;color:#6366f1;font-weight:600">km</th>':'')+'</tr></thead><tbody>';
+      p_bod2+='<table style="width:100%;border-collapse:collapse;font-size:4.8pt"><thead><tr style="background:#fff7ed"><th style="padding:.5mm .7mm;text-align:left;color:#64748b;font-weight:600">Zona/Parque</th><th style="padding:.5mm .7mm;text-align:center;color:#64748b;font-weight:600">Op</th><th style="padding:.5mm .7mm;text-align:right;color:#64748b;font-weight:600">m²</th><th style="padding:.5mm .7mm;text-align:center;color:#64748b;font-weight:600">Cls</th><th style="padding:.5mm .7mm;text-align:right;color:#64748b;font-weight:600">MXN/m²</th>'+(_hasDist?'<th style="padding:.5mm .7mm;text-align:right;color:#0369a1;font-weight:600">km</th>':'')+'</tr></thead><tbody>';
       _bodsZona.slice(0,20).forEach(function(b,i){
         var dist=(_hasDist&&b.lat&&b.lon)?_hav(puntoLat,puntoLon,b.lat,b.lon).toFixed(1):null;
-        p_bod2+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .7mm;color:#334155">'+(b.zona||b.mun||'—')+'</td><td style="padding:.5mm .7mm;text-align:center"><span style="background:'+(b.op==='Renta'?'#dcfce7':'#dbeafe')+';color:'+(b.op==='Renta'?'#16a34a':'#1d4ed8')+';font-size:4pt;font-weight:700;padding:1px 2px;border-radius:2px">'+(b.op||'—')+'</span></td><td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace">'+(b.m2?_N2(b.m2):'—')+'</td><td style="padding:.5mm .7mm;text-align:center;font-weight:700;color:'+(_clsCols[b.cls]||'#64748b')+';font-family:IBM Plex Mono,monospace;font-size:5pt">'+(b.cls||'—')+'</td><td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#092c3b">'+(b.rent_m2?'$'+b.rent_m2.toFixed(0):'—')+'</td>'+(_hasDist?'<td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#6366f1">'+(dist||'—')+'</td>':'')+'</tr>';
+        p_bod2+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .7mm;color:#334155">'+(b.zona||b.mun||'—')+'</td><td style="padding:.5mm .7mm;text-align:center"><span style="background:'+(b.op==='Renta'?'#dcfce7':'#dbeafe')+';color:'+(b.op==='Renta'?'#16a34a':'#1d4ed8')+';font-size:4pt;font-weight:700;padding:1px 2px;border-radius:2px">'+(b.op||'—')+'</span></td><td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace">'+(b.m2?_N2(b.m2):'—')+'</td><td style="padding:.5mm .7mm;text-align:center;font-weight:700;color:'+(_clsCols[b.cls]||'#64748b')+';font-family:IBM Plex Mono,monospace;font-size:5pt">'+(b.cls||'—')+'</td><td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#092c3b">'+(b.rent_m2?'$'+b.rent_m2.toFixed(0):'—')+'</td>'+(_hasDist?'<td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#0369a1">'+(dist||'—')+'</td>':'')+'</tr>';
       });
       p_bod2+='</tbody></table>';
       if(_bodsZona.length>20)p_bod2+='<div style="font-size:4pt;color:#94a3b8;margin-top:.3mm">Mostrando 20 de '+_bodsZona.length+' bodegas.</div>';
@@ -5615,7 +5483,7 @@ function generarReporte(){
     p_bod2+='<div style="font-weight:700;font-size:4.8pt;color:#15803d;margin-bottom:.5mm">¿Comprar o rentar?</div>';
     p_bod2+='<div style="font-size:4.3pt;color:#166534;line-height:1.5">En ZM La Laguna, la venta de naves industriales representa una oportunidad patrimonial con cap rates del 7–9% anual en inmuebles bien especificados. Para operadores con horizonte &gt;7 años, la compra puede ser más eficiente que la renta si el precio/m² es competitivo respecto al mercado de CDMX o Monterrey (diferencial estimado: 30–40% menor).</div>';
     p_bod2+='</div>';
-    p_bod2+='<div style="background:#fff7ed;border-left:2.5px solid #ea580c;padding:1.5mm;border-radius:3px">';
+    p_bod2+='<div style="background:#f8fafc;border-left:2.5px solid #d97706;padding:1.5mm;border-radius:3px">';
     p_bod2+='<div style="font-weight:700;font-size:4.8pt;color:#c2410c;margin-bottom:.5mm">Mercado de venta · contexto</div>';
     p_bod2+='<div style="font-size:4.3pt;color:#9a3412;line-height:1.5">La oferta en venta es más limitada que en renta. Las transacciones de compraventa industrial en La Laguna suelen tardarse 6–18 meses en cerrarse. Compradores típicos: empresas manufactureras que buscan activo propio o fondos de inversión en desarrollo de naves especulativas.</div>';
     p_bod2+='</div>';
@@ -5629,7 +5497,7 @@ function generarReporte(){
     // ══════════════════════════════════════════════════════════════
     var p_bod3='<div class="report-page">';
     p_bod3+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p_bod3+='<div style="border-bottom:3px solid #6366f1;padding-bottom:2mm;margin-bottom:3.5mm">';
+    p_bod3+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:3.5mm">';
     p_bod3+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Recomendación de Bodega · '+munPrincipal+'</div>';
     p_bod3+='<div style="font-size:7.5pt;color:#64748b;font-family:IBM Plex Mono,monospace;margin-top:1mm">Clase óptima · precio de entrada · tenant target · diferenciadores · análisis de competencia</div>';
     p_bod3+='</div>';
@@ -5640,7 +5508,7 @@ function generarReporte(){
     p_bod3+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-bottom:2.5mm">';
 
     // Clase recomendada
-    p_bod3+='<div style="background:linear-gradient(135deg,#4338ca 0%,#6366f1 100%);border-radius:5px;padding:3mm;color:white">';
+    p_bod3+='<div style="background:#0f172a;border-radius:5px;padding:3mm;color:white">';
     p_bod3+='<div style="font-size:5pt;font-weight:700;color:#c7d2fe;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">Clase Recomendada · '+munPrincipal+'</div>';
     p_bod3+='<div style="font-size:20pt;font-weight:700;line-height:1;margin-bottom:1mm">'+_clsRec+'</div>';
     p_bod3+='<div style="font-size:5.5pt;color:#e0e7ff;line-height:1.4;margin-bottom:1.5mm">'+_clsDesc+'</div>';
@@ -5652,8 +5520,8 @@ function generarReporte(){
     p_bod3+='</div></div></div>';
 
     // Factores de decisión
-    p_bod3+='<div><div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #6366f1;padding-bottom:1mm;margin-bottom:1.5mm">Factores de Decisión</div>';
-    function _fRow(label,val,good){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:.7mm 1mm;margin-bottom:.7mm;background:#f8fafc;border-radius:3px;border-left:2.5px solid '+(good?'#16a34a':'#f97316')+'"><span style="font-size:5.5pt;color:#334155">'+label+'</span><span style="font-family:IBM Plex Mono,monospace;font-size:5.5pt;font-weight:700;color:#092c3b">'+val+'</span></div>';}
+    p_bod3+='<div><div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #0369a1;padding-bottom:1mm;margin-bottom:1.5mm">Factores de Decisión</div>';
+    function _fRow(label,val,good){return '<div style="display:flex;justify-content:space-between;align-items:center;padding:.7mm 1mm;margin-bottom:.7mm;background:#f8fafc;border-radius:3px;border-left:2.5px solid '+(good?'#16a34a':'#d97706')+'"><span style="font-size:5.5pt;color:#334155">'+label+'</span><span style="font-family:IBM Plex Mono,monospace;font-size:5.5pt;font-weight:700;color:#092c3b">'+val+'</span></div>';}
     p_bod3+=_fRow('NSE predominante zona',nsePredZona,_nseScore>=5);
     p_bod3+=_fRow('PEA activa en zona',P1(pctPea),pctPea>50);
     p_bod3+=_fRow('Escolaridad promedio',N(avgEsc,1)+' años',avgEsc>=9);
@@ -5685,9 +5553,9 @@ function generarReporte(){
     p_bod3+='</div>';
 
     // Top industrias demandantes
-    p_bod3+='<div><div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #f97316;padding-bottom:1mm;margin-bottom:1.5mm">Industrias que Demandan Espacios Industriales</div>';
+    p_bod3+='<div><div style="font-size:5.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e2e8f0;padding-bottom:1mm;margin-bottom:1.5mm">Industrias que Demandan Espacios Industriales</div>';
     p_bod3+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5mm;margin-bottom:1.5mm">';
-    _topInd.slice(0,4).forEach(function(r){p_bod3+='<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:4px;padding:1.5mm"><div style="font-size:4.5pt;font-weight:700;color:#092c3b;line-height:1.3;margin-bottom:.3mm">'+(r.sub.length>28?r.sub.substring(0,28)+'…':r.sub)+'</div><div style="font-size:6.5pt;font-weight:700;color:#ea580c;font-family:IBM Plex Mono,monospace">'+_N2(r.e23)+' emp</div></div>';});
+    _topInd.slice(0,4).forEach(function(r){p_bod3+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:1.5mm"><div style="font-size:4.5pt;font-weight:700;color:#0f172a;line-height:1.3;margin-bottom:.3mm">'+(r.sub.length>28?r.sub.substring(0,28)+'…':r.sub)+'</div><div style="font-size:6.5pt;font-weight:700;color:#d97706;font-family:IBM Plex Mono,monospace">'+_N2(r.e23)+' emp</div></div>';});
     p_bod3+='</div>';
     // Competencia directa
     p_bod3+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #dc2626;padding-bottom:1mm;margin-bottom:1mm">Competencia Directa</div>';
@@ -5713,15 +5581,15 @@ function generarReporte(){
     p_ter+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     p_ter+='<div style="border-bottom:3px solid #fb923c;padding-bottom:2mm;margin-bottom:2.5mm;display:flex;align-items:baseline;gap:3mm">';
     p_ter+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Terrenos Industriales en Venta · ZM La Laguna</div>';
-    p_ter+='<div style="font-size:7pt;color:#fb923c;font-family:IBM Plex Mono,monospace;font-weight:700">Tierra disponible para desarrollo industrial · '+_terAll.length+' terrenos catalogados</div>';
+    p_ter+='<div style="font-size:7pt;color:#d97706;font-family:IBM Plex Mono,monospace;font-weight:700">Tierra disponible para desarrollo industrial · '+_terAll.length+' terrenos catalogados</div>';
     p_ter+='</div>';
 
     // KPI strip
     p_ter+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:3mm">';
     p_ter+=_kpiBod2(_terAll.length+' terrenos','Catalogados ZM Laguna','#092c3b');
     p_ter+=_kpiBod2('$'+_N2(_terMedPrecio,0)+'/m²','Precio mediano','#fb923c');
-    p_ter+=_kpiBod2('$'+_N2(_terMinPrecio,0)+'–$'+_N2(_terMaxPrecio,0),'Rango precio/m²','#ea580c');
-    p_ter+=_kpiBod2(_terTotHa.toFixed(0)+' ha','Superficie total catalogada','#7c3aed');
+    p_ter+=_kpiBod2('$'+_N2(_terMinPrecio,0)+'–$'+_N2(_terMaxPrecio,0),'Rango precio/m²','#d97706');
+    p_ter+=_kpiBod2(_terTotHa.toFixed(0)+' ha','Superficie total catalogada','#0369a1');
     p_ter+='</div>';
 
     // Tabla principal: terrenos ordenados por distancia a zona
@@ -5730,17 +5598,17 @@ function generarReporte(){
     // Columna izquierda: tabla de terrenos
     p_ter+='<div>';
     p_ter+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #fb923c;padding-bottom:1mm;margin-bottom:1.5mm">Inventario de Terrenos · Ordenados por Proximidad a la Zona</div>';
-    p_ter+='<table style="width:100%;border-collapse:collapse;font-size:4.8pt"><thead><tr style="background:#fff7ed"><th style="padding:.5mm .8mm;text-align:left;color:#92400e;font-weight:600">Zona / Corredor</th><th style="padding:.5mm .8mm;text-align:center;color:#92400e;font-weight:600">Mun.</th><th style="padding:.5mm .8mm;text-align:right;color:#92400e;font-weight:600">ha</th><th style="padding:.5mm .8mm;text-align:right;color:#92400e;font-weight:600">m²</th><th style="padding:.5mm .8mm;text-align:right;color:#fb923c;font-weight:600">$/m²</th><th style="padding:.5mm .8mm;text-align:right;color:#7c3aed;font-weight:600">Total MDP</th><th style="padding:.5mm .8mm;text-align:center;color:#92400e;font-weight:600">Cls</th><th style="padding:.5mm .8mm;text-align:right;color:#64748b;font-weight:600">km</th></tr></thead><tbody>';
+    p_ter+='<table style="width:100%;border-collapse:collapse;font-size:4.8pt"><thead><tr style="background:#f8fafc"><th style="padding:.5mm .8mm;text-align:left;color:#475569;font-weight:600">Zona / Corredor</th><th style="padding:.5mm .8mm;text-align:center;color:#475569;font-weight:600">Mun.</th><th style="padding:.5mm .8mm;text-align:right;color:#475569;font-weight:600">ha</th><th style="padding:.5mm .8mm;text-align:right;color:#475569;font-weight:600">m²</th><th style="padding:.5mm .8mm;text-align:right;color:#d97706;font-weight:600">$/m²</th><th style="padding:.5mm .8mm;text-align:right;color:#0369a1;font-weight:600">Total MDP</th><th style="padding:.5mm .8mm;text-align:center;color:#475569;font-weight:600">Cls</th><th style="padding:.5mm .8mm;text-align:right;color:#64748b;font-weight:600">km</th></tr></thead><tbody>';
     _terDist.forEach(function(t,i){
       var distStr=t._dist>=90?'ZM':t._dist.toFixed(1);
       var totMDP=(t.precio_m2*t.m2/1e6).toFixed(1);
-      var clsCol=t.cls==='A'?'#6d28d9':t.cls==='A/B'?'#1d4ed8':t.cls==='B+'?'#0891b2':t.cls==='B'?'#16a34a':'#78716c';
-      p_ter+='<tr style="border-bottom:1px solid #fef3c7;'+(i%2?'background:#fffbeb':'')+'"><td style="padding:.5mm .8mm">'+t.zona+'</td>';
+      var clsCol=t.cls==='A'?'#0f172a':t.cls==='A/B'?'#1e293b':t.cls==='B+'?'#0369a1':t.cls==='B'?'#16a34a':'#78716c';
+      p_ter+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#f8fafc':'')+'"><td style="padding:.5mm .8mm">'+t.zona+'</td>';
       p_ter+='<td style="padding:.5mm .8mm;text-align:center;color:#64748b">'+t.mun.slice(0,4)+'.</td>';
-      p_ter+='<td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#092c3b">'+t.ha.toFixed(1)+'</td>';
+      p_ter+='<td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#0f172a">'+t.ha.toFixed(1)+'</td>';
       p_ter+='<td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#475569">'+_N2(t.m2)+'</td>';
-      p_ter+='<td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#fb923c">$'+_N2(t.precio_m2)+'</td>';
-      p_ter+='<td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#7c3aed">$'+totMDP+'</td>';
+      p_ter+='<td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#d97706">$'+_N2(t.precio_m2)+'</td>';
+      p_ter+='<td style="padding:.5mm .8mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#0369a1">$'+totMDP+'</td>';
       p_ter+='<td style="padding:.5mm .8mm;text-align:center"><span style="background:'+clsCol+';border-radius:2px;padding:0 3px;color:#fff;font-weight:700;font-size:4pt">'+t.cls+'</span></td>';
       p_ter+='<td style="padding:.5mm .8mm;text-align:right;color:#64748b">'+distStr+'</td></tr>';
     });
@@ -5750,27 +5618,27 @@ function generarReporte(){
 
     // Columna derecha: resumen por zona + análisis
     p_ter+='<div>';
-    p_ter+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #f97316;padding-bottom:1mm;margin-bottom:1.5mm">Resumen por Corredor</div>';
+    p_ter+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #e2e8f0;padding-bottom:1mm;margin-bottom:1.5mm">Resumen por Corredor</div>';
     _terZonaArr.slice(0,7).forEach(function(z){
       var pct=_terMaxPrecio>0?z.med/_terMaxPrecio*100:0;
-      var clsCol=z.cls==='A'?'#6d28d9':z.cls==='A/B'?'#1d4ed8':z.cls==='B+'?'#0891b2':z.cls==='B'?'#16a34a':'#78716c';
+      var clsCol=z.cls==='A'?'#0f172a':z.cls==='A/B'?'#1e293b':z.cls==='B+'?'#0369a1':z.cls==='B'?'#16a34a':'#78716c';
       p_ter+='<div style="margin-bottom:1.5mm"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.4mm">';
       p_ter+='<span style="font-size:4.8pt;font-weight:600;color:#374151">'+z.zona.slice(0,28)+(z.zona.length>28?'…':'')+'</span>';
-      p_ter+='<span style="font-family:IBM Plex Mono,monospace;font-size:4.8pt;font-weight:700;color:#fb923c">$'+_N2(z.med)+'/m²</span></div>';
+      p_ter+='<span style="font-family:IBM Plex Mono,monospace;font-size:4.8pt;font-weight:700;color:#d97706">$'+_N2(z.med)+'/m²</span></div>';
       p_ter+='<div style="background:#f1f5f9;border-radius:2px;height:3px"><div style="background:'+clsCol+';width:'+pct.toFixed(0)+'%;height:3px;border-radius:2px"></div></div>';
       p_ter+='<div style="display:flex;justify-content:space-between;font-size:3.8pt;color:#94a3b8;margin-top:.3mm"><span>'+z.n+' terreno'+(z.n>1?'s':'')+' · '+z.ha+' ha</span><span style="background:'+clsCol+';border-radius:2px;padding:0 2px;color:#fff;font-weight:700">'+z.cls+'</span></div></div>';
     });
 
     // Análisis de precio por clase
-    p_ter+='<div style="margin-top:2mm;background:#fff7ed;border:1px solid #fed7aa;border-radius:4px;padding:1.5mm">';
-    p_ter+='<div style="font-size:5pt;font-weight:700;color:#92400e;font-family:IBM Plex Mono,monospace;margin-bottom:1mm">Precio de referencia por Clase</div>';
-    var clsGrps=[{c:'A',col:'#6d28d9'},{c:'A/B',col:'#1d4ed8'},{c:'B+',col:'#0891b2'},{c:'B',col:'#16a34a'},{c:'C',col:'#78716c'}];
+    p_ter+='<div style="margin-top:2mm;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:1.5mm">';
+    p_ter+='<div style="font-size:5pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;margin-bottom:1mm">Precio de referencia por Clase</div>';
+    var clsGrps=[{c:'A',col:'#0f172a'},{c:'A/B',col:'#1e293b'},{c:'B+',col:'#0369a1'},{c:'B',col:'#16a34a'},{c:'C',col:'#78716c'}];
     clsGrps.forEach(function(cg){
       var ps=_terAll.filter(function(t){return t.cls===cg.c;}).map(function(t){return t.precio_m2;});
       if(!ps.length) return;
       ps.sort(function(a,b){return a-b;});
       var med=ps[Math.floor(ps.length/2)];
-      p_ter+='<div style="display:flex;align-items:center;gap:2mm;margin-bottom:.5mm"><span style="background:'+cg.col+';border-radius:2px;padding:0 3px;color:#fff;font-weight:700;font-size:4pt;width:16px;text-align:center">'+cg.c+'</span><span style="font-size:4.5pt;color:#374151">$'+_N2(ps[0])+'–$'+_N2(ps[ps.length-1])+'/m²</span><span style="font-family:IBM Plex Mono,monospace;font-size:4.5pt;color:#fb923c;margin-left:auto;font-weight:700">med $'+_N2(med)+'</span></div>';
+      p_ter+='<div style="display:flex;align-items:center;gap:2mm;margin-bottom:.5mm"><span style="background:'+cg.col+';border-radius:2px;padding:0 3px;color:#fff;font-weight:700;font-size:4pt;width:16px;text-align:center">'+cg.c+'</span><span style="font-size:4.5pt;color:#374151">$'+_N2(ps[0])+'–$'+_N2(ps[ps.length-1])+'/m²</span><span style="font-family:IBM Plex Mono,monospace;font-size:4.5pt;color:#d97706;margin-left:auto;font-weight:700">med $'+_N2(med)+'</span></div>';
     });
     p_ter+='</div>';
 
@@ -5799,9 +5667,10 @@ function generarReporte(){
     // ── Análisis de Zona Industrial ─────────────────────────────────────
     var p_zona_ind='<div class="report-page">';
     p_zona_ind+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p_zona_ind+='<div style="border-bottom:3px solid #f97316;padding-bottom:2mm;margin-bottom:2.5mm">';
-    p_zona_ind+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Análisis de Zona · Oferta Industrial Circundante</div>';
-    p_zona_ind+='<div style="font-size:7pt;color:#f97316;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Inventario de activos industriales en área de influencia directa · Radio de 15 km desde zona analizada</div>';
+    p_zona_ind+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">La vocación económica confirma la demanda — ahora analizamos las condiciones específicas de la zona para desarrollo industrial.</div>';
+    p_zona_ind+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:2.5mm">';
+    p_zona_ind+='<div style="font-size:14pt;font-weight:700;color:#0f172a">Análisis de Zona · Oferta Industrial Circundante</div>';
+    p_zona_ind+='<div style="font-size:7pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Inventario de activos industriales en área de influencia directa · Radio de 15 km desde zona analizada</div>';
     p_zona_ind+='</div>';
     if(mZ){p_zona_ind+='<img src="'+mZ+'" style="width:60%;height:auto;border-radius:5px;border:1px solid #e2e8f0;display:block;margin:0 auto 3mm auto"/>';}
     var _bodsNear=INDUSTRIAL.bodegas.filter(function(b){return b.lat&&b.lon;}).map(function(b){
@@ -5837,7 +5706,7 @@ function generarReporte(){
     p_zona_ind+='<div><div style="font-size:5.5pt;font-weight:700;color:#7c2d12;font-family:IBM Plex Mono,monospace;text-transform:uppercase;border-bottom:2px solid #fb923c;padding-bottom:.5mm;margin-bottom:1mm">Terrenos en Venta</div>';
     if(_terNear.length){
       _terNear.slice(0,8).forEach(function(t){
-        p_zona_ind+='<div style="padding:.8mm 0;border-bottom:1px solid #fff7ed;font-size:5.5pt"><div style="font-weight:600;color:#0f172a">'+t.zona.slice(0,20)+'</div><div style="display:flex;justify-content:space-between;color:#64748b"><span>'+t.ha+'ha · Cls '+t.cls+'</span><span style="color:#fb923c;font-weight:700">$'+t.precio_m2+'/m²</span></div><div style="color:#94a3b8">'+t._d.toFixed(1)+' km</div></div>';
+        p_zona_ind+='<div style="padding:.8mm 0;border-bottom:1px solid #fff7ed;font-size:5.5pt"><div style="font-weight:600;color:#0f172a">'+t.zona.slice(0,20)+'</div><div style="display:flex;justify-content:space-between;color:#64748b"><span>'+t.ha+'ha · Cls '+t.cls+'</span><span style="color:#d97706;font-weight:700">$'+t.precio_m2+'/m²</span></div><div style="color:#94a3b8">'+t._d.toFixed(1)+' km</div></div>';
       });
     } else p_zona_ind+='<div style="padding:3mm;text-align:center;color:#94a3b8;font-size:5.5pt">Sin terrenos<br>en radio 15km</div>';
     p_zona_ind+='</div>';
@@ -5856,9 +5725,10 @@ function generarReporte(){
 
     var p_ind_concl='<div class="report-page">';
     p_ind_concl+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p_ind_concl+='<div style="border-bottom:3px solid #f97316;padding-bottom:2mm;margin-bottom:2.5mm">';
-    p_ind_concl+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Conclusión Industrial · '+munPrincipal+'</div>';
-    p_ind_concl+='<div style="font-size:7pt;color:#64748b;font-family:IBM Plex Mono,monospace;margin-top:1mm">Síntesis: demografía laboral + economía sectorial + mercado inmobiliario industrial + cap rate</div>';
+    p_ind_concl+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">Con todos los elementos analizados, presentamos la recomendación de inversión para esta zona.</div>';
+    p_ind_concl+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:2.5mm">';
+    p_ind_concl+='<div style="font-size:14pt;font-weight:700;color:#0f172a">Conclusión Industrial · '+munPrincipal+'</div>';
+    p_ind_concl+='<div style="font-size:7pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:1mm">Síntesis: demografía laboral + economía sectorial + mercado inmobiliario industrial + cap rate</div>';
     p_ind_concl+='</div>';
 
     // ── 3 pilares (demografía · economía · inmobiliario)
@@ -5867,44 +5737,44 @@ function generarReporte(){
     // Pilar demografía con insights profundos
     var _peaInterpret=pctPea>58?'PEA alta ('+P1(pctPea)+') → pool laboral robusto. Empresas industriales pueden reclutar sin presión salarial excesiva.':pctPea>48?'PEA media ('+P1(pctPea)+') → mercado laboral balanceado. Manufactura ligera y logística son viables.':'PEA baja ('+P1(pctPea)+') → plantillas reducidas o zona dormitorio. Operaciones de menor escala.';
     var _escInterpret=avgEsc>=12?'Escolaridad '+N(avgEsc,1)+'a → perfiles técnicos/bachillerato. Apto para manufactura avanzada, BPO y calidad ISO.':avgEsc>=9?'Escolaridad '+N(avgEsc,1)+'a → secundaria completa. Manufactura estándar, ensamble, logística.':'Escolaridad '+N(avgEsc,1)+'a → operadores de base. Almacenaje, maquila simple.';
-    p_ind_concl+='<div style="border:1.5px solid #bfdbfe;border-radius:5px;padding:2.5mm;background:#eff6ff">';
-    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#1d4ed8;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Demografía · Laboral</div>';
+    p_ind_concl+='<div style="border:1.5px solid #e2e8f0;border-top:3px solid #0369a1;border-radius:5px;padding:2.5mm;background:#f8fafc">';
+    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Demografía · Laboral</div>';
     p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm;margin-bottom:1.5mm">';
     p_ind_concl+=_minKpi2(P1(pctPea),'PEA activa');
     p_ind_concl+=_minKpi2(N(avgEsc,1)+' a','Escolaridad');
     p_ind_concl+=_minKpi2(P1(pct2559),'Edad 25-59a');
     p_ind_concl+=_minKpi2(nsePredZona,'NSE predom.');
     p_ind_concl+='</div>';
-    p_ind_concl+='<div style="font-size:5pt;color:#1e40af;line-height:1.5;background:#dbeafe;border-radius:3px;padding:1.5mm">'+_peaInterpret+'<br/><span style="color:#3b82f6">'+_escInterpret+'</span></div>';
+    p_ind_concl+='<div style="font-size:5pt;color:#1e293b;line-height:1.5;background:#f1f5f9;border-radius:3px;padding:1.5mm">'+_peaInterpret+'<br/><span style="color:#475569">'+_escInterpret+'</span></div>';
     var _nseInterpret=_nseScore>=6?'NSE '+nsePredZona+' → tenants con alta capacidad de pago. Renta Clase A o B+ sin comprometer márgenes.':_nseScore>=4?'NSE '+nsePredZona+' → tenants medianos solventes. Renta B/B+ sostenible.':'NSE '+nsePredZona+' → PyMEs locales. Sensibles al precio. Clase B- o C+.';
-    p_ind_concl+='<div style="font-size:5pt;color:#1e40af;line-height:1.5;margin-top:1mm;padding:1mm;background:#bfdbfe33;border-radius:3px">'+_nseInterpret+'</div>';
+    p_ind_concl+='<div style="font-size:5pt;color:#1e293b;line-height:1.5;margin-top:1mm;padding:1mm;background:#e2e8f033;border-radius:3px">'+_nseInterpret+'</div>';
     p_ind_concl+='</div>';
 
     // Pilar economía
     var _topMot=[].concat(_cM,_cC,_cT).sort(function(a,b){return b.e23-a.e23;})[0];
     var _vaPerT=_totE23>0?(_zmVA/_totE23*1000).toFixed(0):0; // miles MXN por empleado
-    p_ind_concl+='<div style="border:1.5px solid #fed7aa;border-radius:5px;padding:2.5mm;background:#fff7ed">';
-    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#ea580c;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Economía · Motores</div>';
+    p_ind_concl+='<div style="border:1.5px solid #e2e8f0;border-top:3px solid #d97706;border-radius:5px;padding:2.5mm;background:#f8fafc">';
+    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#d97706;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Economía · Motores</div>';
     p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm;margin-bottom:1.5mm">';
     p_ind_concl+=_minKpi2(_N2(_mE23),'Emp. manufactura');
     p_ind_concl+=_minKpi2('$'+_N2(_zmVA,0)+' M','Val. Agr. ZM');
     p_ind_concl+=_minKpi2(_N2(_cE23+_tE23),'Com+Transporte');
     p_ind_concl+=_minKpi2(_N2(_totE23-_totE18),'Empleos netos');
     p_ind_concl+='</div>';
-    p_ind_concl+='<div style="font-size:5pt;color:#9a3412;line-height:1.5;background:#ffedd5;border-radius:3px;padding:1.5mm">'+(_topMot?'<b>'+(_topMot.sub.length>40?_topMot.sub.substring(0,40)+'…':_topMot.sub)+'</b> lidera con '+_N2(_topMot.e23)+' empleos y $'+_N2(_topMot.va23,0)+' MDP VA.':'')+' VA/empleado promedio: $'+_vaPerT+' mil MXN — indica manufactura de valor medio-alto.</div>';
+    p_ind_concl+='<div style="font-size:5pt;color:#1e293b;line-height:1.5;background:#f1f5f9;border-radius:3px;padding:1.5mm">'+(_topMot?'<b>'+(_topMot.sub.length>40?_topMot.sub.substring(0,40)+'…':_topMot.sub)+'</b> lidera con '+_N2(_topMot.e23)+' empleos y $'+_N2(_topMot.va23,0)+' MDP VA.':'')+' VA/empleado promedio: $'+_vaPerT+' mil MXN — indica manufactura de valor medio-alto.</div>';
     p_ind_concl+='</div>';
 
     // Pilar inmobiliario + cap rate
     var _nivelComp=_bodsZona.length<5?'Bajo — oportunidad primer entrante':_bodsZona.length<15?'Medio — diferenciación por clase':_bodsZona.length<25?'Alto — foco en nicho':_bodsZona.length+' bodegas — precio competitivo';
-    p_ind_concl+='<div style="border:1.5px solid #ddd6fe;border-radius:5px;padding:2.5mm;background:#f5f3ff">';
-    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#7c3aed;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Mercado · Cap Rate</div>';
+    p_ind_concl+='<div style="border:1.5px solid #e2e8f0;border-top:3px solid #16a34a;border-radius:5px;padding:2.5mm;background:#f8fafc">';
+    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Mercado · Cap Rate</div>';
     p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm;margin-bottom:1.5mm">';
     p_ind_concl+=_minKpi2(_bodsZona.length,'Bodegas zona');
     p_ind_concl+=_minKpi2(_medRenta2?'$'+_medRenta2.toFixed(0):'—','Renta med/m²');
     p_ind_concl+=_minKpi2(_capMed?_capMed.toFixed(1)+'%':'—','Cap Rate med.');
     p_ind_concl+=_minKpi2(_clasePred,'Clase predom.');
     p_ind_concl+='</div>';
-    p_ind_concl+='<div style="font-size:5pt;color:#4c1d95;line-height:1.5;background:#ede9fe;border-radius:3px;padding:1.5mm">'+_nivelComp+'. Cap rate '+(_capMed?_capMed.toFixed(1)+'%':_bodsZona.length<5?'n/d (sin datos de venta)':'estimado')+(_capMed&&_capMed>8?' → upside de precio: activo subvaluado vs. rentas.':_capMed&&_capMed<5?' → mercado maduro o activo premium.':' → rango normal para bodegas B en mercados secundarios MX.')+'</div>';
+    p_ind_concl+='<div style="font-size:5pt;color:#1e293b;line-height:1.5;background:#f0fdf4;border-radius:3px;padding:1.5mm">'+_nivelComp+'. Cap rate '+(_capMed?_capMed.toFixed(1)+'%':_bodsZona.length<5?'n/d (sin datos de venta)':'estimado')+(_capMed&&_capMed>8?' → upside de precio: activo subvaluado vs. rentas.':_capMed&&_capMed<5?' → mercado maduro o activo premium.':' → rango normal para bodegas B en mercados secundarios MX.')+'</div>';
     p_ind_concl+='</div>';
     p_ind_concl+='</div>';
 
@@ -5940,13 +5810,13 @@ function generarReporte(){
 
     // ── Parques industriales en la ZM
     p_ind_concl+='<div style="margin-top:1.5mm">';
-    p_ind_concl+='<div style="font-weight:700;font-size:5pt;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;color:#7c3aed;margin-bottom:.8mm">Parques Industriales en la Zona Metropolitana</div>';
+    p_ind_concl+='<div style="font-weight:700;font-size:5pt;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;color:#0369a1;margin-bottom:.8mm">Parques Industriales en la Zona Metropolitana</div>';
     p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1mm">';
     INDUSTRIAL.parques.slice(0,6).forEach(function(p){p_ind_concl+='<div style="background:#f8fafc;border:1px solid #e2e8f0;padding:.8mm 1mm;border-radius:3px"><div style="font-weight:700;font-size:4.5pt;color:#1e293b;line-height:1.3">'+(p.nom||'—')+'</div><div style="font-size:3.8pt;color:#64748b;margin-top:.2mm">'+(p.mun||'')+(p.ha?' · '+p.ha+' ha':'')+'</div></div>';});
     p_ind_concl+='</div></div>';
 
     // ── Cuadro recomendación COEZA
-    p_ind_concl+='<div style="background:linear-gradient(135deg,#7c3aed,#1d4ed8);color:#fff;padding:1.5mm 2mm;border-radius:5px;margin-top:1.5mm">';
+    p_ind_concl+='<div style="background:#0f172a;color:#fff;padding:1.5mm 2mm;border-radius:5px;margin-top:1.5mm">';
     p_ind_concl+='<div style="font-weight:900;font-size:6.5pt;margin-bottom:.8mm">Recomendación COEZA para esta zona</div>';
     p_ind_concl+='<div style="font-size:4.8pt;line-height:1.65">';
     p_ind_concl+='Nave recomendada: <strong>'+_clsRec+'</strong> &nbsp;·&nbsp; Superficie óptima: <strong>'+(_nseScore>=6?'3,000–8,000':'1,500–4,000')+' m²</strong><br>';
@@ -5963,9 +5833,9 @@ function generarReporte(){
     // ══════════════════════════════════════════════════════════════
     var p_ind_concl2='<div class="report-page">';
     p_ind_concl2+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-    p_ind_concl2+='<div style="border-bottom:3px solid #f97316;padding-bottom:2mm;margin-bottom:2.5mm">';
-    p_ind_concl2+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Recomendaciones Estratégicas · '+munPrincipal+'</div>';
-    p_ind_concl2+='<div style="font-size:7pt;color:#f97316;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Tipo de nave recomendada · Pros & Contras · Infraestructura · Sectores objetivo</div>';
+    p_ind_concl2+='<div style="border-bottom:3px solid #0f172a;padding-bottom:2mm;margin-bottom:2.5mm">';
+    p_ind_concl2+='<div style="font-size:14pt;font-weight:700;color:#0f172a">Recomendaciones Estratégicas · '+munPrincipal+'</div>';
+    p_ind_concl2+='<div style="font-size:7pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Tipo de nave recomendada · Pros & Contras · Infraestructura · Sectores objetivo</div>';
     p_ind_concl2+='</div>';
 
     // ── Síntesis del entorno: economía + demografía + mercado ──────
@@ -5987,7 +5857,7 @@ function generarReporte(){
     // NSE entorno
     if(_nseScore>=5){_indScore+=1;_indOps.push('Entorno NSE '+nsePredZona+' — tenants con mayor solvencia y capacidad de renta');}
     else{_indRisks.push('NSE del entorno limitado — orientar producto a precio competitivo');}
-    var _indScoreColor=_indScore>=5?'#16a34a':_indScore>=3?'#d97706':'#ea580c';
+    var _indScoreColor=_indScore>=5?'#16a34a':_indScore>=3?'#d97706':'#dc2626';
     var _indScoreLbl=_indScore>=5?'ENTORNO INDUSTRIAL FAVORABLE':_indScore>=3?'ENTORNO MODERADO — DIFERENCIACIÓN CLAVE':'ENTORNO RETADOR — NICHO ESPECÍFICO';
     p_ind_concl2+='<div style="background:'+_indScoreColor+';color:#fff;border-radius:5px;padding:2.5mm 4mm;margin-bottom:2.5mm;display:flex;align-items:center;gap:3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
     p_ind_concl2+='<span style="font-size:20pt;font-weight:700;font-family:IBM Plex Mono,monospace;line-height:1">'+_indScore+'<span style="font-size:8pt;opacity:.75">/7</span></span>';
@@ -5998,18 +5868,18 @@ function generarReporte(){
     p_ind_concl2+='</div>';
 
     // ── Tipo de nave recomendada ──────────────────────────────────
-    var _naveRec='',_naveDesc='',_naveColor='#0891b2';
+    var _naveRec='',_naveDesc='',_naveColor='#0369a1';
     var _competenciaDesc='';
     if(_bodsZona.length===0){
-      _naveRec='Clase A / Build-to-Suit';_naveColor='#7c3aed';
+      _naveRec='Clase A / Build-to-Suit';_naveColor='#0f172a';
       _naveDesc='Sin competencia directa en zona — primer entrante puede definir el estándar del mercado. BTS para tenant ancla o Clase A especulativa para capturar demanda de nearshoring y manufactura avanzada.';
       _competenciaDesc='Sin competencia directa identificada en la zona.';
     } else if(_nseScore>=6&&_bodsZona.length<10){
-      _naveRec='Clase A / A−';_naveColor='#6d28d9';
+      _naveRec='Clase A / A−';_naveColor='#0f172a';
       _naveDesc='NSE alto del entorno + oferta limitada = ventana de mercado para Clase A. Tenants objetivo: manufactura de precisión, electrónica, farmacéutica, automotriz Tier 1-2.';
       _competenciaDesc=_bodsZona.length+' bodegas existentes en zona (Clase '+_clasePred+' predom.).';
     } else if(_nseScore>=4||_bodsZona.length>=10){
-      _naveRec='Clase B+ / B';_naveColor='#2563eb';
+      _naveRec='Clase B+ / B';_naveColor='#0369a1';
       _naveDesc='Mercado con competencia moderada — diferenciarse con spec técnico superior a la clase predominante ('+_clasePred+'): altura libre ≥10m, piso 7 ton/m², andenes dobles. Precio dentro de cuartil superior del mercado.';
       _competenciaDesc=_bodsZona.length+' bodegas en zona. Clase predominante: '+_clasePred+'. Mediana renta: $'+(_medRenta2?_medRenta2.toFixed(0):'—')+'/m²/mes.';
     } else {
@@ -6033,7 +5903,7 @@ function generarReporte(){
     var _specKva=_nseScore>=6?'≥500 kVA':_nseScore>=4?'150-300 kVA':'100-150 kVA';
     var _specOfi=_nseScore>=6?'15-20%':_nseScore>=4?'10-15%':'5-10%';
     var _specAndenes=_nseScore>=6?'≥4 andenes + patio 40m':_nseScore>=4?'2-3 andenes + patio':'1-2 andenes';
-    [['Altura libre',_specAltura,'#6d28d9'],['Carga piso',_specPiso,'#2563eb'],['Potencia elec.',_specKva,'#0891b2'],['Área oficinas',_specOfi,'#16a34a'],['Acceso camiones',_specAndenes,'#d97706']].forEach(function(sp){
+    [['Altura libre',_specAltura,'#0f172a'],['Carga piso',_specPiso,'#0369a1'],['Potencia elec.',_specKva,'#0369a1'],['Área oficinas',_specOfi,'#16a34a'],['Acceso camiones',_specAndenes,'#d97706']].forEach(function(sp){
       p_ind_concl2+='<div style="display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid #f1f5f9;padding:1mm 0;font-size:5.5pt"><span style="color:#64748b">'+sp[0]+'</span><span style="font-weight:700;color:'+sp[2]+';font-family:IBM Plex Mono,monospace">'+sp[1]+'</span></div>';
     });
     p_ind_concl2+='</div>';
@@ -6047,9 +5917,9 @@ function generarReporte(){
     p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">✓ Factores Positivos de la Zona</div>';
     _indOps.forEach(function(t){p_ind_concl2+='<div style="font-size:5.5pt;color:#166534;line-height:1.5;margin-bottom:.8mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#16a34a">▸</span>'+t+'</div>';});
     p_ind_concl2+='</div>';
-    p_ind_concl2+='<div style="border:1.5px solid #fed7aa;border-radius:5px;padding:2mm 2.5mm;background:#fff8f5">';
-    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#ea580c;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">⚠ Factores de Riesgo / Consideraciones</div>';
-    _indRisks.forEach(function(t){p_ind_concl2+='<div style="font-size:5.5pt;color:#9a3412;line-height:1.5;margin-bottom:.8mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#ea580c">▸</span>'+t+'</div>';});
+    p_ind_concl2+='<div style="border:1.5px solid #fde68a;border-radius:5px;padding:2mm 2.5mm;background:#fffbeb">';
+    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#d97706;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">⚠ Factores de Riesgo / Consideraciones</div>';
+    _indRisks.forEach(function(t){p_ind_concl2+='<div style="font-size:5.5pt;color:#92400e;line-height:1.5;margin-bottom:.8mm;display:flex;gap:1.5mm"><span style="flex-shrink:0;color:#d97706">▸</span>'+t+'</div>';});
     p_ind_concl2+='</div>';
     p_ind_concl2+='</div>';
 
@@ -6805,7 +6675,7 @@ function _buildIndLayers() {
       html: '<div style="width:28px;height:28px;border-radius:7px;background:#0a2c3a;border:2px solid #00e2e0;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 10px rgba(0,0,0,.55);cursor:pointer">&#127981;</div>',
       iconSize: [28,28], iconAnchor: [14,14]
     });
-    var clsColor = p.cls === 'A' ? '#6d28d9' : p.cls === 'A/B' ? '#1d4ed8' : p.cls === 'B+' ? '#0891b2' : '#16a34a';
+    var clsColor = p.cls === 'A' ? '#0f172a' : p.cls === 'A/B' ? '#1e293b' : p.cls === 'B+' ? '#0369a1' : '#16a34a';
     var popup = '<div style="font-family:IBM Plex Mono,monospace;min-width:210px;font-size:11px;color:#e4eaf5;line-height:1.5">'
       + '<div style="font-weight:700;font-size:12.5px;color:#00e2e0;margin-bottom:5px">'+p.nom+'</div>'
       + '<div style="display:flex;gap:6px;margin-bottom:4px"><span style="background:'+clsColor+';border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;color:#fff">Clase '+p.cls+'</span><span style="color:#8a96a8">'+p.tipo+'</span></div>'
@@ -6828,7 +6698,7 @@ function _buildIndLayers() {
     var grp = rGrp[k];
     grp.forEach(function(b, i) {
       var pos = _jitter(b.lat, b.lon, i, grp.length);
-      var clsC = b.cls === 'A' ? '#6d28d9' : b.cls === 'B+' ? '#0891b2' : b.cls === 'B' ? '#16a34a' : '#8a96a8';
+      var clsC = b.cls === 'A' ? '#0f172a' : b.cls === 'B+' ? '#0369a1' : b.cls === 'B' ? '#16a34a' : '#8a96a8';
       var icon = L.divIcon({
         className: '',
         html: '<div style="width:22px;height:22px;border-radius:50%;background:#16a34a;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700;color:#fff;font-family:monospace;box-shadow:0 2px 7px rgba(0,0,0,.45);cursor:pointer">R</div>',
@@ -6852,19 +6722,19 @@ function _buildIndLayers() {
   _indL.terrenos = L.layerGroup();
   INDUSTRIAL.terrenos.forEach(function(t) {
     if (!t.lat || !t.lon) return;
-    var clsCol = t.cls==='A'?'#6d28d9':t.cls==='A/B'?'#1d4ed8':t.cls==='B+'?'#0891b2':t.cls==='B'?'#16a34a':'#8a96a8';
+    var clsCol = t.cls==='A'?'#0f172a':t.cls==='A/B'?'#1e293b':t.cls==='B+'?'#0369a1':t.cls==='B'?'#16a34a':'#8a96a8';
     var haStr = t.ha>=1 ? t.ha.toFixed(1)+' ha' : (t.m2/1000).toFixed(1)+'k m²';
     var icon = L.divIcon({
       className: '',
-      html: '<div style="width:26px;height:26px;border-radius:4px;background:#7c2d12;border:2.5px solid #fb923c;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fb923c;font-family:monospace;box-shadow:0 2px 8px rgba(0,0,0,.5);cursor:pointer">T</div>',
+      html: '<div style="width:26px;height:26px;border-radius:4px;background:#7c2d12;border:2.5px solid #fb923c;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#d97706;font-family:monospace;box-shadow:0 2px 8px rgba(0,0,0,.5);cursor:pointer">T</div>',
       iconSize: [26,26], iconAnchor: [13,13]
     });
     var popup = '<div style="font-family:IBM Plex Mono,monospace;min-width:220px;font-size:11px;color:#e4eaf5;line-height:1.5">'
-      + '<div style="font-weight:700;font-size:12.5px;color:#fb923c;margin-bottom:4px">Terreno Industrial en Venta</div>'
+      + '<div style="font-weight:700;font-size:12.5px;color:#d97706;margin-bottom:4px">Terreno Industrial en Venta</div>'
       + '<div style="display:flex;gap:6px;align-items:center;margin-bottom:4px"><span style="background:'+clsCol+';border-radius:3px;padding:1px 5px;font-size:9px;font-weight:700;color:#fff">Clase '+t.cls+'</span><span style="color:#8a96a8">'+t.zona+'</span></div>'
       + '<div>📍 <strong>'+t.mun+'</strong></div>'
       + '<div>Superficie: <strong>'+haStr+'</strong> ('+t.m2.toLocaleString('es-MX')+' m²)</div>'
-      + '<div>Precio: <strong style="color:#fb923c">$'+t.precio_m2.toLocaleString('es-MX')+'/m²</strong> = <strong>$'+(t.precio_m2*t.m2/1e6).toFixed(1)+' MDP</strong></div>'
+      + '<div>Precio: <strong style="color:#d97706">$'+t.precio_m2.toLocaleString('es-MX')+'/m²</strong> = <strong>$'+(t.precio_m2*t.m2/1e6).toFixed(1)+' MDP</strong></div>'
       + '<div>Uso: '+t.uso+'</div>'
       + '<div style="color:#8a96a8;font-size:9.5px">Servicios: '+t.serv+'</div>'
       + (t.car ? '<div style="color:#8a96a8;font-size:9.5px;margin-top:3px;border-top:1px solid rgba(255,255,255,0.08);padding-top:3px">'+t.car+'</div>' : '')
@@ -7003,12 +6873,12 @@ function refreshIndPanel() {
     .sort(function(a,b){ return a._d - b._d; })
     .slice(0, 4);
   if (terCerca.length) {
-    h += '<div class="ind-zona-ttl" style="margin-top:6px;color:#fb923c">Terrenos en venta cercanos</div>';
+    h += '<div class="ind-zona-ttl" style="margin-top:6px;color:#d97706">Terrenos en venta cercanos</div>';
     terCerca.forEach(function(t) {
       h += '<div class="ind-bod-row">'
-        + '<span class="ind-cls" style="color:#fb923c">'+t.cls+'</span>'
+        + '<span class="ind-cls" style="color:#d97706">'+t.cls+'</span>'
         + '<span class="ind-m2">'+t.ha.toFixed(1)+' ha</span>'
-        + '<span class="ind-rp" style="color:#fb923c">$'+Math.round(t.precio_m2/100)*100+'</span>'
+        + '<span class="ind-rp" style="color:#d97706">$'+Math.round(t.precio_m2/100)*100+'</span>'
         + '<span class="ind-km">'+t._d.toFixed(1)+' km</span>'
         + '</div>';
     });
