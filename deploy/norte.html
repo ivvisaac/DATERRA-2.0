@@ -3963,7 +3963,7 @@ function generarReporte(){
 
     // Título
     p1+='<div style="margin-bottom:4mm">';
-    p1+='<div style="display:flex;align-items:center;gap:3mm"><div class="rpt-title">Reporte de Zona de Influencia</div><span style="background:rgba(240,184,64,.22);border:1.5px solid rgba(240,184,64,.65);color:#b45309;font-size:7pt;font-weight:700;font-family:IBM Plex Mono,monospace;padding:2px 6px;border-radius:4px;letter-spacing:1px;flex-shrink:0">BETA</span></div>';
+    p1+='<div style="display:flex;align-items:center;gap:3mm"><div class="rpt-title">Reporte de Zona de Influencia</div></div>';
     p1+='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:3mm;margin-top:2.5mm">';
     p1+='<span class="zona-badge '+tipoBadge+'">'+tipoNombre+'</span>';
     if(herramientaDetalle) p1+='<span style="font-size:8pt;color:#64748b;font-family:IBM Plex Mono,monospace">'+herramientaDetalle+'</span>';
@@ -4207,6 +4207,11 @@ function generarReporte(){
 
     var pExec='<div class="report-page">';
     pExec+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    pExec+='<div style="background:#0f172a;border:1.5px solid #38bdf8;border-radius:6px;padding:2mm 4mm;margin-bottom:2mm">';
+    pExec+='<div style="font-size:5pt;font-family:IBM Plex Mono,monospace;color:#38bdf8;text-transform:uppercase;letter-spacing:1px;margin-bottom:.8mm">Pregunta de Inversión</div>';
+    pExec+='<div style="font-size:7pt;font-weight:700;color:#e2e8f0;line-height:1.5">¿Es viable desarrollar bodega industrial Clase '+_pxClsRec+' en la zona analizada para inversión con horizonte 7–10 años?</div>';
+    pExec+='<div style="font-size:5.5pt;color:#94a3b8;margin-top:.5mm">Este reporte responde con datos de empleo industrial ZM La Laguna (INEGI 2023), inventario de mercado (COEZA 2025) y perfil demográfico laboral de la zona seleccionada.</div>';
+    pExec+='</div>';
     pExec+='<div style="background:linear-gradient(135deg,#0f172a,#1e3a5f);border-radius:6px;padding:2.5mm 5mm;margin-bottom:2mm;display:flex;justify-content:space-between;align-items:center">';
     pExec+='<div><div style="font-size:7pt;font-family:IBM Plex Mono,monospace;color:rgba(148,226,224,0.8);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1.5mm">Resumen Ejecutivo · Análisis Industrial · ZM La Laguna</div>';
     pExec+='<div style="font-size:11pt;font-weight:700;color:#fff;line-height:1.2">'+munPrincipal+' · '+tipoNombre+'</div>';
@@ -4620,10 +4625,14 @@ function generarReporte(){
     p_dem_ind+='<div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:1mm;padding:.5mm 0;font-size:5pt;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px"><div>Indicador</div><div style="text-align:right">Zona</div><div style="text-align:right">'+munPrincipal.slice(0,8)+'</div><div style="text-align:right">ZM Lag.</div></div>';
     p_dem_ind+=_benchRow('% PEA activa',P1(pctPea),P1(munPctPea||0),_zmPctPea+'','%',true);
     p_dem_ind+=_benchRow('Escolaridad prom.',N(avgEsc,1),N(munAvgEsc||0,1),_zmAvgEsc,'a',true);
-    p_dem_ind+=_benchRow('% edad 25-59 (productiva)',P1(pct2559),P1((mun.pct_25_59||0)*100),_zmPct2559+'','%',true);
-    p_dem_ind+=_benchRow('% edad 0-14 (futura fuerza)',P1(pct014),P1((mun.pct_0_14||0)*100),'22','%',false);
-    p_dem_ind+=_benchRow('% NSE AB+C+ (alta capac.)',P1(pNseAlto),P1(0),_zmPctAlto+'','%',true);
-    p_dem_ind+=_benchRow('% desocupados/PEA',P1(_pctDes),P1((mun.desocupados||0)/(mun.pea||1)*100),'4.2','%',false);
+    p_dem_ind+=_benchRow('% edad 25-59 (productiva)',P1(pct2559),P1(mun.pct_25_59||0),_zmPct2559+'','%',true);
+    p_dem_ind+=_benchRow('% edad 0-14 (futura fuerza)',P1(pct014),P1(mun.pct_0_14||0),'22','%',false);
+    var _munNseAltoB=(_munNseTotExec>0?((_munNseAbExec+_munNseCmasExec)/_munNseTotExec*100):0);
+    var _munNseAltoBDisp=(_munNseAltoB===0||isNaN(_munNseAltoB))?'n/d':P1(_munNseAltoB);
+    p_dem_ind+=_benchRow('% NSE AB+C+ (alta capac.)',P1(pNseAlto),_munNseAltoBDisp,_zmPctAlto+'','%',true);
+    var _munDesocPct=(mun.desocupados||0)/(mun.pea||1)*100;
+    var _munDesocDisp=(_munDesocPct===0||isNaN(_munDesocPct))?'n/d':P1(_munDesocPct);
+    p_dem_ind+=_benchRow('% desocupados/PEA',P1(_pctDes),_munDesocDisp,'4.2','%',false);
     p_dem_ind+='</div>';
     p_dem_ind+='<div>';
     p_dem_ind+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #7c3aed;padding-bottom:1mm;margin-bottom:1.5mm">¿Qué significa para la industria?</div>';
@@ -5391,12 +5400,12 @@ function generarReporte(){
     p_bod1+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     p_bod1+='<div style="border-bottom:3px solid #6366f1;padding-bottom:2mm;margin-bottom:2.5mm">';
     p_bod1+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Inventario de Bodegas Industriales · ZM La Laguna</div>';
-    p_bod1+='<div style="font-size:7pt;color:#64748b;font-family:IBM Plex Mono,monospace;margin-top:1mm">120 bodegas · 30 parques · 4 municipios · COEZA Real Estate Market Intelligence 2025</div>';
+    p_bod1+='<div style="font-size:7pt;color:#64748b;font-family:IBM Plex Mono,monospace;margin-top:1mm">'+_pxBodCount+' bodegas · '+_pxPqCount+' parques · 4 municipios · COEZA Real Estate Market Intelligence 2025</div>';
     p_bod1+='</div>';
     // KPI strip
     p_bod1+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:2.5mm">';
-    p_bod1+=_kpiBod2('120','Bodegas totales','#6366f1');
-    p_bod1+=_kpiBod2('30','Parques industriales','#6366f1');
+    p_bod1+=_kpiBod2(_pxBodCount+'','Bodegas totales','#6366f1');
+    p_bod1+=_kpiBod2(_pxPqCount+'','Parques industriales','#6366f1');
     p_bod1+=_kpiBod2('$'+_medGR.toFixed(0)+'/m²','Renta mediana ZM','#ea580c');
     p_bod1+=_kpiBod2(_N2(_medGM2)+' m²','Tamaño mediano','#2563eb');
     p_bod1+='</div>';
@@ -5480,7 +5489,7 @@ function generarReporte(){
       // Sin bodegas: oportunidad de primer entrante
       p_bod2+='<div style="text-align:center;padding:6mm;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:5px;margin-bottom:3mm">';
       p_bod2+='<div style="font-size:11pt;font-weight:700;color:#166534;margin-bottom:1.5mm">Sin bodegas registradas en esta zona</div>';
-      p_bod2+='<div style="font-size:6pt;color:#15803d;line-height:1.6;max-width:120mm;margin:0 auto">El inventario COEZA cubre 120 bodegas en los principales corredores de ZM La Laguna. Esta zona no tiene listings activos — <strong>ventana de primer entrante</strong> con demanda potencial sin cubrir por la oferta formal.</div>';
+      p_bod2+='<div style="font-size:6pt;color:#15803d;line-height:1.6;max-width:120mm;margin:0 auto">El inventario COEZA cubre '+_pxBodCount+' bodegas en los principales corredores de ZM La Laguna. Esta zona no tiene listings activos — <strong>ventana de primer entrante</strong> con demanda potencial sin cubrir por la oferta formal.</div>';
       p_bod2+='</div>';
       // Bandas de referencia ZM
       p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #ea580c;padding-bottom:1mm;margin-bottom:1.5mm">Renta de Referencia ZM · Por Banda de Tamaño</div>';
@@ -5520,6 +5529,7 @@ function generarReporte(){
       // Comparativa zona vs municipio
       var _tabMun=INDUSTRIAL.tab.mun[munPrincipal]||{med:65,usd:3.21};
       if(_medRenta2){var diff=((_medRenta2-_tabMun.med)/_tabMun.med*100);p_bod2+='<div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:4px;padding:1.5mm"><div style="font-size:5pt;font-weight:700;color:#4338ca;margin-bottom:.8mm">Zona vs '+munPrincipal+'</div><div style="display:flex;gap:2mm;justify-content:center;align-items:center"><div style="text-align:center"><div style="font-size:9pt;font-weight:700;color:#6366f1;font-family:IBM Plex Mono,monospace">$'+_medRenta2.toFixed(0)+'</div><div style="font-size:5pt;color:#64748b">Zona</div></div><div style="font-size:8pt;color:#94a3b8">→</div><div style="text-align:center"><div style="font-size:9pt;font-weight:700;color:#0891b2;font-family:IBM Plex Mono,monospace">$'+_tabMun.med+'</div><div style="font-size:5pt;color:#64748b">Mun. med.</div></div></div><div style="font-size:5pt;text-align:center;color:'+(diff>=0?'#16a34a':'#dc2626')+';font-weight:700;margin-top:.5mm">Zona '+(diff>=0?'▲'+Math.abs(diff).toFixed(0)+'% sobre':'▼'+Math.abs(diff).toFixed(0)+'% bajo')+' la mediana</div></div>';}
+      p_bod2+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:1.5mm;margin-top:1.5mm;font-size:4.5pt;color:#166534;line-height:1.55"><strong>Benchmark nacional:</strong> Saltillo Clase A USD $6.50/m²/mes · Monterrey USD $7.00/m²/mes · La Laguna representa ~50% del costo de mercados Tier 1 — ventaja competitiva de entrada para tenants sensibles al costo.</div>';
       // Bandas de tamaño
       p_bod2+='<div style="font-size:5.5pt;font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid #ea580c;padding-bottom:1mm;margin-bottom:1mm;margin-top:2mm">Renta por Banda de Tamaño</div>';
       p_bod2+='<table style="width:100%;border-collapse:collapse;font-size:5pt"><thead><tr style="background:#fff7ed"><th style="padding:.5mm .8mm;text-align:left;color:#64748b;font-weight:600">Tamaño</th><th style="padding:.5mm .8mm;text-align:right;color:#64748b;font-weight:600">Bodegas</th><th style="padding:.5mm .8mm;text-align:right;color:#64748b;font-weight:600">Renta med MXN/m²</th></tr></thead><tbody>';
@@ -5644,7 +5654,7 @@ function generarReporte(){
     p_ter+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     p_ter+='<div style="border-bottom:3px solid #fb923c;padding-bottom:2mm;margin-bottom:2.5mm;display:flex;align-items:baseline;gap:3mm">';
     p_ter+='<div style="font-size:14pt;font-weight:700;color:#092c3b">Terrenos Industriales en Venta · ZM La Laguna</div>';
-    p_ter+='<div style="font-size:7pt;color:#fb923c;font-family:IBM Plex Mono,monospace;font-weight:700">Tierra disponible para desarrollo industrial · 22 terrenos catalogados</div>';
+    p_ter+='<div style="font-size:7pt;color:#fb923c;font-family:IBM Plex Mono,monospace;font-weight:700">Tierra disponible para desarrollo industrial · '+_terAll.length+' terrenos catalogados</div>';
     p_ter+='</div>';
 
     // KPI strip
@@ -5866,6 +5876,7 @@ function generarReporte(){
     p_ind_concl+='<div style="text-align:center"><div style="font-size:9pt;font-weight:900;color:#a78bfa;font-family:IBM Plex Mono,monospace;line-height:1">'+(_nseScore>=6?'12–14 años':_nseScore>=4?'14–16 años':'16–18 años')+'</div><div style="font-size:4pt;color:#94a3b8;margin-top:.3mm">Payback estimado<br>a valor de mercado</div></div>';
     p_ind_concl+='</div>';
     p_ind_concl+='<div style="font-size:4pt;color:#94a3b8;line-height:1.45">El cap rate se calcula con base en la renta de mercado de bodegas Clase '+_clsRec+' dentro de la zona seleccionada, sobre un precio de construcción estimado (Clase A: USD 650–800/m², Clase B: USD 400–550/m²). Los datos de renta provienen del inventario activo de la ZM La Laguna. No considera vacancia ni gastos operativos.</div>';
+    p_ind_concl+=(_capArr&&_capArr.length===0?'<div style="margin-top:1mm;font-size:3.8pt;color:#7dd3d2;line-height:1.5;background:rgba(125,211,210,0.08);border-radius:3px;padding:1mm">Metodología de triangulación: (a) cap rates Saltillo industrial 7–8%, (b) prima de riesgo Tier 4 mercado secundario +300–500 pbs, (c) yields ofertados por brokers locales. Sin muestras directas con precio+renta simultáneos en el inventario actual.</div>':'');
     p_ind_concl+='</div>';
 
     // ── Parques industriales en la ZM
@@ -5922,6 +5933,9 @@ function generarReporte(){
     p_ind_concl2+='<div style="background:'+_indScoreColor+';color:#fff;border-radius:5px;padding:2.5mm 4mm;margin-bottom:2.5mm;display:flex;align-items:center;gap:3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
     p_ind_concl2+='<span style="font-size:20pt;font-weight:700;font-family:IBM Plex Mono,monospace;line-height:1">'+_indScore+'<span style="font-size:8pt;opacity:.75">/7</span></span>';
     p_ind_concl2+='<div><div style="font-size:9pt;font-weight:700;letter-spacing:.3px">'+_indScoreLbl+'</div><div style="font-size:6.5pt;opacity:.85;margin-top:.3mm">'+n+' AGEBs · Empleo + Demografía + Mercado + NSE</div></div>';
+    p_ind_concl2+='</div>';
+    p_ind_concl2+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;padding:1.5mm 2mm;margin-bottom:2mm;font-size:4pt;color:#64748b;line-height:1.6">';
+    p_ind_concl2+='<strong style="color:#475569">Metodología score (0–7 pts):</strong> (1) Crecimiento empleo 2018-23 ×2, (2) Pool laboral en edad activa + escolaridad ×2, (3) Oferta disponible en zona ×2, (4) NSE predominante del entorno ×1. Fuentes: Censo Económico INEGI 2023 · Inventario COEZA 2025 · Censo Demográfico INEGI 2020.';
     p_ind_concl2+='</div>';
 
     // ── Tipo de nave recomendada ──────────────────────────────────
