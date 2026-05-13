@@ -6041,6 +6041,7 @@ function generarReporte(){
     var _zonaKeys=Object.keys(INDUSTRIAL_ZONAS);
     var _claseNavesMap={cgpark:'B+/A',cdtorreon:'B/B+',ferropuerto:'A/A-',lajat:'B/B+',pigp:'B/A-'};
     var _rentaRef={cgpark:'$55–110',cdtorreon:'$45–75',ferropuerto:'$65–115',lajat:'$35–115',pigp:'$25–130'};
+    var _oColors={'Alta':'#16a34a','Media-Alta':'#0369a1','Media':'#d97706','Consolidado':'#475569'};
     var _zonaStats={};
     _zonaKeys.forEach(function(k){
       var bods=_bodsByZona(k);
@@ -6206,7 +6207,6 @@ function generarReporte(){
     p_zonas_comp+='</div>';
 
     // ── Tabla comparativa ampliada ──
-    var _claseNavesMap={cgpark:'B+/A',cdtorreon:'B/B+',ferropuerto:'A/A-',lajat:'B/B+',pigp:'B/A-'};
     p_zonas_comp+='<table style="width:100%;border-collapse:collapse;font-size:6px;margin-bottom:2.5mm">';
     p_zonas_comp+='<thead><tr style="background:#0f172a;color:#fff">';
     p_zonas_comp+='<th style="padding:3px 5px;text-align:left;font-size:5.5px">Zona</th>';
@@ -6219,8 +6219,6 @@ function generarReporte(){
     p_zonas_comp+='<th style="padding:3px 4px;text-align:center;font-size:5.5px">Mercado</th>';
     p_zonas_comp+='</tr></thead><tbody>';
 
-    var _oColors={'Alta':'#16a34a','Media-Alta':'#0369a1','Media':'#d97706','Consolidado':'#475569'};
-    var _rentaRef={cgpark:'$55–110',cdtorreon:'$45–75',ferropuerto:'$65–115',lajat:'$35–115',pigp:'$25–130'};
     _zonaKeys.forEach(function(k,i){
       var z=INDUSTRIAL_ZONAS[k];var s=_zonaStats[k];
       var isMyZone=(_zonaDetectedKey===k);
