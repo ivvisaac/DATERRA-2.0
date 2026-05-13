@@ -5003,7 +5003,7 @@ function generarReporte(){
       pMapRenta+='<td style="padding:.8mm 1.5mm;color:#475569">'+clsSet+'</td></tr>';
     });
     pMapRenta+='</tbody></table>';
-    pMapRenta+='<div style="margin-top:2mm;padding:2mm 3mm;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;font-size:6.5pt;color:#166534"><strong>Insight:</strong> Renta mediana ZM $'+_medGR+'/m²/mes. '+(_capArr&&_capArr.length?'Cap rate implícito ('+_capArr.length+' muestras): '+(_capMed||'—')+'%. ':'')+'Las bodegas clase A/B+ comando primas de 25-40% sobre clase B/C. A mayor altura libre y andenes, mayor precio.</div>';
+    pMapRenta+='<div style="margin-top:2mm;padding:2mm 3mm;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;font-size:6.5pt;color:#166534"><strong>Insight:</strong> Renta mediana ZM $'+(_medGR||65)+'/m²/mes. '+(_capArr&&_capArr.length?'Cap rate implícito ('+_capArr.length+' muestras): '+(_capMed||'—')+'%. ':'')+'Las bodegas clase A/B+ comando primas de 25-40% sobre clase B/C. A mayor altura libre y andenes, mayor precio.</div>';
     pMapRenta+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Inventario Industrial · COEZA 2025</span><span>Industrial · Bodegas Renta</span><span>'+fecha+'</span></div>';
     pMapRenta+='</div>';
 
@@ -6149,7 +6149,7 @@ function generarReporte(){
     // ══════════════════════════════════════════════════════════════
     function _bodsByZona(key){var z=INDUSTRIAL_ZONAS[key];return INDUSTRIAL.bodegas.filter(function(b){return b.lat&&b.lon&&b.lat>=z.latMin&&b.lat<=z.latMax&&b.lon>=z.lonMin&&b.lon<=z.lonMax;});}
     function _medZ(arr){if(!arr.length)return null;var s=arr.slice().sort(function(a,b){return a-b;});return s[Math.floor(s.length/2)];}
-    function _terByZona(key){var z=INDUSTRIAL_ZONAS[key];return (INDUSTRIAL.terrenos||[]).filter(function(t){return t.lat&&t.lon&&t.lat>=z.latMin&&t.lat<=z.latMax&&t.lon>=z.lonMin&&t.lon<=z.lonMax;});}
+    function _getTerByZona(key){var z=INDUSTRIAL_ZONAS[key];return (INDUSTRIAL.terrenos||[]).filter(function(t){return t.lat&&t.lon&&t.lat>=z.latMin&&t.lat<=z.latMax&&t.lon>=z.lonMin&&t.lon<=z.lonMax;});}
 
     var _zonaKeys=Object.keys(INDUSTRIAL_ZONAS);
     var _zonaStats={};
@@ -6157,7 +6157,7 @@ function generarReporte(){
       var bods=_bodsByZona(k);
       var rents=bods.filter(function(b){return b.rent_m2>0;}).map(function(b){return b.rent_m2;});
       var ventas=bods.filter(function(b){return b.vta_m2>0;}).map(function(b){return b.vta_m2;});
-      var ters=_terByZona(k);
+      var ters=_getTerByZona(k);
       var terPrices=ters.filter(function(t){return t.precio_m2>0;}).map(function(t){return t.precio_m2;});
       var z=INDUSTRIAL_ZONAS[k];
       var pct251=z.empresas>0?Math.round(z.s251/z.empresas*100):0;
