@@ -4573,6 +4573,27 @@ function generarReporte(){
     });
     pExec+='</div>';
 
+    // ── Pre-compute: centroide + bodegas + zona detectada (usados en pExec y en todo el reporte) ──
+    var _zLats=[],_zLons=[];
+    feats.forEach(function(f){if(f.geometry&&f.geometry.coordinates&&f.geometry.coordinates[0]){f.geometry.coordinates[0].forEach(function(c){if(c&&c.length>=2){_zLons.push(c[0]);_zLats.push(c[1]);}});}});
+    var _zonaCLat=_zLats.length?(_zLats.reduce(function(a,b){return a+b;},0)/_zLats.length):(puntoLat||25.54);
+    var _zonaCLon=_zLons.length?(_zLons.reduce(function(a,b){return a+b;},0)/_zLons.length):(puntoLon||(-103.41));
+    var _zonaBboxLatSpan=_zLats.length?(Math.max.apply(null,_zLats)-Math.min.apply(null,_zLats)):0;
+    var _zonaBboxLonSpan=_zLons.length?(Math.max.apply(null,_zLons)-Math.min.apply(null,_zLons)):0;
+    var _zonaRadKm=Math.max(2,Math.min(12,Math.sqrt(Math.pow(_zonaBboxLatSpan*111,2)+Math.pow(_zonaBboxLonSpan*111*Math.cos(_zonaCLat*Math.PI/180),2))/2+2));
+    function _havB(lat1,lon1,lat2,lon2){var R=6371,dL=(lat2-lat1)*Math.PI/180,dLo=(lon2-lon1)*Math.PI/180,a=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+    var _bodsZona=[];
+    if(puntoLat!==null&&window._radioParams){
+      var _rKm=window._radioParams.km;
+      _bodsZona=INDUSTRIAL.bodegas.filter(function(b){if(!b.lat||!b.lon)return false;return _havB(puntoLat,puntoLon,b.lat,b.lon)<=_rKm;});
+    } else {
+      _bodsZona=INDUSTRIAL.bodegas.filter(function(b){if(!b.lat||!b.lon)return false;return _havB(_zonaCLat,_zonaCLon,b.lat,b.lon)<=_zonaRadKm;});
+      if(_bodsZona.length<3){_bodsZona=INDUSTRIAL.bodegas.filter(function(b){return b.mun===munPrincipal;});}
+    }
+    var _zonaDetected=null,_zonaDetectedKey=null;
+    Object.keys(INDUSTRIAL_ZONAS).forEach(function(k){var z=INDUSTRIAL_ZONAS[k];if(_zonaCLat>=z.latMin&&_zonaCLat<=z.latMax&&_zonaCLon>=z.lonMin&&_zonaCLon<=z.lonMax){_zonaDetected=z;_zonaDetectedKey=k;}});
+    if(!_zonaDetected){var _bestDistE=99,_bestKeyE=null;Object.keys(INDUSTRIAL_ZONAS).forEach(function(k){var z=INDUSTRIAL_ZONAS[k];var d=_havB(_zonaCLat,_zonaCLon,z.cLat,z.cLon);if(d<_bestDistE){_bestDistE=d;_bestKeyE=k;}});if(_bestDistE<15){_zonaDetected=INDUSTRIAL_ZONAS[_bestKeyE];_zonaDetectedKey=_bestKeyE;}}
+
     // ── CONTEXTO DE ZONA ANALIZADA ──────────────────────────────────
     pExec+='<div style="border:1.5px solid #16a34a;border-radius:5px;padding:2mm 3mm;margin-bottom:3mm;background:#f0fdf4">';
     pExec+='<div style="font-size:5.5pt;font-weight:700;color:#16a34a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1mm">📍 Zona Analizada</div>';
@@ -5377,33 +5398,7 @@ function generarReporte(){
     var _totE23=_mE23+_cE23+_tE23,_totE18=_mE18+_cE18+_tE18;
     var _scol={'31':'#ea580c','32':'#ea580c','33':'#ea580c','43':'#2563eb','48':'#7c3aed','49':'#7c3aed'};
 
-    // ── Centroide de la zona analizada (desde feats) ──────────────
-    var _zLats=[],_zLons=[];
-    feats.forEach(function(f){if(f.geometry&&f.geometry.coordinates&&f.geometry.coordinates[0]){f.geometry.coordinates[0].forEach(function(c){if(c&&c.length>=2){_zLons.push(c[0]);_zLats.push(c[1]);}});}});
-    var _zonaCLat=_zLats.length?(_zLats.reduce(function(a,b){return a+b;},0)/_zLats.length):(puntoLat||25.54);
-    var _zonaCLon=_zLons.length?(_zLons.reduce(function(a,b){return a+b;},0)/_zLons.length):(puntoLon||(-103.41));
-    var _zonaBboxLatSpan=_zLats.length?(Math.max.apply(null,_zLats)-Math.min.apply(null,_zLats)):0;
-    var _zonaBboxLonSpan=_zLons.length?(Math.max.apply(null,_zLons)-Math.min.apply(null,_zLons)):0;
-    var _zonaRadKm=Math.max(2,Math.min(12,Math.sqrt(Math.pow(_zonaBboxLatSpan*111,2)+Math.pow(_zonaBboxLonSpan*111*Math.cos(_zonaCLat*Math.PI/180),2))/2+2));
-
-    // ── Bodegas en radio o zona centroide ──────────────────────────
-    var _bodsZona=[];
-    function _havB(lat1,lon1,lat2,lon2){var R=6371,dL=(lat2-lat1)*Math.PI/180,dLo=(lon2-lon1)*Math.PI/180,a=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLo/2)*Math.sin(dLo/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
-    if(puntoLat!==null&&window._radioParams){
-      var _rKm=window._radioParams.km;
-      _bodsZona=INDUSTRIAL.bodegas.filter(function(b){
-        if(!b.lat||!b.lon) return false;
-        return _havB(puntoLat,puntoLon,b.lat,b.lon)<=_rKm;
-      });
-    } else {
-      // Filter by zone centroid radius — zone-specific, not full municipality
-      _bodsZona=INDUSTRIAL.bodegas.filter(function(b){
-        if(!b.lat||!b.lon) return false;
-        return _havB(_zonaCLat,_zonaCLon,b.lat,b.lon)<=_zonaRadKm;
-      });
-      // Fallback to municipality if too few bodegas found
-      if(_bodsZona.length<3){_bodsZona=INDUSTRIAL.bodegas.filter(function(b){return b.mun===munPrincipal;});}
-    }
+    // ── _bodsZona, centroide y _zonaDetected computados arriba (antes de pExec) ──
     var _bodsRenta=_bodsZona.filter(function(b){return b.op==='Renta'&&b.rent_m2>0;});
     var _bodsVenta=_bodsZona.filter(function(b){return b.op==='Venta';});
     var _rentasMed=_bodsRenta.map(function(b){return b.rent_m2;}).sort(function(a,b){return a-b;});
@@ -5438,24 +5433,7 @@ function generarReporte(){
     var _capMin=_capArr.length?Math.min.apply(null,_capArr.map(function(c){return c.cap;})):null;
     var _capMax=_capArr.length?Math.max.apply(null,_capArr.map(function(c){return c.cap;})):null;
     if(!_capMed){_capMed=(_medRenta2||_medGR)*12*0.92*0.80/(_nseScore>=6?12000:_nseScore>=4?7500:5000)*100;}
-    // ── Detectar qué zona industrial corresponde a la selección ──────
-    var _zonaDetected=null,_zonaDetectedKey=null;
-    Object.keys(INDUSTRIAL_ZONAS).forEach(function(k){
-      var z=INDUSTRIAL_ZONAS[k];
-      if(_zonaCLat>=z.latMin&&_zonaCLat<=z.latMax&&_zonaCLon>=z.lonMin&&_zonaCLon<=z.lonMax){
-        _zonaDetected=z;_zonaDetectedKey=k;
-      }
-    });
-    // If centroid not in any zone, find nearest
-    if(!_zonaDetected){
-      var _bestDist=99,_bestKey=null;
-      Object.keys(INDUSTRIAL_ZONAS).forEach(function(k){
-        var z=INDUSTRIAL_ZONAS[k];
-        var d=_havB(_zonaCLat,_zonaCLon,z.cLat,z.cLon);
-        if(d<_bestDist){_bestDist=d;_bestKey=k;}
-      });
-      if(_bestDist<15){_zonaDetected=INDUSTRIAL_ZONAS[_bestKey];_zonaDetectedKey=_bestKey;}
-    }
+    // ── _zonaDetected ya computado arriba ──
     var _actSubs=[].concat(_cM,_cC,_cT).filter(function(r){return r.e23>0;}).sort(function(a,b){return b.e23-a.e23;});
     // ── Terrenos: sort por distancia al centroide de zona ──
     var _terAll=INDUSTRIAL.terrenos||[];
