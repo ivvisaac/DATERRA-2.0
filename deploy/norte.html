@@ -6034,6 +6034,26 @@ function generarReporte(){
 
     var _veredictoFinal=_nseScore>=5&&_bodsZona.length<15?'OPORTUNIDAD ACTIVA':_nseScore>=4&&_bodsZona.length<25?'ENTORNO FAVORABLE':_bodsZona.length>=25?'MERCADO COMPETITIVO':'ZONA EN DESARROLLO';
     var _veredictoColor=_veredictoFinal==='OPORTUNIDAD ACTIVA'?'#16a34a':_veredictoFinal==='ENTORNO FAVORABLE'?'#0369a1':_veredictoFinal==='MERCADO COMPETITIVO'?'#d97706':'#dc2626';
+    // ── Pre-computar _zonaStats (necesario para conclusiones zona-específicas) ──
+    function _bodsByZona(key){var z=INDUSTRIAL_ZONAS[key];return INDUSTRIAL.bodegas.filter(function(b){return b.lat&&b.lon&&b.lat>=z.latMin&&b.lat<=z.latMax&&b.lon>=z.lonMin&&b.lon<=z.lonMax;});}
+    function _medZ(arr){if(!arr||!arr.length)return null;var s=arr.slice().sort(function(a,b){return a-b;});return s[Math.floor(s.length/2)];}
+    function _getTerByZona(key){var z=INDUSTRIAL_ZONAS[key];return (INDUSTRIAL.terrenos||[]).filter(function(t){return t.lat&&t.lon&&t.lat>=z.latMin&&t.lat<=z.latMax&&t.lon>=z.lonMin&&t.lon<=z.lonMax;});}
+    var _zonaKeys=Object.keys(INDUSTRIAL_ZONAS);
+    var _claseNavesMap={cgpark:'B+/A',cdtorreon:'B/B+',ferropuerto:'A/A-',lajat:'B/B+',pigp:'B/A-'};
+    var _rentaRef={cgpark:'$55–110',cdtorreon:'$45–75',ferropuerto:'$65–115',lajat:'$35–115',pigp:'$25–130'};
+    var _zonaStats={};
+    _zonaKeys.forEach(function(k){
+      var bods=_bodsByZona(k);
+      var rents=bods.filter(function(b){return b.rent_m2>0;}).map(function(b){return b.rent_m2;});
+      var ventas=bods.filter(function(b){return b.vta_m2>0;}).map(function(b){return b.vta_m2;});
+      var ters=_getTerByZona(k);
+      var terPrices=ters.filter(function(t){return t.precio_m2>0;}).map(function(t){return t.precio_m2;});
+      var z=INDUSTRIAL_ZONAS[k];
+      var pct251=z.empresas>0?Math.round(z.s251/z.empresas*100):0;
+      var oport=(bods.length<5&&z.empresas<15)?'Alta':((bods.length<12&&pct251>30)?'Media-Alta':(bods.length<20?'Media':'Consolidado'));
+      _zonaStats[k]={bods:bods,medRenta:_medZ(rents),medVenta:_medZ(ventas),medTer:_medZ(terPrices),oport:oport,pct251:pct251,nBods:bods.length};
+    });
+
     var p_ind_concl='<div class="report-page">';
     p_ind_concl+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     // ── Veredicto ejecutivo ──
@@ -6047,99 +6067,126 @@ function generarReporte(){
     p_ind_concl+='<div style="font-size:6.5pt;color:#475569;font-family:IBM Plex Mono,monospace;margin-top:.8mm">Síntesis: demografía laboral (zona analizada) + economía sectorial (ZM La Laguna) + mercado inmobiliario (zona) + cap rate</div>';
     p_ind_concl+='</div>';
 
-    // ── 3 pilares (demografía · economía · inmobiliario)
-    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2mm;margin-bottom:2.5mm">';
+    // ── Variables zona detectada para conclusiones ──
+    var _zD=_zonaDetected||{nom:munPrincipal,color:'#0f172a',empresas:'—',s251:0,top_sector:'—',top_sector2:'—',parques:[],nota:'',mun:munPrincipal};
+    var _zDK=_zonaDetectedKey;
+    var _zDS=_zDK&&_zonaStats[_zDK]?_zonaStats[_zDK]:{bods:[],medRenta:null,medVenta:null,medTer:null,oport:'—',pct251:0,nBods:0};
+    var _zClase=_zDK?(_claseNavesMap[_zDK]||_clasePred):_clasePred;
+    var _zRentaRange=_zDK?(_rentaRef[_zDK]||(_medRenta2?'$'+_medRenta2.toFixed(0):'—')):(_medRenta2?'$'+_medRenta2.toFixed(0):'—');
 
-    // Pilar demografía con insights profundos
-    var _peaInterpret=pctPea>58?'PEA alta ('+P1(pctPea)+') → pool laboral robusto. Empresas industriales pueden reclutar sin presión salarial excesiva.':pctPea>48?'PEA media ('+P1(pctPea)+') → mercado laboral balanceado. Manufactura ligera y logística son viables.':'PEA baja ('+P1(pctPea)+') → plantillas reducidas o zona dormitorio. Operaciones de menor escala.';
-    var _escInterpret=avgEsc>=12?'Escolaridad '+N(avgEsc,1)+'a → perfiles técnicos/bachillerato. Apto para manufactura avanzada, BPO y calidad ISO.':avgEsc>=9?'Escolaridad '+N(avgEsc,1)+'a → secundaria completa. Manufactura estándar, ensamble, logística.':'Escolaridad '+N(avgEsc,1)+'a → operadores de base. Almacenaje, maquila simple.';
-    p_ind_concl+='<div style="border:1.5px solid #e2e8f0;border-top:3px solid #0369a1;border-radius:5px;padding:2.5mm;background:#f8fafc">';
-    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Demografía · Laboral</div>';
-    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm;margin-bottom:1.5mm">';
-    p_ind_concl+=_minKpi2(P1(pctPea),'PEA activa');
-    p_ind_concl+=_minKpi2(N(avgEsc,1)+' a','Escolaridad');
-    p_ind_concl+=_minKpi2(P1(pct2559),'Edad 25-59a');
-    p_ind_concl+=_minKpi2(nsePredZona,'NSE predom.');
-    p_ind_concl+='</div>';
-    p_ind_concl+='<div style="font-size:5pt;color:#1e293b;line-height:1.5;background:#f1f5f9;border-radius:3px;padding:1.5mm">'+_peaInterpret+'<br/><span style="color:#475569">'+_escInterpret+'</span></div>';
-    var _nseInterpret=_nseScore>=6?'NSE '+nsePredZona+' → tenants con alta capacidad de pago. Renta Clase A o B+ sin comprometer márgenes.':_nseScore>=4?'NSE '+nsePredZona+' → tenants medianos solventes. Renta B/B+ sostenible.':'NSE '+nsePredZona+' → PyMEs locales. Sensibles al precio. Clase B- o C+.';
-    p_ind_concl+='<div style="font-size:5pt;color:#1e293b;line-height:1.5;margin-top:1mm;padding:1mm;background:#e2e8f033;border-radius:3px">'+_nseInterpret+'</div>';
-    p_ind_concl+='</div>';
+    // ZM benchmarks (median across 5 zones)
+    var _allMedRentas=_zonaKeys.map(function(k){return _zonaStats[k].medRenta;}).filter(function(v){return v;});
+    var _zmMedRenta=_medZ(_allMedRentas)||65;
+    var _allPct251=_zonaKeys.map(function(k){return _zonaStats[k].pct251;});
+    var _zmMedPct251=Math.round(_allPct251.reduce(function(a,b){return a+b;},0)/(_allPct251.length||1));
+    var _zmTotBods=_zonaKeys.reduce(function(a,k){return a+_zonaStats[k].nBods;},0);
 
-    // Pilar economía
-    var _topMot=[].concat(_cM,_cC,_cT).sort(function(a,b){return b.e23-a.e23;})[0];
-    var _vaPerT=_totE23>0?(_zmVA/_totE23*1000).toFixed(0):0; // miles MXN por empleado
-    p_ind_concl+='<div style="border:1.5px solid #e2e8f0;border-top:3px solid #d97706;border-radius:5px;padding:2.5mm;background:#f8fafc">';
-    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#d97706;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Economía · Motores ZM</div>';
-    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm;margin-bottom:1.5mm">';
-    p_ind_concl+=_minKpi2(_N2(_mE23),'Emp. manufactura');
-    p_ind_concl+=_minKpi2('$'+_N2(_zmVA,0)+' M','Val. Agr. ZM');
-    p_ind_concl+=_minKpi2(_N2(_cE23+_tE23),'Com+Transporte');
-    p_ind_concl+=_minKpi2(_N2(_totE23-_totE18),'Empleos netos');
-    p_ind_concl+='</div>';
-    p_ind_concl+='<div style="font-size:5pt;color:#1e293b;line-height:1.5;background:#f1f5f9;border-radius:3px;padding:1.5mm">'+(_topMot?'<b>'+(_topMot.sub.length>40?_topMot.sub.substring(0,40)+'…':_topMot.sub)+'</b> lidera con '+_N2(_topMot.e23)+' empleos y $'+_N2(_topMot.va23,0)+' MDP VA.':'')+' VA/empleado promedio: $'+_vaPerT+' mil MXN — indica manufactura de valor medio-alto.</div>';
-    p_ind_concl+='</div>';
+    // Tenant anchor text per zone
+    var _tenantAncla={cgpark:'Linamar Industries · Jumex CEDIS · Coca-Cola Sta. Rita',cdtorreon:'Bodegas Usted Guarda · Mix manufactura y servicios',ferropuerto:'John Deere · Caterpillar · Spec nearshoring CPKC',lajat:'VYNMSA (spec A) · Manufactura textil · Confección',pigp:'PepsiCo · Weida · MLS China · Pro Laguna'};
+    var _tenantStr=(_zDK&&_tenantAncla[_zDK])||(_zonaDetected?_zonaDetected.nota:'');
 
-    // Pilar inmobiliario + cap rate
-    var _nivelComp=_bodsZona.length<5?'Bajo — oportunidad primer entrante':_bodsZona.length<15?'Medio — diferenciación por clase':_bodsZona.length<25?'Alto — foco en nicho':_bodsZona.length+' bodegas — precio competitivo';
-    p_ind_concl+='<div style="border:1.5px solid #e2e8f0;border-top:3px solid #16a34a;border-radius:5px;padding:2.5mm;background:#f8fafc">';
-    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Mercado · Cap Rate · Zona</div>';
-    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1mm;margin-bottom:1.5mm">';
-    p_ind_concl+=_minKpi2(_bodsZona.length,'Bodegas zona');
-    p_ind_concl+=_minKpi2(_medRenta2?'$'+_medRenta2.toFixed(0):'—','Renta med/m²');
-    p_ind_concl+=_minKpi2(_capMed?_capMed.toFixed(1)+'%':'—','Cap Rate med.');
-    p_ind_concl+=_minKpi2(_clasePred,'Clase predom.');
-    p_ind_concl+='</div>';
-    p_ind_concl+='<div style="font-size:5pt;color:#1e293b;line-height:1.5;background:#f0fdf4;border-radius:3px;padding:1.5mm">'+_nivelComp+'. Cap rate '+(_capMed?_capMed.toFixed(1)+'%':_bodsZona.length<5?'n/d (sin datos de venta)':'estimado')+(_capMed&&_capMed>8?' → upside de precio: activo subvaluado vs. rentas.':_capMed&&_capMed<5?' → mercado maduro o activo premium.':' → rango normal para bodegas B en mercados secundarios MX.')+'</div>';
-    p_ind_concl+='</div>';
+    // ── FILA 1: 4 KPIs comparativos zona vs ZM ──────────────────────────
+    p_ind_concl+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5mm;margin-bottom:2.5mm">';
+    function _kpiVsZM(val,lbl,ref,mejor){
+      var diff=val&&ref?(val-ref)/ref*100:null;
+      var col=diff===null?'#64748b':mejor==='alto'?(diff>5?'#16a34a':diff>-5?'#d97706':'#dc2626'):(diff<-5?'#16a34a':diff<5?'#d97706':'#dc2626');
+      var arrow=diff===null?'':diff>5?'▲':diff<-5?'▼':'→';
+      return '<div style="border:1px solid #e2e8f0;border-top:3px solid '+_zD.color+';border-radius:0 0 5px 5px;padding:2mm;background:#f8fafc;text-align:center">'
+        +'<div style="font-size:10pt;font-weight:900;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1">'+val+'</div>'
+        +'<div style="font-size:4.5pt;color:#64748b;text-transform:uppercase;margin:.5mm 0">'+lbl+'</div>'
+        +(diff!==null?'<div style="font-size:4pt;color:'+col+';font-weight:700">'+arrow+' '+(diff>0?'+':'')+diff.toFixed(0)+'% vs ZM</div>':'<div style="font-size:4pt;color:#94a3b8">vs ZM: '+ref+'</div>')
+        +'</div>';
+    }
+    p_ind_concl+=_kpiVsZM(_zDS.nBods+' bods.','Inventario activo',Math.round(_zmTotBods/_zonaKeys.length)+' med.ZM','bajo');
+    p_ind_concl+=_kpiVsZM(_zDS.medRenta?'$'+Math.round(_zDS.medRenta):'$'+(_medRenta2?Math.round(_medRenta2):65),'Renta med. MXN/m²','$'+Math.round(_zmMedRenta)+' ZM','alto');
+    p_ind_concl+=_kpiVsZM(_capMed?_capMed.toFixed(1)+'%':'~'+(_nseScore>=5?'7.8':'8.5')+'%','Cap Rate estimado','~7.8% ZM','alto');
+    p_ind_concl+=_kpiVsZM(_zDS.pct251+'%','Empresas grandes',''+_zmMedPct251+'% ZM','alto');
     p_ind_concl+='</div>';
 
-    // 6 Recomendaciones accionables
+    // ── FILA 2: Perfil de zona + benchmark vs otras zonas ──────────────
+    p_ind_concl+='<div style="display:grid;grid-template-columns:1.15fr 1fr;gap:2mm;margin-bottom:2mm">';
+
+    // Panel izquierdo: perfil zona analizada
+    p_ind_concl+='<div style="border:1.5px solid '+_zD.color+';border-radius:5px;padding:2.5mm;background:#f8fafc">';
+    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:'+_zD.color+';font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">📍 '+_zD.nom+'</div>';
+    p_ind_concl+='<div style="display:grid;grid-template-columns:auto 1fr;gap:.5mm 2mm;font-size:5pt;margin-bottom:1.5mm">';
+    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Parques</div><div style="color:#0f172a;line-height:1.4">'+_zD.parques.join(' · ')+'</div>';
+    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Clase naves</div><div style="color:#0f172a;font-weight:700;font-family:IBM Plex Mono,monospace">'+_zClase+' · Renta '+_zRentaRange+' MXN/m²</div>';
+    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Empresas</div><div style="color:#0f172a">'+_zD.empresas+' totales · '+(_zD.s251||0)+' con 251+ pers. ('+_zDS.pct251+'%) · '+_zD.top_sector+'</div>';
+    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Tenants âncla</div><div style="color:#1e293b;line-height:1.4">'+_tenantStr+'</div>';
+    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Terreno</div><div style="color:#0f172a">'+(_zDS.medTer?'Mediana $'+Math.round(_zDS.medTer).toLocaleString('es-MX')+' MXN/m²':'n/d')+' · '+(_zD.mun||munPrincipal)+'</div>';
+    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Mercado</div><div style="color:'+(_oColors[_zDS.oport]||'#475569')+';font-weight:700">'+(_zDS.oport||'—')+' — '+(_zDS.nBods<5?'Primer entrante posible':_zDS.nBods<12?'Diferenciación por clase':_zDS.nBods<20?'Competencia media':'Alta oferta, especializar')+'</div>';
+    p_ind_concl+='</div>';
+    // Demografía laboral resumida
+    p_ind_concl+='<div style="background:#f1f5f9;border-radius:3px;padding:1.5mm;font-size:4.8pt;color:#334155;line-height:1.5">';
+    p_ind_concl+='PEA <strong>'+P1(pctPea)+'</strong> · Escolaridad <strong>'+N(avgEsc,1)+' a</strong> · NSE zona <strong>'+nsePredZona+'</strong> · Edad 25-59a <strong>'+P1(pct2559)+'</strong><br>';
+    var _laborDesc=pctPea>55&&avgEsc>=10?'Pool laboral apto para manufactura avanzada. Perfiles técnicos disponibles.':pctPea>45?'Mercado laboral balanceado. Manufactura ligera y logística viables.':'Zona industrial-comercial. Plantillas reducen por cercanía a parques.';
+    p_ind_concl+=_laborDesc;
+    p_ind_concl+='</div></div>';
+
+    // Panel derecho: benchmark vs otras zonas
+    p_ind_concl+='<div style="border:1px solid #e2e8f0;border-radius:5px;padding:2.5mm;background:#f8fafc">';
+    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1.5mm">Posición vs Otras Zonas</div>';
+    p_ind_concl+='<table style="width:100%;border-collapse:collapse;font-size:4.8pt"><thead><tr style="background:#f1f5f9">';
+    p_ind_concl+='<th style="padding:2px 3px;text-align:left;color:#64748b;font-weight:600">Zona</th><th style="padding:2px;text-align:center;color:#64748b;font-weight:600">Bods.</th><th style="padding:2px;text-align:center;color:#64748b;font-weight:600">Renta</th><th style="padding:2px;text-align:center;color:#64748b;font-weight:600">Grandes</th><th style="padding:2px;text-align:center;color:#64748b;font-weight:600">Mercado</th>';
+    p_ind_concl+='</tr></thead><tbody>';
+    _zonaKeys.forEach(function(k){
+      var z2=INDUSTRIAL_ZONAS[k],s2=_zonaStats[k];
+      var isMe=(_zDK===k);
+      var oBg2=_oColors[s2.oport]||'#475569';
+      p_ind_concl+='<tr style="border-bottom:1px solid #f1f5f9;background:'+(isMe?z2.color+'11':'')+';">';
+      p_ind_concl+='<td style="padding:2px 3px;font-weight:'+(isMe?'700':'500')+';color:'+z2.color+'">'+(isMe?'▶ ':'')+z2.nom.substring(0,17)+'</td>';
+      p_ind_concl+='<td style="padding:2px;text-align:center;font-family:IBM Plex Mono,monospace">'+s2.nBods+'</td>';
+      p_ind_concl+='<td style="padding:2px;text-align:center;font-family:IBM Plex Mono,monospace;color:#0369a1;font-weight:'+(isMe?'700':'400')+'">'+(_rentaRef[k]||'—')+'</td>';
+      p_ind_concl+='<td style="padding:2px;text-align:center;font-weight:700;color:'+z2.color+'">'+s2.pct251+'%</td>';
+      p_ind_concl+='<td style="padding:2px;text-align:center"><span style="color:'+oBg2+';font-weight:700">'+s2.oport+'</span></td>';
+      p_ind_concl+='</tr>';
+    });
+    p_ind_concl+='</tbody></table>';
+    // Cap rate box dentro del benchmark
+    p_ind_concl+='<div style="margin-top:2mm;background:#0f172a;border-radius:3px;padding:1.5mm;display:grid;grid-template-columns:1fr 1fr 1fr;gap:1mm;text-align:center">';
+    var _capDisp=_capMed?_capMed.toFixed(1)+'%':(_nseScore>=5?'7.8%':'8.5%');
+    p_ind_concl+='<div><div style="font-size:9pt;font-weight:900;color:#34d399;font-family:IBM Plex Mono,monospace;line-height:1">'+_capDisp+'</div><div style="font-size:3.8pt;color:#94a3b8;margin-top:.3mm">Cap Rate zona<br>('+_capArr.length+' muestras)</div></div>';
+    p_ind_concl+='<div><div style="font-size:9pt;font-weight:900;color:#fbbf24;font-family:IBM Plex Mono,monospace;line-height:1">'+_zRentaRange+'</div><div style="font-size:3.8pt;color:#94a3b8;margin-top:.3mm">Renta en zona<br>MXN/m²/mes</div></div>';
+    p_ind_concl+='<div><div style="font-size:9pt;font-weight:900;color:#a78bfa;font-family:IBM Plex Mono,monospace;line-height:1">'+(_nseScore>=6?'12–14a':_nseScore>=4?'14–16a':'16–18a')+'</div><div style="font-size:3.8pt;color:#94a3b8;margin-top:.3mm">Payback estimado<br>construcción+renta</div></div>';
+    p_ind_concl+='</div>';
+    p_ind_concl+=(_capArr&&_capArr.length===0?'<div style="margin-top:1mm;font-size:3.8pt;color:#7dd3d2;line-height:1.5">Triangulación: Saltillo industrial 7–8% + prima Tier 4 +300–500 pbs.</div>':'');
+    p_ind_concl+='</div>';
+    p_ind_concl+='</div>'; // cierra grid 2 columnas
+
+    // ── RECOMENDACIONES zona-específicas ──────────────────────────────
     var _topMot2=[].concat(_cM,_cC,_cT).sort(function(a,b){return b.e23-a.e23;})[0];
-    p_ind_concl+='<div style="background:#092c3b;border-radius:5px;padding:3mm;margin-bottom:2mm">';
-    p_ind_concl+='<div style="font-size:6pt;font-weight:700;color:#00e2e0;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:2mm">6 Recomendaciones Accionables · '+munPrincipal+'</div>';
-    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2mm">';
+    var _compDesc=_zDS.nBods<5?'Sin competencia directa en zona — define el precio de referencia.':_zDS.nBods<12?'Competencia media ('+_zDS.nBods+' bods.) — diferenciación por clase y spec.':'Alta oferta ('+_zDS.nBods+' bods.) — entrar en nicho de tamaño o clase superior.';
+    var _tenantRec=_zDK==='cgpark'?'Manufactura automotriz TIER 1/2 (nearshoring) y agroindustria multinacional':_zDK==='ferropuerto'?'Heavy manufacturing, maquinaria pesada, nearshoring intermodal (CPKC)':_zDK==='cdtorreon'?'Manufactura ligera, 3PL regional, distribución y alimentos':_zDK==='lajat'?'Manufactura textil, confección, logística regional, TIER 2 automotriz':'PyME manufactura, comercio mayorista, maquila ligera, distribución local';
+    var _specRec=_zDK==='cgpark'||_zDK==='ferropuerto'?'10–12 m altura libre · Piso 7 ton/m² · 6+ andenes · 500 kVA · SCI ESFR · Tilt-up':'8–9 m altura libre · Piso 5 ton/m² · 2–4 andenes · 150–300 kVA · SCI básico';
+    p_ind_concl+='<div style="background:#092c3b;border-radius:5px;padding:2.5mm;margin-top:2mm">';
+    p_ind_concl+='<div style="font-size:6pt;font-weight:700;color:#00e2e0;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.5mm">6 Recomendaciones Accionables · '+_zD.nom+'</div>';
+    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5mm">';
     var _recs=[
-      {n:'01',tit:'Clase & Precio de Entrada',body:'Bodega '+_clsRec+' a '+_precioRec+'. '+(_bodsZona.length<5?'Primer entrante en zona — captura demanda reprimida sin descuento competitivo.':'Entrar en cuartil inferior del rango para absorción rápida en los primeros 6 meses.'),col:'#00e2e0'},
-      {n:'02',tit:'Tenant Objetivo',body:(_topMot2?'Priorizar '+(_topMot2.sub.length>35?_topMot2.sub.substring(0,35)+'…':_topMot2.sub)+' ('+_N2(_topMot2.e23)+' emp, $'+_N2(_topMot2.va23,0)+' MDP VA). Manufactura avanzada y nearshoring: contratos 3-5 años con ajuste anual.':'Manufactura avanzada y logística regional: contratos mínimos 3 años con ajuste INPC.'),col:'#29ebb9'},
-      {n:'03',tit:'Especificaciones Técnicas',body:'Altura libre '+(_nseScore>=5?'10-12m':'8-9m')+', piso '+(_nseScore>=5?'7':'5')+' ton/m², andenes dobles, subestación '+(_nseScore>=5?'500':'150')+' kVA, oficinas '+(_nseScore>=5?'15':'10')+'%, SCI '+(_nseScore>=5?'ESFR':'básico')+'. Certificación ambiental preferible.',col:'#f0b840'},
-      {n:'04',tit:'Estrategia Financiera',body:'Cap rate estimado '+(_capMed?_capMed.toFixed(1)+'%':'7-9% referencial')+' ('+_capArr.length+' muestras). IRR objetivo 12-15% a 10 años con rentas indexadas a INPC. Lease-up target: <6 meses vacancia inicial.',col:'#e879f9'},
-      {n:'05',tit:'Diferenciadores vs Competencia',body:_bodsZona.length===0?'Sin competencia directa: define estándar de la zona. Invertir en acceso 24h, vigilancia perimetral y certificación CTPAT para atraer multinacionales.':'Superar la oferta existente ('+_clasePred+') con spec superior: altura, piso y potencia eléctrica adicionales. Precio entrada = mediana mercado.',col:'#fb923c'},
-      {n:'06',tit:'Timing & Expansión',body:'ZM La Laguna creció '+_N2(_totE23-_totE18)+' empleos ('+(_totE18>0?((_totE23-_totE18)/_totE18*100).toFixed(0):'n/d')+'% 2018-23). Nearshoring activo: window 2025-27. Diseñar planta con lotes adjacentes para expansión BTS futura.',col:'#34d399'}
+      {n:'01',tit:'Clase & Precio de Entrada',body:'Nave '+_clsRec+' a '+_precioRec+'. '+(_zDS.nBods<5?'Primer entrante: define precio de referencia de la zona sin descuento competitivo.':'Entrar en cuartil inferior del rango ('+_zRentaRange+') para absorción en los primeros 6 meses.'),col:'#00e2e0'},
+      {n:'02',tit:'Tenant Objetivo',body:'Priorizar: '+_tenantRec+'. Contratos 3–5 años con ajuste anual INPC. '+(_topMot2?'Sector más dinámico ZM: '+(_topMot2.sub.length>30?_topMot2.sub.substring(0,30)+'…':_topMot2.sub)+'.':''),col:'#29ebb9'},
+      {n:'03',tit:'Especificaciones de Nave',body:_specRec+'. Acceso 24h, vigilancia perimetral. Certificación CTPAT si tenant multinacional.',col:'#f0b840'},
+      {n:'04',tit:'Cap Rate & Finanzas',body:'Cap rate zona: '+_capDisp+'. NOI = renta × 12 × 92% ocup. × 80% margen. IRR 12–15% a 10 años. Lease-up target: <6 meses. '+(_zDS.medTer?'Terreno ref. $'+Math.round(_zDS.medTer).toLocaleString('es-MX')+'/m².':''),col:'#e879f9'},
+      {n:'05',tit:'Diferenciación vs Competencia',body:_compDesc+' Parques referencia: '+_zD.parques.slice(0,2).join(' · ')+'. Superar con spec superior y flexibilidad de subdivisión.',col:'#fb923c'},
+      {n:'06',tit:'Timing',body:'Nearshoring activo 2025–2027. ZM La Laguna creció '+_N2(_totE23-_totE18)+' empleos industriales (2018–23). Diseñar con expansión BTS de 20–30% en lotes adjacentes.',col:'#34d399'}
     ];
-    _recs.forEach(function(r){p_ind_concl+='<div style="background:rgba(255,255,255,.06);border-radius:4px;padding:2mm;border-top:2px solid '+r.col+'"><div style="font-size:13pt;font-weight:700;color:'+r.col+';font-family:IBM Plex Mono,monospace;line-height:1;margin-bottom:.8mm">'+r.n+'</div><div style="font-size:5pt;font-weight:700;color:#e0f2fe;margin-bottom:.8mm">'+r.tit+'</div><div style="font-size:4.8pt;color:#94a3b8;line-height:1.5">'+r.body+'</div></div>';});
+    _recs.forEach(function(r){p_ind_concl+='<div style="background:rgba(255,255,255,.06);border-radius:4px;padding:1.8mm;border-top:2px solid '+r.col+'"><div style="font-size:12pt;font-weight:700;color:'+r.col+';font-family:IBM Plex Mono,monospace;line-height:1;margin-bottom:.6mm">'+r.n+'</div><div style="font-size:5pt;font-weight:700;color:#e0f2fe;margin-bottom:.6mm">'+r.tit+'</div><div style="font-size:4.5pt;color:#94a3b8;line-height:1.5">'+r.body+'</div></div>';});
     p_ind_concl+='</div></div>';
 
-    p_ind_concl+='<div style="background:#fefce8;border:1px solid #fde68a;border-radius:4px;padding:1.5mm;font-size:4.8pt;color:#92400e;line-height:1.5"><strong>Nota Metodológica:</strong> Inventario bodegas: listings públicos asking price (Lamudi, Colliers, VYNMSA, COEZA 2025). Cap rate: '+_capArr.length+' bodegas con datos renta+venta; NOI=Renta×12×0.92×0.80; Vacancia 8%, OpEx 20%. Datos económicos: Censo Económico INEGI 2023, ZM La Laguna. Validar con broker industrial y estudio de absorción antes de decisiones de inversión.</div>';
+    // ── Declaración ejecutiva de oportunidad ─────────────────────────
+    var _oportunidadDecl=_zDK==='cgpark'?'CG Park presenta la mejor relación demand-supply de la ZM: sólo '+_zDS.nBods+' bodegas para '+_zD.empresas+' empresas activas (Linamar anchor). Inventario limitado + renta asking $87 MXN = ventana de entrada sin competencia directa. La conectividad de GP Norte con Hwy 40 y el vecindario multinacional justifican nave B+/A a '+_zRentaRange+'.':
+      _zDK==='ferropuerto'?'Ferropuerto es la única zona de la ZM con acceso ferroviario CPKC y concentración de empresas >251 personas (65%). Caterpillar y John Deere como anchors + 6 bodegas spec en colocación activa (nearshoring). Premium de renta ($65–115 MXN) y terreno ($4,200–5,200/m²) refleja demanda institucional real.':
+      _zDK==='cdtorreon'?'CD Industrial Torreón es el mercado más consolidado y líquido de la ZM (>90% est. ocupación). Alta barrera de entrada por escasez de terrenos. Oportunidad en renovación/upgrading de naves B a B+ para capturar expansión de tenants existentes. Bajo riesgo de vacancia.':
+      _zDK==='lajat'?'PI Lajat permite entrada de desarrollo a precio competitivo ($35–65 MXN renta) con VYNMSA (Clase A, $115 USD) como benchmark de absorción. Tenant mix textil+metal. Oportunidad en nave B/B+ 1,500–5,000 m² que no compite directamente con spec institucional VYNMSA.':
+      _zDK==='pigp'?'Polígono Industrial GP tiene el mayor volumen de empresas de la ZM (104) pero alta oferta de bodegas ('+_zDS.nBods+'). Diferenciación indispensable: spec B+ con altura, potencia y SCI supera la oferta PIL histórica. Tenants objetivo: proveedores de MLS China (120 ha pipeline) y PepsiCo supply chain.':
+      'Zona analizada en '+munPrincipal+': '+_bodsZona.length+' bodegas activas, renta mediana $'+(_medRenta2?Math.round(_medRenta2):65)+' MXN/m², cap rate estimado '+_capDisp+'. '+_zDS.oport+' de mercado — entrada con clase '+_clsRec+' recomendada.';
 
-    // ── Cap Rate zona en análisis
-    p_ind_concl+='<div style="background:#0f172a;color:#fff;padding:1.5mm 2mm;border-radius:5px;margin-top:2mm">';
-    p_ind_concl+='<div style="font-weight:700;font-size:5.5pt;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;color:#38bdf8;margin-bottom:1.2mm">Cap Rate · Zona en Análisis</div>';
-    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.5mm;margin-bottom:1mm">';
-    p_ind_concl+='<div style="text-align:center"><div style="font-size:13pt;font-weight:900;color:#34d399;font-family:IBM Plex Mono,monospace;line-height:1">'+(_capMed?_capMed.toFixed(1)+'%':(_nseScore>=6?'7.2%':_nseScore>=4?'7.8%':'8.5%'))+'</div><div style="font-size:4pt;color:#94a3b8;margin-top:.3mm">Cap Rate estimado<br>zona seleccionada</div></div>';
-    p_ind_concl+='<div style="text-align:center"><div style="font-size:9pt;font-weight:900;color:#fbbf24;font-family:IBM Plex Mono,monospace;line-height:1">'+_precioRec+'</div><div style="font-size:4pt;color:#94a3b8;margin-top:.3mm">Renta de mercado<br>clase recomendada</div></div>';
-    p_ind_concl+='<div style="text-align:center"><div style="font-size:9pt;font-weight:900;color:#a78bfa;font-family:IBM Plex Mono,monospace;line-height:1">'+(_nseScore>=6?'12–14 años':_nseScore>=4?'14–16 años':'16–18 años')+'</div><div style="font-size:4pt;color:#94a3b8;margin-top:.3mm">Payback estimado<br>a valor de mercado</div></div>';
+    p_ind_concl+='<div style="background:'+_veredictoColor+';border-radius:5px;padding:2.5mm 3mm;margin-top:1.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.8px;margin-bottom:.8mm">Declaración Ejecutiva de Oportunidad · '+_zD.nom+'</div>';
+    p_ind_concl+='<div style="font-size:6.5pt;color:#fff;line-height:1.6;font-weight:500">'+_oportunidadDecl+'</div>';
     p_ind_concl+='</div>';
-    p_ind_concl+='<div style="font-size:4pt;color:#94a3b8;line-height:1.45">El cap rate se calcula con base en la renta de mercado de bodegas Clase '+_clsRec+' dentro de la zona seleccionada, sobre un precio de construcción estimado (Clase A: USD 650–800/m², Clase B: USD 400–550/m²). Los datos de renta provienen del inventario activo de la ZM La Laguna. No considera vacancia ni gastos operativos.</div>';
-    p_ind_concl+=(_capArr&&_capArr.length===0?'<div style="margin-top:1mm;font-size:3.8pt;color:#7dd3d2;line-height:1.5;background:rgba(125,211,210,0.08);border-radius:3px;padding:1mm">Metodología de triangulación: (a) cap rates Saltillo industrial 7–8%, (b) prima de riesgo Tier 4 mercado secundario +300–500 pbs, (c) yields ofertados por brokers locales. Sin muestras directas con precio+renta simultáneos en el inventario actual.</div>':'');
-    p_ind_concl+='</div>';
 
-    // ── Parques industriales en la ZM
-    p_ind_concl+='<div style="margin-top:1.5mm">';
-    p_ind_concl+='<div style="font-weight:700;font-size:5pt;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px;color:#0369a1;margin-bottom:.8mm">Parques Industriales en la Zona Metropolitana</div>';
-    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1mm">';
-    INDUSTRIAL.parques.slice(0,6).forEach(function(p){p_ind_concl+='<div style="background:#f8fafc;border:1px solid #e2e8f0;padding:.8mm 1mm;border-radius:3px"><div style="font-weight:700;font-size:4.5pt;color:#1e293b;line-height:1.3">'+(p.nom||'—')+'</div><div style="font-size:3.8pt;color:#64748b;margin-top:.2mm">'+(p.mun||'')+(p.ha?' · '+p.ha+' ha':'')+'</div></div>';});
-    p_ind_concl+='</div></div>';
-
-    // ── Cuadro recomendación COEZA
-    p_ind_concl+='<div style="background:#0f172a;color:#fff;padding:1.5mm 2mm;border-radius:5px;margin-top:1.5mm">';
-    p_ind_concl+='<div style="font-weight:900;font-size:6.5pt;margin-bottom:.8mm">Recomendación para: '+n+' AGEBs · '+munPrincipal+(_zonaDetected?' · '+_zonaDetected.nom:'')+'</div>';
-    p_ind_concl+='<div style="font-size:4.8pt;line-height:1.65">';
-    p_ind_concl+='Nave recomendada: <strong>'+_clsRec+'</strong> &nbsp;·&nbsp; Superficie óptima: <strong>'+(_nseScore>=6?'3,000–8,000':'1,500–4,000')+' m²</strong> &nbsp;·&nbsp; Renta objetivo: <strong>'+_precioRec+'</strong><br>';
-    p_ind_concl+='Arrendatario ideal: <strong>'+(_nseScore>=6?'Manufactura exportadora / 3PL Tier 1':_nseScore>=4?'Distribución regional / Manufactura ligera':'Almacenaje general / PyME industrial')+'</strong><br>';
-    p_ind_concl+='Horizonte: <strong>'+(_nseScore>=6?'5–7 años con rendimiento competitivo':_nseScore>=4?'7–10 años, mercado en consolidación':'10+ años, zona en desarrollo')+'</strong>';
-    if(_zonaDetected){p_ind_concl+='<br>Contexto de zona: <strong>'+_zonaDetected.nota+'</strong>';}
-    p_ind_concl+='</div></div>';
+    p_ind_concl+='<div style="margin-top:1mm;font-size:4pt;color:#94a3b8;line-height:1.5">Cap rate: NOI=Renta×12×0.92×0.80; Vacancia 8%, OpEx 20%. Inventario: asking price listings COEZA/Lamudi/Colliers 2025. Empresas: INEGI DENUE 2025. Validar con broker industrial antes de decisiones de inversión.</div>';
 
     p_ind_concl+=_rptFooterInd(8);
     p_ind_concl+='</div>';
@@ -6147,23 +6194,8 @@ function generarReporte(){
     // ══════════════════════════════════════════════════════════════
     // PAG ZONAS COMP · Comparativo de Zonas Industriales
     // ══════════════════════════════════════════════════════════════
-    function _bodsByZona(key){var z=INDUSTRIAL_ZONAS[key];return INDUSTRIAL.bodegas.filter(function(b){return b.lat&&b.lon&&b.lat>=z.latMin&&b.lat<=z.latMax&&b.lon>=z.lonMin&&b.lon<=z.lonMax;});}
-    function _medZ(arr){if(!arr.length)return null;var s=arr.slice().sort(function(a,b){return a-b;});return s[Math.floor(s.length/2)];}
-    function _getTerByZona(key){var z=INDUSTRIAL_ZONAS[key];return (INDUSTRIAL.terrenos||[]).filter(function(t){return t.lat&&t.lon&&t.lat>=z.latMin&&t.lat<=z.latMax&&t.lon>=z.lonMin&&t.lon<=z.lonMax;});}
-
-    var _zonaKeys=Object.keys(INDUSTRIAL_ZONAS);
-    var _zonaStats={};
-    _zonaKeys.forEach(function(k){
-      var bods=_bodsByZona(k);
-      var rents=bods.filter(function(b){return b.rent_m2>0;}).map(function(b){return b.rent_m2;});
-      var ventas=bods.filter(function(b){return b.vta_m2>0;}).map(function(b){return b.vta_m2;});
-      var ters=_getTerByZona(k);
-      var terPrices=ters.filter(function(t){return t.precio_m2>0;}).map(function(t){return t.precio_m2;});
-      var z=INDUSTRIAL_ZONAS[k];
-      var pct251=z.empresas>0?Math.round(z.s251/z.empresas*100):0;
-      var oport=(bods.length<5&&z.empresas<15)?'Alta':((bods.length<12&&pct251>30)?'Media-Alta':(bods.length<20?'Media':'Consolidado'));
-      _zonaStats[k]={bods:bods,medRenta:_medZ(rents),medVenta:_medZ(ventas),medTer:_medZ(terPrices),oport:oport,pct251:pct251,nBods:bods.length};
-    });
+    // _bodsByZona, _medZ, _getTerByZona, _zonaKeys, _zonaStats, _claseNavesMap, _rentaRef
+    // ya computados arriba antes de p_ind_concl
 
     var p_zonas_comp='<div class="report-page">';
     p_zonas_comp+='<div class="rpt-header">'+RPT_LOGO+'</div>';
