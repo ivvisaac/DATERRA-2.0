@@ -3897,15 +3897,12 @@ function generarReporte(){
 
   // Insight con contexto
   function insight(text,tipo_){
-    var cfg={
-      pos:{bg:'#f0fdf4',border:'#86efac',dot:'#16a34a',icon:'✓'},
-      neg:{bg:'#fef2f2',border:'#fca5a5',dot:'#dc2626',icon:'!'},
-      neutral:{bg:'#f8fafc',border:'#cbd5e1',dot:'#64748b',icon:'→'},
-      warn:{bg:'#fffbeb',border:'#fde68a',dot:'#d97706',icon:'△'}
-    }[tipo_]||{bg:'#f8fafc',border:'#e2e8f0',dot:'#64748b',icon:'→'};
-    return '<div class="rpt-ins" style="display:flex;gap:3mm;background:'+cfg.bg+';border:1px solid '+cfg.border+';border-radius:5px;padding:3mm 3.5mm;margin-bottom:2.5mm">'+
-      '<span style="color:'+cfg.dot+';font-size:10pt;flex-shrink:0;margin-top:0.5mm">'+cfg.icon+'</span>'+
-      '<div style="font-size:8pt;color:#334155;line-height:1.65">'+text+'</div></div>';
+    var _iClr={'pos':'#16a34a','neg':'#dc2626','neutral':'#0369a1','warn':'#d97706'}[tipo_]||'#0369a1';
+    var _iBg={'pos':'#f0fdf4','neg':'#fef2f2','neutral':'#eff6ff','warn':'#fff7ed'}[tipo_]||'#eff6ff';
+    return '<div class="rpt-ins" style="background:'+_iBg+';border-left:5px solid '+_iClr+';border-radius:0 8px 8px 0;padding:3mm 3.5mm;margin:2.5mm 0;-webkit-print-color-adjust:exact;print-color-adjust:exact">'
+      +'<div style="font-size:5pt;font-weight:700;color:'+_iClr+';text-transform:uppercase;letter-spacing:1px;margin-bottom:1mm">💡 Insight COEZA</div>'
+      +'<div style="font-size:8pt;font-weight:700;color:#0f172a;line-height:1.4">'+text+'</div>'
+      +'</div>';
   }
 
   // Análisis de crecimiento con perspectiva de mercado inmobiliario
@@ -4663,7 +4660,7 @@ function generarReporte(){
     pExec+='<div style="font-size:6pt;color:#94a3b8;text-align:center;line-height:1.5">Este análisis se basa en datos INEGI Censo 2020 · INEGI Económico 2023 · Inventario COEZA 2025</div>';
     pExec+='</div>';
 
-    pExec+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pág. 2 / 25</span><span>'+fecha+'</span></div>';
+    pExec+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pág. 3 / 25</span><span>'+fecha+'</span></div>';
     pExec+='</div>';
 
     // ────────── PÁGINA 2 (ahora 3): Análisis Dinámica Territorial ──────────
@@ -5377,7 +5374,7 @@ function generarReporte(){
     p11+='Para mayor información encuéntranos en <strong><a href="https://consulting.coeza.mx" style="color:#0ea5e9;text-decoration:none">consulting.coeza.mx</a></strong>';
     p11+='</div>';
 
-    p11+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pág. 25 / 25</span><span>'+fecha+'</span></div>';
+    p11+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pág. 26 / 26</span><span>'+fecha+'</span></div>';
     p11+='</div>';
 
     // ── PÁGINA 2: Índice de Contenidos ─────────────────────────────────────
@@ -5402,9 +5399,9 @@ function generarReporte(){
     }
     pIdx+=_idxSection('OPORTUNIDAD — RESUMEN EJECUTIVO','#0f172a');
     pIdx+=_idxRow('1','Portada · Panorama de Zona','Mapa del área analizada · KPIs demográficos y laborales · benchmarks municipales');
-    pIdx+=_idxRow('2','Resumen Ejecutivo — Oportunidad y Tesis','Veredicto zona · tesis de inversión · KPIs zona-específicos · riesgos principales');
-    pIdx+=_idxRow('3','Mapa de Zonas Industriales','Mapa esquemático ZM · 5 polígonos industriales · características y competencia');
-    pIdx+=_idxRow('4','Índice de Contenidos','Estructura del reporte y guía de navegación');
+    pIdx+=_idxRow('2','Índice de Contenidos','Estructura del reporte y guía de navegación');
+    pIdx+=_idxRow('3','Resumen Ejecutivo — Oportunidad y Tesis','Veredicto zona · tesis de inversión · KPIs zona-específicos · riesgos principales');
+    pIdx+=_idxRow('4','Mapa de Zonas Industriales','Mapa esquemático ZM · 5 polígonos industriales · características y competencia');
     pIdx+=_idxSection('LA OPORTUNIDAD','#16a34a');
     pIdx+=_idxRow('5','Hallazgos · Motores Regionales y de Zona','Drivers ZM La Laguna + motores específicos de la zona analizada');
     pIdx+=_idxRow('6','Conclusión · Zona Analizada','Veredicto · clase recomendada · cap rate · pros y contras · sectores objetivo');
@@ -5429,12 +5426,13 @@ function generarReporte(){
     pIdx+=_idxRow('23','Bodegas · Decisión de Inversión','Scorecard de decisión · sectores objetivo · tipo de nave recomendada');
     pIdx+=_idxRow('24','Terrenos Industriales Disponibles','Oferta de terrenos por zona · precio/m² · superficie · potencial de desarrollo');
     pIdx+=_idxSection('CIERRE','#16a34a');
-    pIdx+=_idxRow('25','Soluciones COEZA','Servicios especializados para decisiones de inversión industrial · contacto');
+    pIdx+=_idxRow('25','Justificación del Producto Recomendado','Distribución por tipo de nave · terrenos disponibles · conclusión de viabilidad');
+    pIdx+=_idxRow('26','Soluciones COEZA','Servicios especializados para decisiones de inversión industrial · contacto');
     pIdx+='<div style="margin-top:3mm;padding:1.5mm 3mm;border-top:2px solid #00e2e0;font-size:6pt;color:#64748b;line-height:1.5">';
     pIdx+='<span style="font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px">Fuentes · </span>';
     pIdx+='Censo Económico INEGI 2023 · Inventario Industrial COEZA 2025 · Censo Población y Vivienda 2020 · NSE AMAI 2018 · Newmark México 2S25 · CBRE México Q4 2024.';
     pIdx+='</div>';
-    pIdx+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pág. 4 / 25</span><span>'+fecha+'</span></div>';
+    pIdx+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pág. 2 / 25</span><span>'+fecha+'</span></div>';
     pIdx+='</div>';
 
 
@@ -5446,7 +5444,7 @@ function generarReporte(){
     function _N2(v,d){v=+(v)||0;if(d!==undefined)return v.toLocaleString('es-MX',{minimumFractionDigits:d,maximumFractionDigits:d});return Math.round(v).toLocaleString('es-MX');}
     function _bar2(pct,color){pct=Math.min(100,Math.max(0,+pct||0));return '<div style="background:#e2e8f0;border-radius:2px;height:5px;overflow:hidden;margin-top:1.5mm"><div style="background:'+color+';width:'+pct+'%;height:100%;border-radius:2px"></div></div>';}
     function _sumC(arr,k){return arr.reduce(function(a,r){return a+(r[k]||0);},0);}
-    var _pgTot=25; // total de páginas en el reporte (sin contar divisores de sección)
+    var _pgTot=26; // total de páginas en el reporte (sin contar divisores de sección)
     function _rptFooterInd(gpag,label){
       var numStr='Pág. '+gpag+' / '+_pgTot+(label?' · '+label:'');
       return '<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · INEGI Censo Económico 2018-2023</span><span>'+numStr+'</span><span>'+fecha+'</span></div>';
@@ -5613,6 +5611,29 @@ function generarReporte(){
     // ── Insight sectorial zona-específico ──────────────────────────
     var _sectorZonaIns=_zonaDetected?('La zona <strong>'+_zonaDetected.nom+'</strong> está dominada por <strong>'+_zonaDetected.top_sector+'</strong>'+(_zonaDetected.top_sector2?' / '+_zonaDetected.top_sector2:'')+'. '+(_zonaDetected.s251>0?'Con '+_zonaDetected.s251+' empresas de 251+ personas, hay demanda real de naves grandes (>5,000 m²).':'La presencia de empresas medianas (50-250 personas) indica demanda de naves entre 1,000-4,000 m².')+' El contexto sectorial de la ZM confirma que la vocación de esta zona está alineada con los motores de crecimiento del mercado.'):('La vocación de manufactura y logística de ZM La Laguna define el tipo de tenant para cualquier desarrollo industrial de la zona — manufactura estándar y CEDIS son los perfiles con mayor demanda.');
     p_ind1+='<div style="background:#f0fdf4;border-left:3px solid #16a34a;border-radius:0 4px 4px 0;padding:2mm 2.5mm;font-size:5.5pt;color:#14532d;line-height:1.5;margin-top:2mm"><strong>🎯 ¿Qué significa esto para tu inversión?</strong> '+_sectorZonaIns+'</div>';
+
+    // 3A — Desglose Gómez Palacio vs ZM La Laguna
+    var _gpCenso=INDUSTRIAL.censo.filter(function(r){return r.mun==='Gómez Palacio'||r.mun_id==='10007'||r.municipio==='Gómez Palacio';});
+    var _zmCenso=INDUSTRIAL.censo;
+    var _gpTotE=_gpCenso.reduce(function(a,r){return a+(+r.e23||0);},0);
+    var _zmTotE=_zmCenso.reduce(function(a,r){return a+(+r.e23||0);},0);
+    var _gpTotUE=_gpCenso.length;
+    var _zmTotUE=_zmCenso.length;
+    p_ind1+='<div style="margin-top:2.5mm;border-top:2px solid #0369a1;padding-top:2mm">';
+    p_ind1+='<div style="font-size:6.5pt;font-weight:700;color:#0369a1;margin-bottom:1.5mm">Gómez Palacio · Participación en ZM La Laguna</div>';
+    p_ind1+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2mm">';
+    [['Emp. industriales',_gpTotE,_zmTotE,'empleos'],
+     ['Unidades econ.',_gpTotUE,_zmTotUE,'UE'],
+     ['Bodegas catálogo',_zBodsPre.length,INDUSTRIAL.bodegas.length,'bodegas']].forEach(function(row){
+      var pct=row[2]>0?(row[1]/row[2]*100):0;
+      p_ind1+='<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;padding:2mm;text-align:center">';
+      p_ind1+='<div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5mm">'+row[0]+'</div>';
+      p_ind1+='<div style="font-size:9pt;font-weight:800;color:#1d4ed8;font-family:IBM Plex Mono,monospace">'+P1(pct)+'</div>';
+      p_ind1+='<div style="font-size:4.5pt;color:#475569">GP de ZM</div>';
+      p_ind1+='<div style="font-size:5pt;color:#334155;font-family:IBM Plex Mono,monospace;margin-top:.5mm">'+N(row[1],0)+' vs '+N(row[2],0)+' '+row[3]+'</div>';
+      p_ind1+='</div>';
+    });
+    p_ind1+='</div></div>';
 
     p_ind1+=_rptFooterInd(15,'Motores Económicos');
     p_ind1+='</div>';
@@ -5943,8 +5964,12 @@ function generarReporte(){
     if(_bodsZona.length===0){
       p_bod3+='<div style="padding:2mm;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:4px;text-align:center"><div style="font-size:6.5pt;font-weight:700;color:#166534">✓ Sin competencia formal registrada</div><div style="font-size:5pt;color:#15803d;margin-top:.3mm">Oportunidad de primer entrante · mayor poder de fijación de precio</div></div>';
     } else {
-      p_bod3+='<table style="width:100%;border-collapse:collapse;font-size:4.8pt"><thead><tr style="background:#fef2f2"><th style="padding:.5mm .7mm;text-align:left;color:#64748b;font-weight:600">Zona</th><th style="padding:.5mm .7mm;text-align:center;color:#64748b;font-weight:600">Cls</th><th style="padding:.5mm .7mm;text-align:right;color:#64748b;font-weight:600">m²</th><th style="padding:.5mm .7mm;text-align:right;color:#64748b;font-weight:600">MXN/m²</th></tr></thead><tbody>';
-      _bodsZona.filter(function(b){return b.op==='Renta';}).slice(0,6).forEach(function(b,i){p_bod3+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .7mm;color:#334155">'+(b.zona||'—')+'</td><td style="padding:.5mm .7mm;text-align:center;font-weight:700;color:'+(_clsCols[b.cls]||'#64748b')+';font-family:IBM Plex Mono,monospace">'+(b.cls||'—')+'</td><td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace">'+(b.m2?_N2(b.m2):'—')+'</td><td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#dc2626">'+(b.rent_m2?'$'+b.rent_m2.toFixed(0):'—')+'</td></tr>';});
+      var _b3HasDist=puntoLat&&_bodsZona.some(function(b){return b.lat&&b.lon;});
+      p_bod3+='<table style="width:100%;border-collapse:collapse;font-size:4.8pt"><thead><tr style="background:#fef2f2"><th style="padding:.5mm .7mm;text-align:left;color:#64748b;font-weight:600">Zona</th><th style="padding:.5mm .7mm;text-align:center;color:#64748b;font-weight:600">Cls</th><th style="padding:.5mm .7mm;text-align:right;color:#64748b;font-weight:600">m²</th><th style="padding:.5mm .7mm;text-align:right;color:#64748b;font-weight:600">MXN/m²</th>'+(_b3HasDist?'<th style="padding:.5mm .7mm;text-align:right;color:#0369a1;font-weight:600">km</th>':'')+'</tr></thead><tbody>';
+      _bodsZona.filter(function(b){return b.op==='Renta';}).slice(0,6).forEach(function(b,i){
+        var _b3dist=(_b3HasDist&&b.lat&&b.lon)?_havB(puntoLat,puntoLon,b.lat,b.lon).toFixed(1):'—';
+        p_bod3+='<tr style="border-bottom:1px solid #f1f5f9;'+(i%2?'background:#fafafa':'')+'"><td style="padding:.5mm .7mm;color:#334155">'+(b.zona||'—')+'</td><td style="padding:.5mm .7mm;text-align:center;font-weight:700;color:'+(_clsCols[b.cls]||'#64748b')+';font-family:IBM Plex Mono,monospace">'+(b.cls||'—')+'</td><td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace">'+(b.m2?_N2(b.m2):'—')+'</td><td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700;color:#dc2626">'+(b.rent_m2?'$'+b.rent_m2.toFixed(0):'—')+'</td>'+(_b3HasDist?'<td style="padding:.5mm .7mm;text-align:right;font-family:IBM Plex Mono,monospace;color:#0369a1">'+_b3dist+'</td>':'')+'</tr>';
+      });
       p_bod3+='</tbody></table>';
     }
     p_bod3+='</div>';
@@ -6044,6 +6069,76 @@ function generarReporte(){
 
     p_ter+=_rptFooterInd(24,'Terrenos');
     p_ter+='</div>';
+
+    // ── PÁGINA 25: Justificación del Producto Recomendado ─────────────────
+    var p_justif='<div class="report-page">';
+    p_justif+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+    p_justif+='<div style="background:#0f172a;padding:4mm 5mm 3.5mm;margin:-1mm -1mm 3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_justif+='<div style="font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1mm">Justificación del Producto Recomendado</div>';
+    p_justif+='<div style="font-size:7.5pt;color:#94a3b8">Por qué este tipo de nave es el más viable · Evidencia del inventario · '+fecha+'</div>';
+    p_justif+='</div>';
+    (function(){
+      // Distribución de renta por tipo
+      var _jRentTipos={};
+      _zBodsPre.filter(function(b){return b.op==='Renta'&&b.m2>0;}).forEach(function(b){
+        var t=b.tipo||b.cls||'Otro';
+        if(!_jRentTipos[t]){_jRentTipos[t]={count:0,m2:0,rent:[]};}
+        _jRentTipos[t].count++;_jRentTipos[t].m2+=+b.m2||0;
+        if(b.rent_m2>0)_jRentTipos[t].rent.push(b.rent_m2);
+      });
+      var _jVentTipos={};
+      _zBodsPre.filter(function(b){return b.op==='Venta'&&b.m2>0;}).forEach(function(b){
+        var t=b.tipo||b.cls||'Otro';
+        if(!_jVentTipos[t]){_jVentTipos[t]={count:0,m2:0,venta:[]};}
+        _jVentTipos[t].count++;_jVentTipos[t].m2+=+b.m2||0;
+        if(b.vta_m2>0)_jVentTipos[t].venta.push(b.vta_m2);
+      });
+      p_justif+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-bottom:3mm">';
+      ['Mercado Renta','Mercado Venta'].forEach(function(titulo,idx){
+        var tipos=idx===0?_jRentTipos:_jVentTipos;
+        p_justif+='<div>';
+        p_justif+='<div style="font-size:6.5pt;font-weight:700;color:#0f172a;border-bottom:2px solid #00e2e0;padding-bottom:1mm;margin-bottom:1.5mm">'+titulo+'</div>';
+        p_justif+='<table style="width:100%;border-collapse:collapse;font-size:5pt">';
+        p_justif+='<thead><tr style="background:#f1f5f9"><th style="padding:2px 3px;text-align:left">Tipo</th><th style="padding:2px 3px;text-align:center">Ops.</th><th style="padding:2px 3px;text-align:center">m² total</th><th style="padding:2px 3px;text-align:center">$/m²'+(idx===0?' /mes':'')+'</th></tr></thead><tbody>';
+        var _tipArr=Object.keys(tipos).sort(function(a,b){return tipos[b].m2-tipos[a].m2;});
+        if(_tipArr.length===0){p_justif+='<tr><td colspan="4" style="padding:3px;color:#94a3b8;text-align:center;font-style:italic">Sin datos en zona</td></tr>';}
+        _tipArr.forEach(function(t){
+          var d=tipos[t];
+          var rArr=d.rent&&d.rent.length?d.rent:d.venta&&d.venta.length?d.venta:[];
+          var avgP=rArr.length?rArr.reduce(function(a,b){return a+b;},0)/rArr.length:0;
+          p_justif+='<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:2px 3px;color:#334155">'+t+'</td><td style="padding:2px 3px;text-align:center;font-family:IBM Plex Mono,monospace">'+d.count+'</td><td style="padding:2px 3px;text-align:center;font-family:IBM Plex Mono,monospace">'+N(d.m2,0)+'</td><td style="padding:2px 3px;text-align:center;font-weight:700;font-family:IBM Plex Mono,monospace;color:#0369a1">'+(avgP?'$'+avgP.toFixed(0):'—')+'</td></tr>';
+        });
+        p_justif+='</tbody></table></div>';
+      });
+      p_justif+='</div>';
+      // Terrenos disponibles
+      var _jTerr=(INDUSTRIAL.terrenos||[]).filter(function(t){return t.precio_m2>0;}).sort(function(a,b){return a.precio_m2-b.precio_m2;});
+      if(_jTerr.length>0){
+        p_justif+='<div style="margin-bottom:3mm">';
+        p_justif+='<div style="font-size:6.5pt;font-weight:700;color:#0f172a;border-bottom:2px solid #f0b840;padding-bottom:1mm;margin-bottom:1.5mm">Terrenos Industriales Disponibles · ZM La Laguna</div>';
+        p_justif+='<table style="width:100%;border-collapse:collapse;font-size:5pt">';
+        p_justif+='<thead><tr style="background:#f1f5f9"><th style="padding:2px 3px;text-align:left">Nombre/Ref</th><th style="padding:2px 3px;text-align:center">m²</th><th style="padding:2px 3px;text-align:center">$/m²</th><th style="padding:2px 3px;text-align:center">Total MDP</th></tr></thead><tbody>';
+        _jTerr.slice(0,8).forEach(function(t,i){
+          var _tsup=t.m2||t.sup||0;
+          p_justif+='<tr style="border-bottom:1px solid #f1f5f9;background:'+(i%2?'#f8fafc':'#fff')+'"><td style="padding:2px 3px;color:#334155">'+( t.nombre||t.ref||t.zona||'Terreno '+(i+1))+'</td><td style="padding:2px 3px;text-align:center;font-family:IBM Plex Mono,monospace">'+N(_tsup,0)+'</td><td style="padding:2px 3px;text-align:center;font-weight:700;font-family:IBM Plex Mono,monospace;color:#d97706">$'+t.precio_m2.toFixed(0)+'</td><td style="padding:2px 3px;text-align:center;font-family:IBM Plex Mono,monospace;color:#475569">'+(_tsup&&t.precio_m2?'$'+N(_tsup*t.precio_m2/1e6,1)+' M':'—')+'</td></tr>';
+        });
+        p_justif+='</tbody></table></div>';
+      }
+      // Conclusión escrita
+      var _jTopTipo=Object.keys(_jRentTipos).length?Object.keys(_jRentTipos).sort(function(a,b){return _jRentTipos[b].m2-_jRentTipos[a].m2;})[0]:'Clase B+/A';
+      var _jTerr0=_jTerr.length?_jTerr[0].precio_m2.toFixed(0):'N/D';
+      var _jTerrMed=_jTerr.length>1?_jTerr[Math.floor(_jTerr.length/2)].precio_m2.toFixed(0):'N/D';
+      p_justif+='<div style="background:#f0fdf4;border:1.5px solid #16a34a33;border-left:4px solid #16a34a;border-radius:0 6px 6px 0;padding:2.5mm">';
+      p_justif+='<div style="font-size:7pt;font-weight:700;color:#166534;margin-bottom:1.5mm">✅ Por qué este producto es el más viable</div>';
+      p_justif+='<div style="font-size:6pt;color:#334155;line-height:1.6">';
+      p_justif+='El análisis del inventario en la zona confirma que la mayor absorción se concentra en naves industriales '+_jTopTipo+'. ';
+      p_justif+='La disponibilidad de terreno en el rango $'+_jTerr0+' – $'+_jTerrMed+' MXN/m² ';
+      p_justif+='permite un costo de desarrollo competitivo frente al mercado. ';
+      p_justif+='Las '+_zBodsPre.filter(function(b){return b.op==='Renta';}).length+' opciones de renta y '+_zBodsPre.filter(function(b){return b.op==='Venta';}).length+' de venta disponibles validan la liquidez del activo.';
+      p_justif+='</div></div>';
+    }());
+    p_justif+=_rptFooterInd(25,'Justificación de Producto');
+    p_justif+='</div>';
 
     // ── Análisis de Zona Industrial ─────────────────────────────────────
     var p_zona_ind='<div class="report-page">';
@@ -6268,6 +6363,31 @@ function generarReporte(){
 
     p_ind_concl+='<div style="margin-top:1mm;font-size:4pt;color:#94a3b8;line-height:1.5">Cap rate: NOI=Renta×12×0.92×0.80; Vacancia 8%, OpEx 20%. Inventario: asking price listings COEZA/Lamudi/Colliers 2025. Empresas: INEGI DENUE 2025. Validar con broker industrial antes de decisiones de inversión.</div>';
 
+    // 5B — Tabla comparativa zona vs ZM La Laguna
+    (function(){
+      var _cmpRentasZona=_zBodsPre.filter(function(b){return b.op==='Renta'&&b.rent_m2>0;}).map(function(b){return b.rent_m2;});
+      var _cmpRentasZM=INDUSTRIAL.bodegas.filter(function(b){return b.op==='Renta'&&b.rent_m2>0;}).map(function(b){return b.rent_m2;});
+      var _cmpVentaZona=_zBodsPre.filter(function(b){return b.op==='Venta'&&b.vta_m2>0;}).map(function(b){return b.vta_m2;});
+      var _cmpVentaZM=INDUSTRIAL.bodegas.filter(function(b){return b.op==='Venta'&&b.vta_m2>0;}).map(function(b){return b.vta_m2;});
+      function _avgC(arr){return arr.length?arr.reduce(function(a,b){return a+b;},0)/arr.length:0;}
+      function _cmpRowC(lbl,va,vb,fmt,fmtDelta){
+        var d=va-vb;var sign=d>0?'▲ ':d<0?'▼ ':'─ ';var col=d>0?'#16a34a':d<0?'#dc2626':'#64748b';
+        return '<tr style="border-bottom:1px solid #f1f5f9"><td style="padding:2px 4px;color:#475569">'+lbl+'</td>'
+          +'<td style="padding:2px 4px;text-align:center;font-weight:700;font-family:IBM Plex Mono,monospace;color:#0f172a">'+fmt(va)+'</td>'
+          +'<td style="padding:2px 4px;text-align:center;font-family:IBM Plex Mono,monospace;color:#64748b">'+fmt(vb)+'</td>'
+          +'<td style="padding:2px 4px;text-align:center;font-weight:700;color:'+col+'">'+sign+fmtDelta(Math.abs(d))+'</td></tr>';
+      }
+      p_ind_concl+='<div style="margin-top:2.5mm">';
+      p_ind_concl+='<div style="font-size:6.5pt;font-weight:700;color:#0f172a;margin-bottom:1.5mm;border-bottom:1px solid #e2e8f0;padding-bottom:1mm">Comparativo: '+(_zD?_zD.nom:munPrincipal)+' vs. ZM La Laguna</div>';
+      p_ind_concl+='<table style="width:100%;border-collapse:collapse;font-size:5.5pt">';
+      p_ind_concl+='<thead><tr style="background:#0f172a;color:#fff"><th style="padding:2px 4px;text-align:left">Indicador</th><th style="padding:2px 4px;text-align:center">'+(_zD?_zD.nom:'Zona')+'</th><th style="padding:2px 4px;text-align:center">ZM La Laguna</th><th style="padding:2px 4px;text-align:center">Delta</th></tr></thead><tbody>';
+      p_ind_concl+=_cmpRowC('Precio renta prom ($/m²)',_avgC(_cmpRentasZona),_avgC(_cmpRentasZM),function(v){return v?'$'+v.toFixed(0):'—';},function(v){return '$'+v.toFixed(0);});
+      p_ind_concl+=_cmpRowC('Precio venta prom ($/m²)',_avgC(_cmpVentaZona),_avgC(_cmpVentaZM),function(v){return v?'$'+v.toFixed(0):'—';},function(v){return '$'+v.toFixed(0);});
+      p_ind_concl+=_cmpRowC('m² totales inventario',_zBodsPre.reduce(function(a,b){return a+(+b.m2||0);},0),INDUSTRIAL.bodegas.reduce(function(a,b){return a+(+b.m2||0);},0),function(v){return v?N(v,0)+' m²':'—';},function(v){return N(v,0)+' m²';});
+      p_ind_concl+=_cmpRowC('No. opciones',_zBodsPre.length,INDUSTRIAL.bodegas.length,function(v){return String(v);},function(v){return String(v);});
+      p_ind_concl+='</tbody></table></div>';
+    }());
+
     p_ind_concl+=_rptFooterInd(6,'Conclusión');
     p_ind_concl+='</div>';
 
@@ -6404,12 +6524,14 @@ function generarReporte(){
           cls:'B/A-',parques:'PI Lagunero · Zona Histórica GP',rent:'$25–130',empresas:'104',tenant:'PepsiCo · Weida · MLS · Pro Laguna'}
       ];
       var _svgContent='';
-      // Fondo y cuadrícula sutil
-      _svgContent+='<rect x="0" y="0" width="100" height="65" fill="#f0f9ff"/>';
-      _svgContent+='<line x1="0" y1="32.5" x2="100" y2="32.5" stroke="#dde3ee" stroke-width=".15"/>';
-      _svgContent+='<line x1="50" y1="0" x2="50" y2="65" stroke="#dde3ee" stroke-width=".15"/>';
-      // Rectángulos de zonas
+      // 2A — Fondo gris claro con cuadrícula urbana sutil
+      _svgContent+='<rect x="0" y="0" width="100" height="65" fill="#f0f4f8"/>';
+      for(var _gi=0;_gi<=100;_gi+=10){_svgContent+='<line x1="'+_gi+'" y1="0" x2="'+_gi+'" y2="65" stroke="#dde4ed" stroke-width=".15" opacity=".8"/>';}
+      for(var _gj=0;_gj<=65;_gj+=10){_svgContent+='<line x1="0" y1="'+_gj+'" x2="100" y2="'+_gj+'" stroke="#dde4ed" stroke-width=".15" opacity=".8"/>';}
+      _svgContent+='<rect x="0" y="0" width="100" height="65" fill="none" stroke="#cbd5e1" stroke-width=".3"/>';
+      // 2B — Rectángulos de zonas (con validación try/catch)
       _zDef.forEach(function(z){
+        try{
         var tl=_ll2xy(z.latMax,z.lonMin);
         var br=_ll2xy(z.latMin,z.lonMax);
         var rx=tl.x,ry=tl.y,rw=br.x-rx,rh=br.y-ry;
@@ -6428,6 +6550,7 @@ function generarReporte(){
           var tyMe=cy+(lines.length/2)*lh+fsize*0.9;
           _svgContent+='<text x="'+cx.toFixed(2)+'" y="'+tyMe.toFixed(2)+'" text-anchor="middle" dominant-baseline="middle" font-size="'+(fsize*0.8).toFixed(1)+'" fill="'+z.clr+'" font-weight="900">▲ TU ZONA</text>';
         }
+        }catch(e){console.warn('[DATERRA] Polígono malformado omitido:',z.k,e);}
       });
       // Puntos de referencia (ciudades / aeropuerto)
       var _refPts=[
@@ -6438,6 +6561,22 @@ function generarReporte(){
         var p=_ll2xy(r.lat,r.lon);
         _svgContent+='<circle cx="'+p.x.toFixed(2)+'" cy="'+p.y.toFixed(2)+'" r=".75" fill="#94a3b8" opacity=".8"/>';
         _svgContent+='<text x="'+p.x.toFixed(2)+'" y="'+(p.y-1.6).toFixed(2)+'" text-anchor="middle" dominant-baseline="middle" font-size="2.2" fill="#475569">'+r.lbl+'</text>';
+      });
+      // 2C — Markers de empresas ancla
+      var _empPts=[
+        {lat:25.565,lon:-103.43,lbl:'Linamar',zona:'cgpark'},
+        {lat:25.538,lon:-103.420,lbl:'Deere',zona:'ferropuerto'},
+        {lat:25.528,lon:-103.400,lbl:'CAT',zona:'ferropuerto'},
+        {lat:25.545,lon:-103.497,lbl:'VYNMSA',zona:'lajat'},
+        {lat:25.558,lon:-103.510,lbl:'PepsiCo',zona:'pigp'},
+        {lat:25.542,lon:-103.408,lbl:'Flowserve',zona:'cdtorreon'}
+      ];
+      _empPts.forEach(function(e){
+        var p=_ll2xy(e.lat,e.lon);
+        if(isNaN(p.x)||isNaN(p.y))return;
+        var _ez=_zDef.filter(function(z){return z.k===e.zona;})[0]||{clr:'#475569'};
+        _svgContent+='<circle cx="'+p.x.toFixed(2)+'" cy="'+p.y.toFixed(2)+'" r="1.2" fill="'+_ez.clr+'" stroke="#fff" stroke-width=".4" opacity=".9"/>';
+        _svgContent+='<text x="'+(p.x+1.6).toFixed(2)+'" y="'+p.y.toFixed(2)+'" dominant-baseline="middle" font-size="2" fill="#0f172a" font-weight="600">'+e.lbl+'</text>';
       });
       var _svgMap='<svg viewBox="0 0 100 65" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;border:1px solid #e2e8f0;border-radius:4px;display:block">'+
         _svgContent+
@@ -6516,7 +6655,7 @@ function generarReporte(){
         _pageZonas+='</div></div>';
       });
       _pageZonas+='</div>';
-      _pageZonas+=_rptFooterInd(3,'Mapa Industrial'); // page 3 — no cambia
+      _pageZonas+=_rptFooterInd(4,'Mapa Industrial'); // page 4 (pIdx movido a pág 2)
       _pageZonas+='</div>';
       window._pMapaZonas=_pageZonas;
     })();
@@ -6625,6 +6764,43 @@ function generarReporte(){
 
     // ── Nota metodológica ──────────────────────────────────────────
     p_ind_concl2+='<div style="background:#fefce8;border:1px solid #fde68a;border-radius:4px;padding:1.5mm;font-size:4.8pt;color:#92400e;line-height:1.5"><strong>Metodología:</strong> Score industrial: Crecimiento empleo ZM (Censo Econ. INEGI 2018/2023) + Demografía laboral AGEB + Oferta bodegas (listings 2025) + NSE AMAI 2018. Tipo de nave recomendada basado en NSE entorno + nivel de competencia. Especificaciones: estándares CBRE/JLL México 2024. Sectores ordenados por empleos 2023.</div>';
+
+    // 6B — Tarjetas de GAPs de precio
+    (function(){
+      var _gapRentasZona=_zBodsPre.filter(function(b){return b.op==='Renta'&&b.rent_m2>0;}).map(function(b){return b.rent_m2;}).sort(function(a,b){return a-b;});
+      var _gapVentaZona=_zBodsPre.filter(function(b){return b.op==='Venta'&&b.vta_m2>0;}).map(function(b){return b.vta_m2;}).sort(function(a,b){return a-b;});
+      var _gapTerrenosZona=(INDUSTRIAL.terrenos||[]).filter(function(t){return t.precio_m2>0;}).sort(function(a,b){return a.precio_m2-b.precio_m2;});
+      var _gapRentZM=INDUSTRIAL.bodegas.filter(function(b){return b.op==='Renta'&&b.rent_m2>0;}).map(function(b){return b.rent_m2;});
+      var _avgArrG=function(a){return a.length?a.reduce(function(s,v){return s+v;},0)/a.length:0;};
+      var _gaps=[
+        {label:'GAP 1 · Terreno',icon:'🏗️',color:'#0369a1',bg:'#eff6ff',
+          rango:_gapTerrenosZona.length?'$'+_gapTerrenosZona[0].precio_m2.toFixed(0)+' – $'+_gapTerrenosZona[Math.floor(_gapTerrenosZona.length/2)].precio_m2.toFixed(0)+' MXN/m²':'N/D',
+          vs:'Prom. zona: $'+_avgArrG(_gapTerrenosZona.map(function(t){return t.precio_m2;})).toFixed(0)+' MXN/m²',
+          desc:'Precio de adquisición recomendado para terreno industrial en la zona.'},
+        {label:'GAP 2 · Renta asking',icon:'📈',color:'#16a34a',bg:'#f0fdf4',
+          rango:_gapRentasZona.length?'$'+_gapRentasZona[0].toFixed(0)+' – $'+_gapRentasZona[Math.min(Math.floor(_gapRentasZona.length*.75),_gapRentasZona.length-1)].toFixed(0)+' MXN/m²/mes':'N/D',
+          vs:'Prom. ZM: $'+_avgArrG(_gapRentZM).toFixed(0)+' MXN/m²/mes',
+          desc:'Rango competitivo para nave industrial Clase B+/A en la zona.'},
+        {label:'GAP 3 · Exit / Venta',icon:'🎯',color:'#d97706',bg:'#fff7ed',
+          rango:_gapVentaZona.length?'$'+_gapVentaZona[Math.min(Math.floor(_gapVentaZona.length*.25),_gapVentaZona.length-1)].toFixed(0)+' – $'+_gapVentaZona[Math.min(Math.floor(_gapVentaZona.length*.75),_gapVentaZona.length-1)].toFixed(0)+' MXN/m²':'N/D',
+          vs:'Opciones venta en zona: '+_gapVentaZona.length,
+          desc:'Rango de venta futura según inventario actual y tendencia de mercado.'}
+      ];
+      p_ind_concl2+='<div style="margin-top:3mm;border-top:2px solid #e2e8f0;padding-top:3mm">';
+      p_ind_concl2+='<div style="font-size:7pt;font-weight:700;color:#0f172a;margin-bottom:2mm;text-transform:uppercase;letter-spacing:.5px">Análisis de Gaps de Precio · Oportunidades de Entrada</div>';
+      p_ind_concl2+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:2.5mm">';
+      _gaps.forEach(function(g){
+        p_ind_concl2+='<div style="background:'+g.bg+';border:1.5px solid '+g.color+'33;border-top:3px solid '+g.color+';border-radius:0 0 6px 6px;padding:2.5mm">';
+        p_ind_concl2+='<div style="font-size:14pt;margin-bottom:1mm">'+g.icon+'</div>';
+        p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:'+g.color+';text-transform:uppercase;letter-spacing:.5px;margin-bottom:1mm">'+g.label+'</div>';
+        p_ind_concl2+='<div style="font-size:9pt;font-weight:800;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.2;margin-bottom:1mm">'+g.rango+'</div>';
+        p_ind_concl2+='<div style="font-size:5pt;color:#64748b;margin-bottom:.8mm">'+g.vs+'</div>';
+        p_ind_concl2+='<div style="font-size:5pt;color:#475569;line-height:1.4">'+g.desc+'</div>';
+        p_ind_concl2+='</div>';
+      });
+      p_ind_concl2+='</div></div>';
+    }());
+
     p_ind_concl2+=_rptFooterInd(7,'Especificaciones');
     p_ind_concl2+='</div>';
 
@@ -6938,6 +7114,18 @@ function generarReporte(){
       p_hallazgos+='</div></div></div>';
     });
 
+    // 3B — Parque más cercano al punto de análisis
+    var _parqueMasCercano=_pqDist&&_pqDist.length?_pqDist[0]:null;
+    if(_parqueMasCercano){
+      p_hallazgos+='<div style="margin-top:2mm;background:#f0fdf4;border-left:3px solid #16a34a;padding:1.5mm 2.5mm;border-radius:0 4px 4px 0">';
+      p_hallazgos+='<div style="font-size:5.5pt;font-weight:700;color:#15803d">📍 Parque más cercano al punto analizado</div>';
+      p_hallazgos+='<div style="font-size:5pt;color:#334155"><strong>'+(_parqueMasCercano.nombre||_parqueMasCercano.nom||'Parque industrial')+'</strong>';
+      if(_parqueMasCercano._dist<90)p_hallazgos+=' · <strong>'+_parqueMasCercano._dist.toFixed(1)+' km</strong>';
+      if(_parqueMasCercano.cls)p_hallazgos+=' · Clase '+_parqueMasCercano.cls;
+      if(_parqueMasCercano.mun)p_hallazgos+=' · '+_parqueMasCercano.mun;
+      p_hallazgos+='</div></div>';
+    }
+
     p_hallazgos+=_rptFooterInd(5,'Hallazgos');
     p_hallazgos+='</div>';
 
@@ -6962,11 +7150,11 @@ function generarReporte(){
 
         // Orden narrativa comercial: conclusión primero, evidencia después
         return p1
+          + pIdx           // 2  índice de contenidos (MOVIDO — segunda slide)
           // ── SECCIÓN 1: LA OPORTUNIDAD ──────────────────────────────────
           + _secOportunidad
-          + pExec          // 2  hero: veredicto zona analizada vs mercado (zona vs ZM)
-          + p_mapa_zonas   // 3  mapa esquemático 5 polígonos industriales + características
-          + pIdx           // 4  índice de contenidos
+          + pExec          // 3  hero: veredicto zona analizada vs mercado (zona vs ZM)
+          + p_mapa_zonas   // 4  mapa esquemático 5 polígonos industriales + características
           + p_hallazgos    // 5  motores regionales (ZM) + motores zona detectada
           + p_ind_concl    // 6  conclusión zona-específica (cap rate, clase, renta, benchmark)
           + p_ind_concl2   // 7  especificaciones, metodología score
@@ -6980,7 +7168,8 @@ function generarReporte(){
           + _secInventario
           + p_zona_ind + p_zonas_comp + pMapParques + pMapRenta + pMapVenta + p_bod1 + p_bod2 + p_bod3 + p_ter
           // ── CIERRE ───────────────────────────────────────────────────────
-          + p11;
+          + p_justif   // 25 justificación de producto recomendado (nueva)
+          + p11;       // 26 soluciones COEZA
   }
 
   // Estadísticas del municipio completo para comparativa en heatmaps
