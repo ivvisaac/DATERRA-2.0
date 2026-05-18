@@ -6782,13 +6782,42 @@ function generarReporte(){
     p_ind_concl+='<div style="display:grid;grid-template-columns:auto 1fr;gap:.5mm 2mm;font-size:5pt;margin-bottom:1.5mm">';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Parques</div><div style="color:#0f172a;line-height:1.4">'+_zD.parques.join(' · ')+'</div>';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Clase naves</div><div style="color:#0f172a;font-weight:700;font-family:IBM Plex Mono,monospace">'+_zClase+' · Renta '+_zRentaRange+' MXN/m²</div>';
-    var _s251txt=(_zD.s251||0)>0?
-      _zD.empresas+' totales · '+(_zD.s251)+' con 251+ pers. ('+_zDS.pct251+'%) · '+_zD.top_sector:
-      _zD.empresas+' empresas activas · Predomina PYME (50–250 pers.) · '+_zD.top_sector+(_zD.top_sector2?' / '+_zD.top_sector2:'')+' · Demanda: naves 1,000–5,000 m²';
-    var _s251why=(_zD.s251||0)>0?
-      'Las empresas 251+ son el principal driver de demanda de naves >5,000 m² en La Laguna. Mayor concentración ZM: Ferropuerto (65%).':
-      'Sin empresas 251+ el tenant más probable es PYME regional. Naves más pequeñas (800–3,000 m²) con mayor rotación y contratos más cortos.';
-    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Empresas</div><div style="color:#0f172a;line-height:1.5">'+_s251txt+'<div style="font-size:4pt;color:#64748b;margin-top:.5mm;font-style:italic">'+_s251why+'</div></div>';
+    // ── Perfil detallado de empresas por tamaño ──────────────────────
+    var _s50=(_zD.s50||0),_s101=(_zD.s101||0),_s251n=(_zD.s251||0);
+    var _pyme=_s50+_s101; // empresas 50-250 personas
+    var _microPeq=(_zD.empresas||0)-_pyme-_s251n; // <50 personas (micro/pequeña)
+    // Perfil PYME y empresas destacadas por zona
+    var _pymePerfilMap={
+      cgpark:'Proveedores Linamar (automotriz TIER 2), distribuidores regionales de manufactura metálica, operadores de CEDIS. Perfil predominante: 50–100 personas, vocación automotriz y distribución.',
+      cdtorreon:'Autotransportistas medianos, empresas alimentarias (Bodegas Usted Guarda y similares), laboratorios químicos y talleres de manufactura diversificada. Perfil: 100–250 personas, autotransporte de carga y manufactura.',
+      ferropuerto:'Proveedores TIER 2 de John Deere y Caterpillar: metalmecánica de precisión, maquinado CNC, tratamiento de materiales. Perfil: 101–250 personas, vocación manufactura de alto valor.',
+      lajat:'Talleres de confección y maquiladoras textiles, comercio al por mayor, metalmecánica mediana. VYNMSA como parque ancla atrae TIER 2 automotriz incipiente. Perfil: 50–250 personas, rotación media-alta.',
+      pigp:'Quimitech, Pro Laguna, proveedores de PepsiCo (supply chain alimentos), maquiladoras medianas, distribuidores mayoristas (Weida México, MLS logistics). 40 empresas 101–250 pers. = perfil diversificado con buena profundidad de mercado.'
+    };
+    var _pymePerfil=_zDK&&_pymePerfilMap[_zDK]?_pymePerfilMap[_zDK]:'Mix de manufactura ligera, distribución regional y servicios industriales. Verificar perfil específico con DENUE.';
+    var _s251why2=_s251n>0?
+      'Las '+_s251n+' empresas 251+ son el principal driver de demanda de naves >5,000 m². Estas empresas buscan altura libre 36\'+, potencia >500 KVA y certificación de parque. Mayor concentración ZM: Ferropuerto (65%).':
+      'Sin empresas 251+ el tenant objetivo es PYME regional: naves 800–3,000 m², contratos 2–3 años, menor capex por m². El riesgo: mayor rotación y menor poder de negociación de renta.';
+    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Empresas</div>';
+    p_ind_concl+='<div style="color:#0f172a;line-height:1.5">';
+    // Fila de totales con desglose
+    p_ind_concl+='<div style="display:flex;gap:2mm;flex-wrap:wrap;margin-bottom:1mm">';
+    p_ind_concl+='<span style="background:#0f172a;color:#fff;font-size:4pt;font-weight:700;padding:0 2mm;border-radius:2px;font-family:IBM Plex Mono,monospace">'+(_zD.empresas||'—')+' total</span>';
+    if(_microPeq>0)p_ind_concl+='<span style="background:#e2e8f0;color:#334155;font-size:4pt;font-weight:600;padding:0 2mm;border-radius:2px">'+_microPeq+' micro/peq. &lt;50 pers.</span>';
+    if(_pyme>0)p_ind_concl+='<span style="background:#dbeafe;color:#1d4ed8;font-size:4pt;font-weight:700;padding:0 2mm;border-radius:2px">'+_pyme+' PYME · 50–250 pers.</span>';
+    if(_s251n>0)p_ind_concl+='<span style="background:#dcfce7;color:#15803d;font-size:4pt;font-weight:700;padding:0 2mm;border-radius:2px">'+_s251n+' grandes · 251+ pers. ('+_zDS.pct251+'%)</span>';
+    p_ind_concl+='</div>';
+    // Desglose s50/s101 si hay PYME
+    if(_pyme>0){
+      p_ind_concl+='<div style="font-size:4pt;color:#475569;margin-bottom:.5mm">';
+      if(_s50>0)p_ind_concl+='<strong>'+_s50+'</strong> con 50–100 pers.  ';
+      if(_s101>0)p_ind_concl+='<strong>'+_s101+'</strong> con 101–250 pers.  ';
+      p_ind_concl+='· Sector: <strong>'+_zD.top_sector+(_zD.top_sector2?' / '+_zD.top_sector2:'')+'</strong></div>';
+    }
+    // Perfil detallado PYME
+    p_ind_concl+='<div style="font-size:4pt;color:#334155;line-height:1.5;margin-bottom:.5mm">'+_pymePerfil+'</div>';
+    p_ind_concl+='<div style="font-size:4pt;color:#64748b;font-style:italic;line-height:1.4">'+_s251why2+'</div>';
+    p_ind_concl+='</div>';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Tenants ancla</div><div style="color:#1e293b;line-height:1.4">'+_tenantStr+'</div>';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Terreno</div><div style="color:#0f172a">'+(_zDS.medTer?'Mediana $'+Math.round(_zDS.medTer).toLocaleString('es-MX')+' MXN/m²':'n/d')+' · '+(_zD.mun||munPrincipal)+'</div>';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Mercado</div><div style="color:'+(_oColors[_zDS.oport]||'#475569')+';font-weight:700">'+(_zDS.oport||'—')+' — '+(_zDS.nBods<5?'Primer entrante posible':_zDS.nBods<12?'Diferenciación por clase':_zDS.nBods<20?'Competencia media':'Alta oferta, especializar')+'</div>';
