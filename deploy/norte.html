@@ -1897,7 +1897,7 @@ function fmtK(val,v){
   if(a>=1000) return s+(a/1000).toFixed(0)+'K';
   return fmt(val,v);
 }
-function sv(v,u){ var s=v<0?'-':'',a=Math.abs(v); var r=a>=1e6?s+(a/1e6).toFixed(1)+'M':a>=1000?s+(a/1000).toFixed(0)+'K':s+Math.round(a).toLocaleString('es-MX'); return r+(u?' '+u:''); }
+function sv(v,u){ var s=v<0?'-':'',a=Math.abs(v); var r=a>=1e6?s+(a/1e6).toFixed(1)+'M':a>=1000?s+(+(a/1000).toFixed(1))+'K':s+Math.round(a).toLocaleString('es-MX'); return r+(u?' '+u:''); }
 function sp(v){ return (v>0?'+':'')+v.toFixed(1)+'%'; }
 
 // ── COLORES (semáforo: amarillo-bajo → azul-claro → azul-fuerte; rojo para negativos) ──
@@ -4152,7 +4152,7 @@ function generarReporte(){
         } else if(_clsScore(clsDom)>=2){
           tipologia='Nave Clase B+/B · Altura libre 8-10m · Instalaciones básicas completas';
           disponibilidad='Mercado activo · Tenants: distribución regional, manufactura ligera, PyME industrial';
-          implicacion='Cluster óptimo para yield: mejor relación renta/costo de construcción. Cap rate estimado 9-11%.';
+          implicacion='Cluster óptimo para rendimiento bruto: mejor relación renta/costo de construcción. Cap rate estimado 9-11%.';
         } else {
           tipologia='Nave Clase C+/B- · Mixto residencial-industrial · Limitaciones técnicas';
           disponibilidad='Demanda moderada · Tenants: almacenaje, PyME servicios, comercio mayoreo';
@@ -4288,7 +4288,7 @@ function generarReporte(){
     p1+='</div>';
     p1+='</div>';
 
-    p1+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pág. 1 / 25</span><span>'+fecha+'</span></div>';
+    p1+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pág. 1 / 27</span><span>'+fecha+'</span></div>';
     p1+='</div>';
 
     // ────────── PÁGINA EJECUTIVA: Resumen para decisores ──────────
@@ -4475,7 +4475,7 @@ function generarReporte(){
     var _pxTesisPara=_pxScore>=6
       ?'La zona presenta condiciones favorables para desarrollo industrial especulativo '+_pxClsRec+'. El entorno económico muestra crecimiento sostenido en manufactura y logística, con pool laboral disponible (escolaridad '+N(avgEsc,1)+' años, '+P1(pct2559)+' en edad activa 25-59) y rentas competitivas frente a mercados Tier 1. El NSE '+nsePredZona+' del entorno es compatible con tenants de alta solvencia. Score de entorno: <strong>'+_pxScore+'/8 — '+_pxScoreLbl+'</strong>.'+_clusterInsight
       :_pxScore>=4
-      ?'La zona ofrece oportunidad de rendimiento en segmento '+_pxClsRec+' con perfil de yield sobre capital appreciation. El mercado opera en consolidación con demanda manufacturera estable y brecha de oferta en nave mediana 1,500-4,000 m². La demografía laboral ('+P1(pctPea)+' PEA activa, escolaridad '+N(avgEsc,1)+' años) sostiene la operación. Se recomienda diferenciación por especificación técnica y precio de entrada. Score de entorno: <strong>'+_pxScore+'/8 — '+_pxScoreLbl+'</strong>.'+_clusterInsight
+      ?'La zona ofrece oportunidad de rendimiento en segmento '+_pxClsRec+' con perfil de rendimiento bruto sobre apreciación de capital. El mercado opera en consolidación con demanda manufacturera estable y brecha de oferta en nave mediana 1,500-4,000 m². La demografía laboral ('+P1(pctPea)+' PEA activa, escolaridad '+N(avgEsc,1)+' años) sostiene la operación. Se recomienda diferenciación por especificación técnica y precio de entrada. Score de entorno: <strong>'+_pxScore+'/8 — '+_pxScoreLbl+'</strong>.'+_clusterInsight
       :'La zona presenta características de mercado emergente con oportunidad selectiva en bodega funcional '+_pxClsRec+'. Requiere análisis de micro-ubicación y tenant pre-commitment para mitigar riesgo. El entorno (NSE '+nsePredZona+', '+P1(pctPea)+' PEA) es adecuado para manufactura de bajo costo, almacenaje o distribución regional. Score de entorno: <strong>'+_pxScore+'/8 — '+_pxScoreLbl+'</strong>.'+_clusterInsight;
 
     function _kpiInd(val,lbl,sub,subColor){
@@ -4524,14 +4524,14 @@ function generarReporte(){
 
     // Quote estratégica
     pExec+='<div style="background:#0f172a;padding:3mm 4mm;border-radius:4px;margin-bottom:3mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
-    pExec+='<div style="font-size:7.5pt;color:#fff;font-style:italic;line-height:1.6;margin-bottom:1mm">Mientras los polos tradicionales del norte se enfrían o saturan, La Laguna combina absorción creciente (+34.6% YoY), precio récord (+17% YoY) y pipeline de inversión activo. El spread de yield vs Saltillo es de 300–400 pbs — compensación real por tier secundario.</div>';
+    pExec+='<div style="font-size:7.5pt;color:#fff;font-style:italic;line-height:1.6;margin-bottom:1mm">Mientras los polos tradicionales del norte se enfrían o saturan, La Laguna combina absorción creciente (+34.6% variación anual), precio récord (+17% variación anual) y pipeline de inversión activo. El spread de rendimiento bruto vs Saltillo es de 300–400 pbs — compensación real por tier secundario.</div>';
     pExec+='<div style="font-size:5.5pt;color:#94a3b8">Síntesis COEZA basada en: Newmark México 2S25 · CBRE México Q4 2024 / 1T 2026 · Sec. Economía Coahuila</div>';
     pExec+='</div>';
 
     // ── BLOQUE TESIS ───────────────────────────────────────────────
     pExec+='<div style="background:#fff;border-left:4px solid #16a34a;padding:3mm 4mm;margin:0 0 3mm">';
     pExec+='<div style="font-size:7pt;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:1.5mm">Veredicto · ZM La Laguna 2025</div>';
-    pExec+='<div style="font-size:7.5pt;color:#1e293b;line-height:1.6">La Laguna es el mercado industrial del norte con mejor relación precio–renta–vacancia en 2025. Mientras el norte general se estabiliza (construcción −20% YoY) y Saltillo enfrenta saturación (vacancia 3.8% subiendo), La Laguna registra absorción creciente (+34.6%), precio récord (+17% YoY) y un pipeline de inversión empresarial activo ($785 M USD comprometidos). <span style="color:#16a34a;font-weight:600">La recomendación de inversión para la zona específica analizada se presenta en la sección siguiente.</span></div>';
+    pExec+='<div style="font-size:7.5pt;color:#1e293b;line-height:1.6">La Laguna es el mercado industrial del norte con mejor relación precio–renta–vacancia en 2025. Mientras el norte general se estabiliza (construcción −20% variación anual) y Saltillo enfrenta saturación (vacancia 3.8% subiendo), La Laguna registra absorción creciente (+34.6%), precio récord (+17% variación anual) y un pipeline de inversión empresarial activo ($785 M USD comprometidos). <span style="color:#16a34a;font-weight:600">La recomendación de inversión para la zona específica analizada se presenta en la sección siguiente.</span></div>';
     pExec+='</div>';
 
     // ── Pre-compute: centroide + bodegas + zona detectada (PRIMERO — necesario para KPIs y riesgos) ──
@@ -4556,7 +4556,7 @@ function generarReporte(){
     if(!_zonaDetected){var _bestDistE=99,_bestKeyE=null;Object.keys(INDUSTRIAL_ZONAS).forEach(function(k){var z=INDUSTRIAL_ZONAS[k];var d=_havB(_zonaCLat,_zonaCLon,z.cLat,z.cLon);if(d<_bestDistE){_bestDistE=d;_bestKeyE=k;}});if(_bestDistE<15){_zonaDetected=INDUSTRIAL_ZONAS[_bestKeyE];_zonaDetectedKey=_bestKeyE;}}
 
     // ── Pre-compute cap rate temprano para KPIs zona-específicos ──────
-    var _zBodsPre=_zonaDetectedKey?(function(){var z=INDUSTRIAL_ZONAS[_zonaDetectedKey];return INDUSTRIAL.bodegas.filter(function(b){return b.lat&&b.lon&&b.lat>=z.latMin&&b.lat<=z.latMax&&b.lon>=z.lonMin&&b.lon<=z.lonMax;});}()):_bodsZona;
+    var _zBodsPre=(function(){if(_zonaDetectedKey){var z=INDUSTRIAL_ZONAS[_zonaDetectedKey];var bboxResult=INDUSTRIAL.bodegas.filter(function(b){return b.lat&&b.lon&&b.lat>=z.latMin&&b.lat<=z.latMax&&b.lon>=z.lonMin&&b.lon<=z.lonMax;});return bboxResult.length>0?bboxResult:_bodsZona;}return _bodsZona;}());
     var _zRentsPre=_zBodsPre.filter(function(b){return b.rent_m2>0;}).map(function(b){return b.rent_m2;}).sort(function(a,b){return a-b;});
     var _zVentasPre=_zBodsPre.filter(function(b){return b.vta_m2>0;}).map(function(b){return b.vta_m2;}).sort(function(a,b){return a-b;});
     var _medRPre=_zRentsPre.length?_zRentsPre[Math.floor(_zRentsPre.length/2)]:null;
@@ -4598,7 +4598,7 @@ function generarReporte(){
       ],
       cdtorreon:[
         ['Zona consolidada sin expansión','Alta ocupación histórica pero escasa absorción nueva — demanda de reposición, no de expansión.','MEDIO','#d97706'],
-        ['Renta baja comprime retorno','$55-75 MXN mediana — margen estrecho entre costos de desarrollo y yield resultante.','ALTO','#dc2626'],
+        ['Renta baja comprime retorno','$55-75 MXN mediana — margen estrecho entre costos de desarrollo y rendimiento bruto resultante.','ALTO','#dc2626'],
         ['Saturación de opciones','44+ empresas activas — muchas alternativas en el mismo radio; mayor poder de negociación del tenant.','MEDIO','#d97706']
       ],
       ferropuerto:[
@@ -4660,7 +4660,7 @@ function generarReporte(){
     pExec+='<div style="font-size:6pt;color:#94a3b8;text-align:center;line-height:1.5">Este análisis se basa en datos INEGI Censo 2020 · INEGI Económico 2023 · Inventario COEZA 2025</div>';
     pExec+='</div>';
 
-    pExec+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pág. 3 / 25</span><span>'+fecha+'</span></div>';
+    pExec+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pág. 3 / 27</span><span>'+fecha+'</span></div>';
     pExec+='</div>';
 
     // ────────── PÁGINA 2 (ahora 3): Análisis Dinámica Territorial ──────────
@@ -4718,7 +4718,7 @@ function generarReporte(){
     var _crIns=crecHogPct>munCrecHogPct+3?'La zona crece <strong>por encima del municipio</strong> en hogares (+'+N(crecHogPct,1)+'% vs '+N(munCrecHogPct,1)+'% mun.) — señal de demanda habitacional real que sustenta el uso industrial y de servicios.':crecHogPct>0?'La zona crece <strong>a ritmo similar al municipio</strong> en hogares (+'+N(crecHogPct,1)+'%) — mercado estable sin señales de abandono, adecuado para industrial consolidado.':'La zona muestra <strong>contracción en hogares</strong> ('+N(crecHogPct,1)+'%) — típico de zonas industriales maduras donde la población migra a periferias; la demanda industrial puede mantenerse o crecer independientemente.';
     p3+='<div style="background:#f0f9ff;border-left:3px solid #0369a1;border-radius:0 4px 4px 0;padding:2mm 2.5mm;font-size:5.5pt;color:#0c4a6e;line-height:1.5;margin-top:2mm"><strong>📊 Lectura del analista:</strong> '+_crIns+'</div>';
     p3+=DISC;
-    p3+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pág. 13 / 25</span><span>'+fecha+'</span></div>';
+    p3+='<div class="rpt-footer"><span>DATERRA · '+(GEO&&GEO.estado||'México')+' · Censo 2020 · INEGI · COEZA Consulting</span><span>Pág. 14 / 27</span><span>'+fecha+'</span></div>';
     p3+='</div>';
 
     // ────────── PÁGINA 4: Estructura de Edad ──────────
@@ -4853,7 +4853,7 @@ function generarReporte(){
     p4+='<div style="margin-top:1.5mm;font-size:4.5pt;color:#64748b;line-height:1.5">Fuente: INEGI Censo de Población y Vivienda 2020 · NSE AMAI 2018. Perfil industrial = NSE C-/D+/D con escolaridad ≥ 9 años y edad 15–59. <strong>Nota: datos de 2020 — proyectar con factor de crecimiento poblacional para 2026.</strong></div>';
     p4+='</div>';
     p4+=DISC;
-    p4+='<div class="rpt-footer"><span>DATERRA · '+munPrincipal+' · Pool Laboral · Censo INEGI 2020</span><span>Pág. 12 / 25</span><span>'+fecha+'</span></div>';
+    p4+='<div class="rpt-footer"><span>DATERRA · '+munPrincipal+' · Pool Laboral · Censo INEGI 2020</span><span>Pág. 13 / 27</span><span>'+fecha+'</span></div>';
     p4+='</div>';
 
     // ────────── PÁGINA 5: Composición del Parque Habitacional ──────────
@@ -5060,7 +5060,7 @@ function generarReporte(){
       pMapParques+='<td style="padding:.8mm 1.5mm;color:#475569;font-size:5.5pt">'+(p2.ocp_pub||p2.ocup||'—')+'</td></tr>';
     });
     pMapParques+='</tbody></table>';
-    pMapParques+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Inventario Industrial · COEZA 2025</span><span>Pág. 18 / 25</span><span>'+fecha+'</span></div>';
+    pMapParques+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Inventario Industrial · COEZA 2025</span><span>Pág. 19 / 27</span><span>'+fecha+'</span></div>';
     pMapParques+='</div>';
 
     // ── Mapa: Bodegas en Renta ZM Laguna ──
@@ -5089,7 +5089,7 @@ function generarReporte(){
     });
     pMapRenta+='</tbody></table>';
     pMapRenta+='<div style="margin-top:2mm;padding:2mm 3mm;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;font-size:6.5pt;color:#166534"><strong>Insight:</strong> Renta mediana ZM $'+(_medGR||65)+'/m²/mes. '+(_capArr&&_capArr.length?'Cap rate implícito ('+_capArr.length+' muestras): '+(_capMed||'—')+'%. ':'')+'Las bodegas clase A/B+ comando primas de 25-40% sobre clase B/C. A mayor altura libre y andenes, mayor precio.</div>';
-    pMapRenta+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Inventario Industrial · COEZA 2025</span><span>Pág. 19 / 25</span><span>'+fecha+'</span></div>';
+    pMapRenta+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Inventario Industrial · COEZA 2025</span><span>Pág. 20 / 27</span><span>'+fecha+'</span></div>';
     pMapRenta+='</div>';
 
     // ── Mapa: Bodegas en Venta + Terrenos ZM Laguna ──
@@ -5118,7 +5118,7 @@ function generarReporte(){
     });
     pMapVenta+='</tbody></table></div>';
     pMapVenta+='</div>';
-    pMapVenta+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Inventario Industrial · COEZA 2025</span><span>Pág. 20 / 25</span><span>'+fecha+'</span></div>';
+    pMapVenta+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Inventario Industrial · COEZA 2025</span><span>Pág. 21 / 27</span><span>'+fecha+'</span></div>';
     pMapVenta+='</div>';
 
     // ── PÁGINA 11: Mapa de calor NSE (AMAI) ────────────────────
@@ -5182,7 +5182,7 @@ function generarReporte(){
     // ── Insight NSE para análisis industrial ──────────────────────
     var _nseIndIns=pNseAlto>30?'NSE medio-alto ('+P1(pNseAlto)+'% AB+C+) — zona con mano de obra técnica y administrativa disponible. Perfil compatible con manufactura de precisión, electrónica y automotriz.':pNseAlto>15?'NSE mixto ('+P1(pNseAlto)+'% AB+C+, '+P1(pNsePopular)+'% D+/D/E) — fuerza laboral diversa: operación industrial estándar y logística sin restricciones de oferta.':'NSE popular ('+P1(pNsePopular)+'% D+/D/E) — base amplia de mano de obra operativa a costo competitivo; ideal para manufactura intensiva, almacenaje y distribución regional.';
     p_nse+='<div style="background:#fefce8;border-left:3px solid #ca8a04;border-radius:0 4px 4px 0;padding:2mm 2.5mm;font-size:5.5pt;color:#78350f;line-height:1.5;margin-top:1.5mm"><strong>🏭 Implicación industrial:</strong> '+_nseIndIns+'</div>';
-    p_nse+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · AMAI 2018 · Censo INEGI 2020</span><span>Pág. 14 / 25</span><span>'+fecha+'</span></div>';
+    p_nse+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · AMAI 2018 · Censo INEGI 2020</span><span>Pág. 15 / 27</span><span>'+fecha+'</span></div>';
     p_nse+='</div>';
 
     // ── PÁGINA 12: Conclusiones ────────────────────────────────
@@ -5438,27 +5438,26 @@ function generarReporte(){
     pIdx+=_idxRow('5','Hallazgos · Motores Regionales y de Zona','Drivers ZM La Laguna + motores específicos de la zona analizada');
     pIdx+=_idxRow('6','Conclusión · Zona Analizada','Veredicto · clase recomendada · cap rate · pros y contras · sectores objetivo');
     pIdx+=_idxRow('7','Especificaciones Estratégicas','Especificaciones técnicas óptimas · score de entorno · recomendaciones accionables');
+    pIdx+=_idxRow('8','Validación de Mercado · Brokers + CBRE','Precios reales $5.50–$7.53 · vacancia 4.4% · transacciones · Q&A 5 preguntas de mercado');
     pIdx+=_idxSection('SUSTENTO Y EVIDENCIA','#0369a1');
-    pIdx+=_idxRow('8','La Laguna en el Mapa Nacional Industrial','Comparativo 6 mercados · yield vs precio · por qué La Laguna supera la comparativa');
-    pIdx+=_idxRow('9','Contexto de Mercado Industrial','Norte general vs Saltillo vs La Laguna · posición competitiva · drivers actuales');
-    pIdx+=_idxRow('10','Pipeline de Inversión · ZM La Laguna','$785M USD comprometidos · proyectos activos · sectores demandantes 2025-2028');
-    pIdx+=_idxRow('11','Demanda Actual del Mercado','Inventario 1.68M m² · absorción +34.6% · disponibilidad 6.2% · proyección 2026');
-    pIdx+=_idxRow('12','Pool Laboral Disponible','PEA activa · escolaridad · benchmarks ZM · estructura de edades · implicación industrial');
-    pIdx+=_idxRow('13','Crecimiento Comparativo 2010-2020','Población · vivienda · hogares · densidad · comparativa zona vs municipio vs estado');
-    pIdx+=_idxRow('14','Actividad Económica y NSE','Heatmap NSE · distribución AMAI por AGEB · perfil laboral de la zona');
-    pIdx+=_idxRow('15','Motores Económicos · Vocación Industrial','Manufactura · Logística · Comercio — empleos, VA y demanda de bodega por sector');
+    pIdx+=_idxRow('9','La Laguna en el Mapa Nacional Industrial','Comparativo 6 mercados · rendimiento vs precio · por qué La Laguna supera la comparativa');
+    pIdx+=_idxRow('10','Contexto de Mercado Industrial','Norte general vs Saltillo vs La Laguna · posición competitiva · drivers actuales');
+    pIdx+=_idxRow('11','Pipeline de Inversión · ZM La Laguna','$785M USD comprometidos · proyectos activos · sectores demandantes 2025-2028');
+    pIdx+=_idxRow('12','Demanda Actual del Mercado','Inventario 1.68M m² · absorción +34.6% · disponibilidad 6.2% · proyección 2026');
+    pIdx+=_idxRow('13','Pool Laboral Disponible','PEA activa · escolaridad · benchmarks ZM · estructura de edades · implicación industrial');
+    pIdx+=_idxRow('14','Crecimiento Comparativo 2010-2020','Población · vivienda · hogares · densidad · comparativa zona vs municipio vs estado');
+    pIdx+=_idxRow('15','Actividad Económica y NSE','Heatmap NSE · distribución AMAI por AGEB · perfil laboral de la zona');
+    pIdx+=_idxRow('16','Motores Económicos · Vocación Industrial','Manufactura · Logística · Comercio — empleos, VA y demanda de bodega por sector');
     pIdx+=_idxSection('INVENTARIO INDUSTRIAL','#0f172a');
-    pIdx+=_idxRow('16','Zona Industrial · Inventario','Bodegas en renta/venta + terrenos radio 15km · parques cercanos');
-    pIdx+=_idxRow('17','Comparativo de Zonas Industriales','5 polígonos ZM · renta mediana · cap rate · clase · oportunidad');
-    pIdx+=_idxRow('18','Mapa Parques Industriales','Parques industriales ZM · distancia al terreno · infraestructura y clase');
-    pIdx+=_idxRow('19','Mapa Inventario en Renta','Distribución geográfica bodegas en renta · concentración por zona · precios asking');
-    pIdx+=_idxRow('20','Mapa Inventario en Venta y Terrenos','Bodegas en venta + terrenos industriales disponibles · precio/m² por zona');
-    pIdx+=_idxRow('21','Bodegas en Renta · ZM La Laguna','Inventario de renta · clases disponibles · rangos de precio · análisis de mercado');
-    pIdx+=_idxRow('22','Bodegas Cap Rate & Análisis','Inversión vs renta · cap rate · decisión por clase y zona');
-    pIdx+=_idxRow('23','Bodegas · Decisión de Inversión','Scorecard de decisión · sectores objetivo · tipo de nave recomendada');
-    pIdx+=_idxRow('24','Terrenos Industriales Disponibles','Oferta de terrenos por zona · precio/m² · superficie · potencial de desarrollo');
-    pIdx+=_idxSection('LLAMADAS CON BROKERS','#0c4a6e');
-    pIdx+=_idxRow('25','Validación de Mercado · Brokers + CBRE','Precios reales $5.50–$7.53 · vacancia 4.4% · transacciones · Q&A 5 preguntas de mercado');
+    pIdx+=_idxRow('17','Zona Industrial · Inventario','Bodegas en renta/venta + terrenos radio 15km · parques cercanos');
+    pIdx+=_idxRow('18','Comparativo de Zonas Industriales','5 polígonos ZM · renta mediana · cap rate · clase · oportunidad');
+    pIdx+=_idxRow('19','Mapa Parques Industriales','Parques industriales ZM · distancia al terreno · infraestructura y clase');
+    pIdx+=_idxRow('20','Mapa Inventario en Renta','Distribución geográfica bodegas en renta · concentración por zona · precios asking');
+    pIdx+=_idxRow('21','Mapa Inventario en Venta y Terrenos','Bodegas en venta + terrenos industriales disponibles · precio/m² por zona');
+    pIdx+=_idxRow('22','Bodegas en Renta · ZM La Laguna','Inventario de renta · clases disponibles · rangos de precio · análisis de mercado');
+    pIdx+=_idxRow('23','Bodegas Cap Rate & Análisis','Inversión vs renta · cap rate · decisión por clase y zona');
+    pIdx+=_idxRow('24','Bodegas · Decisión de Inversión','Scorecard de decisión · sectores objetivo · tipo de nave recomendada');
+    pIdx+=_idxRow('25','Terrenos Industriales Disponibles','Oferta de terrenos por zona · precio/m² · superficie · potencial de desarrollo');
     pIdx+=_idxSection('CIERRE','#16a34a');
     pIdx+=_idxRow('26','Justificación del Producto Recomendado','Distribución por tipo de nave · terrenos disponibles · conclusión de viabilidad');
     pIdx+=_idxRow('27','Soluciones COEZA','Servicios especializados para decisiones de inversión industrial · contacto');
@@ -5466,7 +5465,7 @@ function generarReporte(){
     pIdx+='<span style="font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px">Fuentes · </span>';
     pIdx+='Censo Económico INEGI 2023 · Inventario Industrial COEZA 2025 · Censo Población y Vivienda 2020 · NSE AMAI 2018 · Newmark México 2S25 · CBRE México Q4 2024.';
     pIdx+='</div>';
-    pIdx+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pág. 2 / 25</span><span>'+fecha+'</span></div>';
+    pIdx+='<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · COEZA Consulting</span><span>Pág. 2 / 27</span><span>'+fecha+'</span></div>';
     pIdx+='</div>';
 
 
@@ -5478,7 +5477,7 @@ function generarReporte(){
     function _N2(v,d){v=+(v)||0;if(d!==undefined)return v.toLocaleString('es-MX',{minimumFractionDigits:d,maximumFractionDigits:d});return Math.round(v).toLocaleString('es-MX');}
     function _bar2(pct,color){pct=Math.min(100,Math.max(0,+pct||0));return '<div style="background:#e2e8f0;border-radius:2px;height:5px;overflow:hidden;margin-top:1.5mm"><div style="background:'+color+';width:'+pct+'%;height:100%;border-radius:2px"></div></div>';}
     function _sumC(arr,k){return arr.reduce(function(a,r){return a+(r[k]||0);},0);}
-    var _pgTot=27; // total de páginas en el reporte (sin contar divisores de sección)
+    var _pgTot=27; // total de páginas en el reporte (sin contar divisores de sección) — p_broker movido a pos 8
     function _rptFooterInd(gpag,label){
       var numStr='Pág. '+gpag+' / '+_pgTot+(label?' · '+label:'');
       return '<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · INEGI Censo Económico 2018-2023</span><span>'+numStr+'</span><span>'+fecha+'</span></div>';
@@ -5669,7 +5668,7 @@ function generarReporte(){
     });
     p_ind1+='</div></div>';
 
-    p_ind1+=_rptFooterInd(15,'Motores Económicos');
+    p_ind1+=_rptFooterInd(16,'Motores Económicos');
     p_ind1+='</div>';
 
     // ══════════════════════════════════════════════════════════════
@@ -5758,7 +5757,7 @@ function generarReporte(){
     // Footer Newmark
     p_demanda+='<div style="margin-top:3mm;text-align:right;font-size:5pt;color:#94a3b8;font-style:italic">Fuente: Newmark México — Mercado Industrial La Laguna, Segundo Semestre 2025. nmrk.lat/reportes-de-mercado</div>';
 
-    p_demanda+=_rptFooterInd(11,'Demanda');
+    p_demanda+=_rptFooterInd(12,'Demanda');
     p_demanda+='</div>';
 
     // ══════════════════════════════════════════════════════════════
@@ -5840,7 +5839,7 @@ function generarReporte(){
     p_bod1+='<div><div style="color:#fbbf24;font-weight:700;font-size:4.8pt;margin-bottom:.4mm">Clase A vs Clase B</div><div style="font-size:4.3pt;color:#cbd5e1;line-height:1.45">Clase A (USD >5/m²) tiene oferta limitada y ocupación >90%. Clase B es el segmento más activo. Diferencial de renta Clase A/B: ~35–45% — justificado para manufactura exportadora.</div></div>';
     p_bod1+='</div></div>';
 
-    p_bod1+=_rptFooterInd(21,'Inventario Bodegas');
+    p_bod1+=_rptFooterInd(22,'Inventario Bodegas');
     p_bod1+='</div>';
 
     // ══════════════════════════════════════════════════════════════
@@ -5931,7 +5930,7 @@ function generarReporte(){
     p_bod2+='</div>';
     p_bod2+='</div>';
 
-    p_bod2+=_rptFooterInd(22,'Cap Rate & Análisis');
+    p_bod2+=_rptFooterInd(23,'Cap Rate & Análisis');
     p_bod2+='</div>';
 
     // ══════════════════════════════════════════════════════════════
@@ -6008,7 +6007,7 @@ function generarReporte(){
     }
     p_bod3+='</div>';
     p_bod3+='</div>';
-    p_bod3+=_rptFooterInd(23,'Decisión de Inversión');
+    p_bod3+=_rptFooterInd(24,'Decisión de Inversión');
     p_bod3+='</div>';
 
     // ══════════════════════════════════════════════════════════════
@@ -6101,7 +6100,7 @@ function generarReporte(){
     p_ter+='<div style="font-size:4.5pt;color:#334155;line-height:1.55">El mercado de terrenos industriales en ZM La Laguna ofrece opciones en tres rangos: <strong>(1) Suelo de parque certificado</strong> (USD 40–80/m²), con infraestructura y servicios incluidos, ideal para manufactura de exportación; <strong>(2) Suelo semi-urbano periférico</strong> (USD 15–40/m²), requiere inversión en infraestructura pero permite desarrollo a medida; <strong>(3) Suelo industrial Gómez Palacio/Lerdo</strong> (USD 10–25/m²), menor costo, buena conectividad, en expansión. La tendencia del mercado es de apreciación sostenida: 8–12% anual en zonas con acceso a infraestructura logística.</div>';
     p_ter+='</div>';
 
-    p_ter+=_rptFooterInd(24,'Terrenos');
+    p_ter+=_rptFooterInd(25,'Terrenos');
     p_ter+='</div>';
 
     // ── PÁGINA 25: Justificación del Producto Recomendado ─────────────────
@@ -6137,6 +6136,16 @@ function generarReporte(){
         _b+='<div style="font-size:4.5pt;color:#6b7280">'+k[2]+'</div></div>';
       });
       _b+='</div>';
+      // ── Indicadores económicos Coahuila (franja compacta) ────────
+      _b+='<div style="background:#f1f5f9;border:1px solid #e2e8f0;border-left:3px solid #0369a1;border-radius:3px;padding:2px 5px;margin-bottom:2mm;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+      [['PIB Coahuila','−3.0%','var. anual 3T 2025 vs 3T 2024','#ef4444'],['Desocupación','3.15%','tasa laboral 4T 2025','#16a34a'],['IED nacional','3.12%','participación al 4T 2025','#0369a1'],['Salario diario','$751 MXN','promedio enero 2025','#d97706']].forEach(function(k){
+        _b+='<div style="text-align:center;padding:1px 2px">';
+        _b+='<div style="font-size:7pt;font-weight:700;color:'+k[3]+';font-family:IBM Plex Mono,monospace;line-height:1.2">'+k[1]+'</div>';
+        _b+='<div style="font-size:4.5pt;font-weight:600;color:#374151">'+k[0]+'</div>';
+        _b+='<div style="font-size:3.8pt;color:#6b7280">'+k[2]+'</div>';
+        _b+='</div>';
+      });
+      _b+='</div>';
       // ── Layout 2 columnas ────────────────────────────────────────
       _b+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm">';
       // Col izquierda: chart + transacciones (compacto)
@@ -6157,7 +6166,7 @@ function generarReporte(){
       _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px">Transacciones recientes</div>';
       _b+='<table style="width:100%;border-collapse:collapse;font-size:4.5pt">';
       _b+='<thead><tr style="background:#0f172a;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact"><th style="padding:2px 3px;text-align:left">Trim.</th><th style="padding:2px 3px;text-align:left">Empresa</th><th style="padding:2px 3px;text-align:left">Sector</th><th style="padding:2px 3px;text-align:right">m²</th></tr></thead><tbody>';
-      [['4T25','Flowserve','Mfg industrial','14,000'],['3T25','Mercado Libre','Logística','7,500'],['3T25','Electrical Comp.','Arnesería','11,235'],['1T25','Clarios','Baterías auto','11,658'],['1T25','VGT','Manufactura','14,492'],['1T25','Buhler','Manufactura','13,608'],['1T25','APS AutoParts','Autopartes','10,400'],['1T25','Elopak','Empaque','4,609']].forEach(function(r,i){
+      [['4T25','Flowserve','Mfg industrial','14,000'],['3T25','Mercado Libre','Logística','7,500'],['3T25','Electrical Comp.','Arnesería','11,235'],['3T25','Essex Brownell','Eléctrico','6,692'],['1T25','Clarios','Baterías auto','11,658'],['1T25','Buhler','Manufactura','13,608'],['1T25','APS AutoParts','Autopartes','10,400'],['1T25','Elopak','Empaque','4,609']].forEach(function(r,i){
         _b+='<tr style="background:'+(i%2?'#f8fafc':'#fff')+';-webkit-print-color-adjust:exact;print-color-adjust:exact"><td style="padding:1.5px 3px">'+r[0]+'</td><td style="padding:1.5px 3px;font-weight:600">'+r[1]+'</td><td style="padding:1.5px 3px">'+r[2]+'</td><td style="padding:1.5px 3px;text-align:right;font-family:IBM Plex Mono,monospace">'+r[3]+'</td></tr>';
       });
       _b+='</tbody></table></div>';
@@ -6165,9 +6174,9 @@ function generarReporte(){
       _b+='<div>';
       _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px">Q&A · Validación con Broker Especializado</div>';
       var _bQA=[
-        ['1','Precios reales Clase A','Operaciones cierran $5.50–$7.53 USD/m²/mes · Promedio ZM: $6.46 · Time to lease: 6–9 meses','#0369a1','#eff6ff'],
+        ['1','Precios reales Clase A','Operaciones cierran $5.50–$7.53 USD/m²/mes · Promedio ZM: $6.46 · Time to lease: 6–9 meses · En construcción: 66,009 m² · Nueva oferta acum: 86,834 m²','#0369a1','#eff6ff'],
         ['2','Perfil demanda activa','Manufactura automotriz (Clarios=baterías, Electrical=arneses) · Logística e-commerce (MercadoLibre) · Tamaños: 4,600–14,500 m²','#16a34a','#f0fdf4'],
-        ['3','Especificación B+ viable','Altura 36\'+ · Piso 6" · 500+ KVAs · KR18 · Precolado · LED + 3-5% luz · Sobre vialidad principal · Precio $6.00–$7.00','#d97706','#fff7ed'],
+        ['3','Especificación B+ viable','Altura 36\'+ · Piso 6" FPS · 500+ KVAs · KR18 · Precolado · LED+3-5% luz · 1 andén/15K SF · 1 rampa/30-50K SF · 3-4 cambios aire · Precio $6.00–$7.00','#d97706','#fff7ed'],
         ['4','Compradores Clase A / Cap rates','Broker enfocado en arrendamientos · Sin datos de cap rates para La Laguna · Referencia: Saltillo como benchmark Norte','#94a3b8','#f8fafc'],
         ['5','B+ con specs hacia A','Sí tiene mercado — perfil diferente: empresas locales vs. multinacionales · Multinacionales priorizan Clase A · Tendencia: desarrolladores construyen solo Clase A','#16a34a','#f0fdf4']
       ];
@@ -6182,7 +6191,7 @@ function generarReporte(){
       });
       _b+='</div>';
       _b+='</div>'; // end grid
-      _b+=_rptFooterInd(25,'Validación de Mercado · Brokers');
+      _b+=_rptFooterInd(8,'Validación de Mercado · Brokers');
       _b+='</div>';
       return _b;
     }());
@@ -6599,7 +6608,7 @@ function generarReporte(){
       });
       p_zona_ind+='</div></div>';
     }
-    p_zona_ind+=_rptFooterInd(16,'Zona Industrial');
+    p_zona_ind+=_rptFooterInd(17,'Zona Industrial');
     p_zona_ind+='</div>';
 
     // ── Pre-computar _zonaStats (necesario para conclusiones zona-específicas) ──
@@ -6666,7 +6675,8 @@ function generarReporte(){
     // ── FILA 1: 4 KPIs comparativos zona vs ZM ──────────────────────────
     p_ind_concl+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5mm;margin-bottom:2.5mm">';
     function _kpiVsZM(val,lbl,ref,mejor){
-      var diff=val&&ref?(val-ref)/ref*100:null;
+      var vn=parseFloat(String(val).replace(/[^0-9.\-]/g,'')),rn=parseFloat(String(ref).replace(/[^0-9.\-]/g,''));
+      var diff=(isFinite(vn)&&isFinite(rn)&&rn!==0)?((vn-rn)/rn*100):null;
       var col=diff===null?'#64748b':mejor==='alto'?(diff>5?'#16a34a':diff>-5?'#d97706':'#dc2626'):(diff<-5?'#16a34a':diff<5?'#d97706':'#dc2626');
       var arrow=diff===null?'':diff>5?'▲':diff<-5?'▼':'→';
       return '<div style="border:1px solid #e2e8f0;border-top:3px solid '+_zD.color+';border-radius:0 0 5px 5px;padding:2mm;background:#f8fafc;text-align:center">'
@@ -6950,7 +6960,7 @@ function generarReporte(){
       p_zonas_comp+='<div style="background:#f0fdf4;border:1.5px solid #16a34a;border-radius:4px;padding:1.5mm 2mm;font-size:5pt;color:#166534;line-height:1.5"><strong>📍 Tu zona analizada</strong> cae dentro de <strong>'+_zonaDetected.nom+'</strong> — '+_zonaDetected.nota+' Ver recomendación específica en Conclusión (página anterior).</div>';
     }
 
-    p_zonas_comp+=_rptFooterInd(17,'Comparativo de Zonas');
+    p_zonas_comp+=_rptFooterInd(18,'Comparativo de Zonas');
     p_zonas_comp+='</div>';
 
     // ══════════════════════════════════════════════════════════════
@@ -7301,8 +7311,8 @@ function generarReporte(){
     var _kpiNac=[
       ['~40M m²','inventario industrial nacional','mercados Tier 1+2 principales','#0f172a','#f8fafc'],
       ['6 mercados','activos de escala nacional','CDMX · MTY · Bajío · Saltillo · Juárez · Laguna','#0369a1','#eff6ff'],
-      ['Pág. 3 de 6','posición La Laguna en yield','supera a CDMX, MTY, Juárez, Saltillo','#16a34a','#f0fdf4'],
-      ['Tier 2','clasificación ZM La Laguna','mercados Tier 2 = yield premium real','#d97706','#fff7ed']
+      ['Pág. 3 de 6','posición La Laguna en rendimiento bruto','supera a CDMX, MTY, Juárez, Saltillo','#16a34a','#f0fdf4'],
+      ['Tier 2','clasificación ZM La Laguna','mercados Tier 2 = rendimiento premium real','#d97706','#fff7ed']
     ];
     _kpiNac.forEach(function(k){
       p_nacional+='<div style="background:'+k[4]+';border:1px solid #e2e8f0;border-radius:4px;padding:2.5mm 3mm">';
@@ -7347,12 +7357,12 @@ function generarReporte(){
     // ── Posicionamiento estratégico ─────────────────────────────────
     p_nacional+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm">';
     p_nacional+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:5px;padding:2.5mm 3mm">';
-    p_nacional+='<div style="font-size:6pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2mm;border-bottom:2px solid #0369a1;padding-bottom:1mm">Yield vs precio: La Laguna en el sweet spot</div>';
+    p_nacional+='<div style="font-size:6pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:2mm;border-bottom:2px solid #0369a1;padding-bottom:1mm">Rendimiento vs precio: La Laguna en el sweet spot</div>';
     var _posRows=[
-      ['CDMX / Juárez','Precio alto $8.00-8.50','Yield 5-6%','Bajo','#dc2626'],
-      ['Monterrey','Precio medio-alto $7.80','Yield 6-7%','Medio','#d97706'],
-      ['Bajío / Saltillo','Precio medio $6.20-6.50','Yield 7-8%','Medio-alto','#0369a1'],
-      ['La Laguna ★','Precio accesible $6.71','Yield ~8-10%','ALTO','#16a34a']
+      ['CDMX / Juárez','Precio alto $8.00-8.50','Rendimiento 5-6%','Bajo','#dc2626'],
+      ['Monterrey','Precio medio-alto $7.80','Rendimiento 6-7%','Medio','#d97706'],
+      ['Bajío / Saltillo','Precio medio $6.20-6.50','Rendimiento 7-8%','Medio-alto','#0369a1'],
+      ['La Laguna ★','Precio accesible $6.71','Rendimiento ~8-10%','ALTO','#16a34a']
     ];
     _posRows.forEach(function(p){
       p_nacional+='<div style="display:grid;grid-template-columns:30mm 1fr 20mm;align-items:center;gap:1mm;padding:1.5mm 0;border-bottom:1px solid #f1f5f9;font-size:5.5pt">';
@@ -7365,7 +7375,7 @@ function generarReporte(){
     p_nacional+='<div style="background:#f0fdf4;border:1.5px solid #16a34a;border-radius:5px;padding:2.5mm 3mm">';
     p_nacional+='<div style="font-size:6pt;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">Por qué La Laguna supera la comparativa</div>';
     [
-      '<strong>Yield premium real:</strong> 200–400 pbs sobre CDMX/MTY — compensación por tier secundario, no por riesgo.',
+      '<strong>Rendimiento premium real:</strong> 200–400 pbs sobre CDMX/MTY — compensación por tier secundario, no por riesgo.',
       '<strong>Precio de entrada más bajo:</strong> $6.71 USD vs $8.50 CDMX y $7.80 MTY — menor CAPEX, mayor retorno relativo.',
       '<strong>Sin saturación:</strong> Mercados maduros en o cerca de techo (CDMX 2.1%, Saltillo 3.8% subiendo). La Laguna tiene margen.',
       '<strong>Catalista nearshoring Tier 2:</strong> La reconfiguración de cadenas China+1 está llegando a mercados secundarios en 2025-2026.'
@@ -7375,7 +7385,7 @@ function generarReporte(){
     p_nacional+='</div>';
     p_nacional+='</div>';
 
-    p_nacional+=_rptFooterInd(8,'Contexto Nacional');
+    p_nacional+=_rptFooterInd(9,'Contexto Nacional');
     p_nacional+='</div>';
 
     // ────────── PÁGINA CONTEXTO: Mercado industrial México ────────
@@ -7399,9 +7409,9 @@ function generarReporte(){
     p_contexto+='</tr></thead><tbody>';
     var _ctxRows=[
       ['Vacancia','6.9% (↑)','3.8% (↑)','6.2% (nueva oferta)','La Laguna: sube por supply, no demand'],
-      ['Renta USD/m²/mes','~$5.75','~$6.50','$6.71 +17% YoY','La Laguna: único mercado con renta al alza'],
+      ['Renta USD/m²/mes','~$5.75','~$6.50','$6.71 +17% var. anual','La Laguna: único mercado con renta al alza'],
       ['Absorción bruta','Bajo promedio','22,000 m² (1T)','73,200 m² 2025','La Laguna supera todo el año 2024'],
-      ['Construcción','-20% YoY','58,000 m² (cayó)','58,100 m² (↓↓ vs 122,400)','Todos en ajuste']
+      ['Construcción','-20% var. anual','58,000 m² (cayó)','58,100 m² (↓↓ vs 122,400)','Todos en ajuste']
     ];
     _ctxRows.forEach(function(r,i){
       var bg=i%2===0?'#fff':'#f8fafc';
@@ -7449,7 +7459,7 @@ function generarReporte(){
     p_contexto+='</div>';
     p_contexto+='</div>';
 
-    p_contexto+='<div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:0 4px 4px 0;padding:2mm 2.5mm;font-size:5.5pt;color:#78350f;line-height:1.5;margin-bottom:2mm"><strong>📌 Por qué La Laguna gana frente a sus competidores:</strong> Mientras el norte general se enfría (construcción −20% YoY) y Saltillo ve riesgo de saturación (vacancia 3.8% subiendo), La Laguna opera con absorción creciente (+34.6%), precio +17% YoY, y un pipeline de $785 M USD comprometidos en inversión nueva. El spread de yield de 300-400 pbs vs Saltillo es compensación real por tier secundario — no riesgo sin premio.</div>';
+    p_contexto+='<div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:0 4px 4px 0;padding:2mm 2.5mm;font-size:5.5pt;color:#78350f;line-height:1.5;margin-bottom:2mm"><strong>📌 Por qué La Laguna gana frente a sus competidores:</strong> Mientras el norte general se enfría (construcción −20% variación anual) y Saltillo ve riesgo de saturación (vacancia 3.8% subiendo), La Laguna opera con absorción creciente (+34.6%), precio +17% variación anual, y un pipeline de $785 M USD comprometidos en inversión nueva. El spread de rendimiento de 300-400 pbs vs Saltillo es compensación real por tier secundario — no riesgo sin premio.</div>';
     p_contexto+='<div style="font-size:5.5pt;color:#94a3b8;line-height:1.5;border-top:1px solid #e2e8f0;padding-top:1.5mm">Fuentes: Newmark México 2S25 · CBRE México Q4 2024 · Vanguardia · El Siglo de Torreón · Proyectos Torreón · PLAYERS of Life · Inmobiliare · Sec. Economía Coahuila</div>';
     p_contexto+='<div style="margin-top:2mm;background:#f0fdf4;border-left:3px solid #16a34a;padding:1.5mm 2.5mm;border-radius:0 4px 4px 0;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
     p_contexto+='<div style="font-size:5.5pt;font-weight:700;color:#166534;margin-bottom:1mm">✅ ¿Por qué La Laguna y no Saltillo?</div>';
@@ -7469,7 +7479,7 @@ function generarReporte(){
     p_contexto+='<div style="color:#16a34a;font-weight:600">✅ Precio competitivo compensa riesgo de mercado terciario</div>';
     p_contexto+='</div>';
     p_contexto+='</div></div>';
-    p_contexto+=_rptFooterInd(9,'Contexto de Mercado');
+    p_contexto+=_rptFooterInd(10,'Contexto de Mercado');
     p_contexto+='</div>';
 
     // ────────── PÁGINA PIPELINE: Inversión comprometida ZM La Laguna ──
@@ -7555,7 +7565,7 @@ function generarReporte(){
     p_pipeline+='<div style="margin-top:2mm;padding:1.5mm 2.5mm;background:#fef9c3;border-left:3px solid #d97706;border-radius:0 4px 4px 0;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
     p_pipeline+='<div style="font-size:4.5pt;color:#92400e;line-height:1.6"><span style="font-weight:700">⚠ Nota metodológica: </span>Los montos de inversión son estimaciones referenciales compiladas de comunicados corporativos, prensa sectorial 2024–2025 y reportes de Secretaría de Economía. No han sido validados con fuentes primarias de cada empresa. Usar como referencia de orden de magnitud — verificar con fuentes oficiales antes de citarlos en análisis financiero formal.</div>';
     p_pipeline+='</div>';
-    p_pipeline+=_rptFooterInd(10,'Pipeline de Inversión');
+    p_pipeline+=_rptFooterInd(11,'Pipeline de Inversión');
     p_pipeline+='</div>';
 
     // ────────── PÁGINA HALLAZGOS: 5 hallazgos que mueven la decisión ──
@@ -7576,11 +7586,11 @@ function generarReporte(){
         data:'74,703 empleos industriales ZM · Sector líder: fabricación equipo transporte (17,962 emp) · Manufactura 50,004 emp vs Logística 2,965 emp',
         imp:'El tenant objetivo ZM es manufactura ligera y proveeduría automotriz/textil. Define spec de nave: altura 8–10 m, piso 5–7 ton/m². No es un mercado de big-box logístico.'},
       {n:'2',title:'Absorción y precio en crecimiento — señal de mercado saludable',
-        data:'73,200 m² absorción 2025 (+34.6% vs 2024) · Precio salida $6.71 USD (+17% YoY) · Vacancia 6.2% por spec reciente',
+        data:'73,200 m² absorción 2025 (+34.6% vs 2024) · Precio salida $6.71 USD (+17% var. anual) · Vacancia 6.2% por spec reciente',
         imp:'La vacancia no refleja caída de demanda: refleja nueva oferta entrando. El precio sube y la absorción crece — no hay sobreoferta estructural en la ZM.'},
       {n:'3',title:'La Laguna gana vs mercados del norte',
-        data:'Norte General vacancia 6.9%, enfriándose (constr. −20% YoY) · Saltillo saturación 3.8% sube · La Laguna: absorción +34.6%, precio +17% YoY',
-        imp:'Mientras los mercados maduros se enfrían, La Laguna está en momento de entrada. La prima de yield (300–400 pbs vs Saltillo) compensa el tier secundario.'}
+        data:'Norte General vacancia 6.9%, enfriándose (constr. −20% var. anual) · Saltillo saturación 3.8% sube · La Laguna: absorción +34.6%, precio +17% var. anual',
+        imp:'Mientras los mercados maduros se enfrían, La Laguna está en momento de entrada. La prima de rendimiento bruto (300–400 pbs vs Saltillo) compensa el tier secundario.'}
     ];
     _hallazgosReg.forEach(function(h){
       p_hallazgos+='<div style="background:#fff;border-left:3px solid #475569;padding:2mm 2.5mm;margin-bottom:1.5mm;border-radius:0 4px 4px 0;border-top:1px solid #e2e8f0;border-right:1px solid #e2e8f0;border-bottom:1px solid #e2e8f0">';
@@ -7605,7 +7615,7 @@ function generarReporte(){
       {n:'4',title:'Pool laboral · '+_zDNom,
         data:'PEA zona: '+P1(pctPea)+' · Sectores del polígono: '+_zDSect+' · Detalle completo → Pág. 12',
         imp:'El perfil laboral del polígono es compatible con manufactura ligera y almacenaje. '+(pctPea>50?'PEA sobre media ZM — ventaja de reclutamiento frente a zonas interiores.':'Disponibilidad adecuada; análisis de escolaridad, edades y benchmarks en página 12.')},
-      {n:'5',title:'Mercado de yield · '+_zDNom+' · Oportunidad: '+(_zDS?_zDS.oport:'—'),
+      {n:'5',title:'Mercado de rendimiento · '+_zDNom+' · Oportunidad: '+(_zDS?_zDS.oport:'—'),
         data:'Inventario zona: '+_zmBodsZona+' bodegas · Renta: '+(_zRentaRange||'—')+' MXN/m²/mes · Cap rate estimado: '+_capDispZ+' · Pct emp 251+: '+(_zDS?_zDS.pct251:0)+'%',
         imp:'La zona paga rendimiento corriente superior a mercados institucionales. Estrategia: arrendar + estabilizar + desinvertir a comprador regional en horizonte 5–7 años. '+(_zDS&&_zDS.oport==='Alta'?'Inventario reducido — primer entrante define precio.':_zDS&&_zDS.oport==='Media-Alta'?'Competencia media — diferenciación por clase es clave.':'Alta oferta — diferenciación por spec superior es indispensable.')}
     ];
@@ -7663,18 +7673,17 @@ function generarReporte(){
           + p_hallazgos    // 5  motores regionales (ZM) + motores zona detectada
           + p_ind_concl    // 6  conclusión zona-específica (cap rate, clase, renta, benchmark)
           + p_ind_concl2   // 7  especificaciones, metodología score
+          + p_broker        // 8  validación mercado CBRE + Q&A brokers (fusionada)
           // ── SECCIÓN 2: SUSTENTO Y EVIDENCIA ────────────────────────────
           + _secEvidence
-          + p_nacional     // 8  mapa nacional: La Laguna vs 6 mercados
-          + p_contexto     // 9  contexto: Norte vs Saltillo vs La Laguna
-          + p_pipeline     // 10 pipeline de inversión comprometida ZM
-          + p_demanda + p4 + p3 + p_nse + p_ind1
+          + p_nacional     // 9  mapa nacional: La Laguna vs 6 mercados
+          + p_contexto     // 10 contexto: Norte vs Saltillo vs La Laguna
+          + p_pipeline     // 11 pipeline de inversión comprometida ZM
+          + p_demanda + p4 + p3 + p_nse + p_ind1  // 12-16
           // ── SECCIÓN 3: INVENTARIO ────────────────────────────────────────
           + _secInventario
-          + p_zona_ind + p_zonas_comp + pMapParques + pMapRenta + pMapVenta + p_bod1 + p_bod2 + p_bod3 + p_ter
+          + p_zona_ind + p_zonas_comp + pMapParques + pMapRenta + pMapVenta + p_bod1 + p_bod2 + p_bod3 + p_ter  // 17-25
           // ── CIERRE ───────────────────────────────────────────────────────
-          + _secBroker
-          + p_broker        // 25 validación mercado CBRE + Q&A brokers (fusionada)
           + p_justif        // 26 justificación de producto recomendado
           + p11;            // 27 soluciones COEZA
   }
