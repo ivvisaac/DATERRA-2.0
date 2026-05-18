@@ -6172,6 +6172,23 @@ function generarReporte(){
       _b+='<div style="font-size:4pt;color:#1e3a8a">Rango tickets: <strong>4,609–14,000 m²</strong></div>';
       _b+='<div style="font-size:4pt;color:#1e3a8a">Tasa absorción: <strong>~2 txns/trim.</strong></div>';
       _b+='</div></div>';
+      // Tabla parques con vacancia activa
+      _b+='<div style="font-size:5pt;font-weight:700;color:#0f172a;margin-bottom:2px;margin-top:2mm;text-transform:uppercase;letter-spacing:.4px">Parques con vacancia activa (1T 2026)</div>';
+      _b+='<table style="width:100%;border-collapse:collapse;font-size:4pt;margin-bottom:2mm">';
+      _b+='<thead><tr style="background:#0f172a;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact"><th style="padding:2px 3px;text-align:left">Parque</th><th style="padding:2px 3px;text-align:right">m² disp.</th><th style="padding:2px 3px;text-align:right">USD/m²/mes</th></tr></thead><tbody>';
+      [['La Encantada (2 espacios)','13,200','$7.00–7.53','#fff'],
+       ['Amistad Laguna / SPECNazas','19,611','$7.00','#f8fafc'],
+       ['SantaFe Building1','22,799','$7.00','#fff'],
+       ['La Perla Pocket Park','11,598','$6.30','#f8fafc'],
+       ['Vynmsa Torreón','6,034','$6.78','#fff'],
+       ['Ferropuerto / Mieleras','9,592','$5.86','#f8fafc'],
+       ['Torreon2000','11,478','$5.38','#fff'],
+       ['PI Las Américas','6,831','$5.06','#f8fafc']
+      ].forEach(function(r){
+        _b+='<tr style="background:'+r[3]+';-webkit-print-color-adjust:exact;print-color-adjust:exact"><td style="padding:1.5px 3px">'+r[0]+'</td><td style="padding:1.5px 3px;text-align:right;font-family:IBM Plex Mono,monospace">'+r[1]+'</td><td style="padding:1.5px 3px;text-align:right;font-family:IBM Plex Mono,monospace">'+r[2]+'</td></tr>';
+      });
+      _b+='<tr style="background:#0f172a;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact"><td style="padding:1.5px 3px;font-weight:700">TOTAL</td><td style="padding:1.5px 3px;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700">~101,143 m²</td><td style="padding:1.5px 3px;text-align:right;font-family:IBM Plex Mono,monospace;font-weight:700">$6.46 prom.</td></tr>';
+      _b+='</tbody></table>';
       // Tabla transacciones
       _b+='<div style="font-size:5pt;font-weight:700;color:#0f172a;margin-bottom:2px;text-transform:uppercase;letter-spacing:.4px">Transacciones recientes 2025</div>';
       _b+='<table style="width:100%;border-collapse:collapse;font-size:4pt">';
@@ -6738,11 +6755,23 @@ function generarReporte(){
         +(diff!==null?'<div style="font-size:4pt;color:'+col+';font-weight:700">'+arrow+' '+(diff>0?'+':'')+diff.toFixed(0)+'% vs ZM</div>':'<div style="font-size:4pt;color:#94a3b8">vs ZM: '+ref+'</div>')
         +'</div>';
     }
-    p_ind_concl+=_kpiVsZM(_zDS.nBods+' bods.','Inventario en zona',Math.round(_zmTotBods/_zonaKeys.length)+' med.ZM','bajo');
+    p_ind_concl+=_kpiVsZM(_zDS.nBods>0?_zDS.nBods+' bods.':'Sin catálogo','Inventario en zona',Math.round(_zmTotBods/_zonaKeys.length)+' med.ZM','bajo');
     p_ind_concl+=_kpiVsZM(_zDS.medRenta?'$'+Math.round(_zDS.medRenta):'$'+(_medRenta2?Math.round(_medRenta2):65),'Renta med. zona MXN/m²','$'+Math.round(_zmMedRenta)+' ZM','alto');
     p_ind_concl+=_kpiVsZM(_capDispZ,'Cap Rate zona','~7.5% ZM','alto');
     p_ind_concl+=_kpiVsZM(_zDS.pct251+'%','Empresas 251+ / total',''+_zmMedPct251+'% ZM','alto');
     p_ind_concl+='</div>';
+
+    if(_zDS.nBods===0){
+      p_ind_concl+='<div style="background:#fff7ed;border:1.5px solid #fed7aa;border-left:4px solid #d97706;border-radius:0 4px 4px 0;padding:2.5mm 3mm;margin-bottom:2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+      p_ind_concl+='<div style="font-size:5.5pt;font-weight:700;color:#b45309;margin-bottom:1mm">⚠️ Sin bodegas en catálogo COEZA para esta zona — contexto por fuentes externas</div>';
+      p_ind_concl+='<div style="font-size:4.5pt;color:#78350f;line-height:1.5;margin-bottom:1.5mm">El inventario COEZA no registra bodegas disponibles en el perímetro de esta zona. Esto puede indicar: (a) baja rotación — los espacios existentes están ocupados, (b) zona históricamente ocupada por propietario-usuario, o (c) fuera del radio de prospección actual. El contexto sectorial y de empresas activas sí confirma actividad industrial real.</div>';
+      p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm">';
+      p_ind_concl+='<div><div style="font-size:4.5pt;font-weight:700;color:#b45309;margin-bottom:.5mm">Actividad industrial confirmada</div>';
+      p_ind_concl+='<div style="font-size:4.5pt;color:#78350f;line-height:1.5">'+(_zD.empresas||'—')+' empresas activas · '+(_zD.top_sector||'—')+(_zD.top_sector2?' / '+_zD.top_sector2:'')+' · '+(_zD.s251||0)+' con 251+ personas</div></div>';
+      p_ind_concl+='<div><div style="font-size:4.5pt;font-weight:700;color:#b45309;margin-bottom:.5mm">Tenants ancla conocidos</div>';
+      p_ind_concl+='<div style="font-size:4.5pt;color:#78350f;line-height:1.5">'+(_tenantAncla[_zDK]||_zD.top_sector||'Ver mapa industrial')+'</div></div>';
+      p_ind_concl+='</div></div>';
+    }
 
     // ── FILA 2: Perfil de zona + benchmark vs otras zonas ──────────────
     p_ind_concl+='<div style="display:grid;grid-template-columns:1.15fr 1fr;gap:2mm;margin-bottom:2mm">';
@@ -6753,7 +6782,13 @@ function generarReporte(){
     p_ind_concl+='<div style="display:grid;grid-template-columns:auto 1fr;gap:.5mm 2mm;font-size:5pt;margin-bottom:1.5mm">';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Parques</div><div style="color:#0f172a;line-height:1.4">'+_zD.parques.join(' · ')+'</div>';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Clase naves</div><div style="color:#0f172a;font-weight:700;font-family:IBM Plex Mono,monospace">'+_zClase+' · Renta '+_zRentaRange+' MXN/m²</div>';
-    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Empresas</div><div style="color:#0f172a">'+_zD.empresas+' totales · '+(_zD.s251||0)+' con 251+ pers. ('+_zDS.pct251+'%) · '+_zD.top_sector+'</div>';
+    var _s251txt=(_zD.s251||0)>0?
+      _zD.empresas+' totales · '+(_zD.s251)+' con 251+ pers. ('+_zDS.pct251+'%) · '+_zD.top_sector:
+      _zD.empresas+' empresas activas · Predomina PYME (50–250 pers.) · '+_zD.top_sector+(_zD.top_sector2?' / '+_zD.top_sector2:'')+' · Demanda: naves 1,000–5,000 m²';
+    var _s251why=(_zD.s251||0)>0?
+      'Las empresas 251+ son el principal driver de demanda de naves >5,000 m² en La Laguna. Mayor concentración ZM: Ferropuerto (65%).':
+      'Sin empresas 251+ el tenant más probable es PYME regional. Naves más pequeñas (800–3,000 m²) con mayor rotación y contratos más cortos.';
+    p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Empresas</div><div style="color:#0f172a;line-height:1.5">'+_s251txt+'<div style="font-size:4pt;color:#64748b;margin-top:.5mm;font-style:italic">'+_s251why+'</div></div>';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Tenants ancla</div><div style="color:#1e293b;line-height:1.4">'+_tenantStr+'</div>';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Terreno</div><div style="color:#0f172a">'+(_zDS.medTer?'Mediana $'+Math.round(_zDS.medTer).toLocaleString('es-MX')+' MXN/m²':'n/d')+' · '+(_zD.mun||munPrincipal)+'</div>';
     p_ind_concl+='<div style="color:#64748b;font-weight:700;font-size:4.2pt;text-transform:uppercase">Mercado</div><div style="color:'+(_oColors[_zDS.oport]||'#475569')+';font-weight:700">'+(_zDS.oport||'—')+' — '+(_zDS.nBods<5?'Primer entrante posible':_zDS.nBods<12?'Diferenciación por clase':_zDS.nBods<20?'Competencia media':'Alta oferta, especializar')+'</div>';
@@ -7047,6 +7082,31 @@ function generarReporte(){
       for(var _gi=0;_gi<=100;_gi+=10){_svgContent+='<line x1="'+_gi+'" y1="0" x2="'+_gi+'" y2="65" stroke="#dde4ed" stroke-width=".15" opacity=".8"/>';}
       for(var _gj=0;_gj<=65;_gj+=10){_svgContent+='<line x1="0" y1="'+_gj+'" x2="100" y2="'+_gj+'" stroke="#dde4ed" stroke-width=".15" opacity=".8"/>';}
       _svgContent+='<rect x="0" y="0" width="100" height="65" fill="none" stroke="#cbd5e1" stroke-width=".3"/>';
+      // 2B-CONTEXT — Tejido urbano y vialidades de contexto geográfico
+      // Mancha urbana Torreón — lat 25.49–25.58, lon -103.45 a -103.35
+      var _tcTL=_ll2xy(25.58,-103.45), _tcBR=_ll2xy(25.49,-103.35);
+      _svgContent+='<rect x="'+_tcTL.x.toFixed(2)+'" y="'+_tcTL.y.toFixed(2)+'" width="'+((_tcBR.x-_tcTL.x)).toFixed(2)+'" height="'+((_tcBR.y-_tcTL.y)).toFixed(2)+'" fill="#e8ead2" opacity=".5" rx=".5"/>';
+      // Mancha urbana Gómez Palacio — lat 25.54–25.60, lon -103.52 a -103.44
+      var _gpTL=_ll2xy(25.60,-103.52), _gpBR=_ll2xy(25.54,-103.44);
+      _svgContent+='<rect x="'+_gpTL.x.toFixed(2)+'" y="'+_gpTL.y.toFixed(2)+'" width="'+((_gpBR.x-_gpTL.x)).toFixed(2)+'" height="'+((_gpBR.y-_gpTL.y)).toFixed(2)+'" fill="#e8ead2" opacity=".4" rx=".5"/>';
+      // Blvd. Independencia / Calzada Colón — arteria E-O principal ~lat 25.548
+      var _r1a=_ll2xy(25.548,-103.50), _r1b=_ll2xy(25.548,-103.32);
+      _svgContent+='<line x1="'+_r1a.x.toFixed(2)+'" y1="'+_r1a.y.toFixed(2)+'" x2="'+_r1b.x.toFixed(2)+'" y2="'+_r1b.y.toFixed(2)+'" stroke="#c8a96e" stroke-width=".5" opacity=".7"/>';
+      _svgContent+='<text x="2" y="'+(_r1a.y-0.6).toFixed(2)+'" font-size="1.5" fill="#92754a" opacity=".8" font-family="IBM Plex Mono,monospace">Blvd. Independencia</text>';
+      // Blvd. Revolución — arteria E-O Gómez Palacio ~lat 25.565
+      var _r2a=_ll2xy(25.565,-103.52), _r2b=_ll2xy(25.565,-103.42);
+      _svgContent+='<line x1="'+_r2a.x.toFixed(2)+'" y1="'+_r2a.y.toFixed(2)+'" x2="'+_r2b.x.toFixed(2)+'" y2="'+_r2b.y.toFixed(2)+'" stroke="#c8a96e" stroke-width=".4" opacity=".6"/>';
+      // Periférico / Hwy 40D — lat 25.60, lon -103.48 a -103.33
+      var _r3a=_ll2xy(25.600,-103.48), _r3b=_ll2xy(25.600,-103.33);
+      _svgContent+='<line x1="'+_r3a.x.toFixed(2)+'" y1="'+_r3a.y.toFixed(2)+'" x2="'+_r3b.x.toFixed(2)+'" y2="'+_r3b.y.toFixed(2)+'" stroke="#a0aec0" stroke-width=".6" opacity=".7" stroke-dasharray="1,0"/>';
+      _svgContent+='<text x="'+((_r3a.x+_r3b.x)/2).toFixed(2)+'" y="'+(_r3a.y-0.8).toFixed(2)+'" text-anchor="middle" font-size="1.5" fill="#718096" opacity=".8" font-family="IBM Plex Mono,monospace">Hwy 40D</text>';
+      // Ferrocarril CPKC — diagonal a través de Ferropuerto
+      var _rka=_ll2xy(25.490,-103.50), _rkb=_ll2xy(25.480,-103.32);
+      _svgContent+='<line x1="'+_rka.x.toFixed(2)+'" y1="'+_rka.y.toFixed(2)+'" x2="'+_rkb.x.toFixed(2)+'" y2="'+_rkb.y.toFixed(2)+'" stroke="#475569" stroke-width=".5" stroke-dasharray="2,.8" opacity=".6"/>';
+      _svgContent+='<text x="'+((_rka.x+_rkb.x)/2+1).toFixed(2)+'" y="'+((_rka.y+_rkb.y)/2-0.8).toFixed(2)+'" font-size="1.5" fill="#475569" opacity=".7" font-family="IBM Plex Mono,monospace">CPKC</text>';
+      // Conector N-S Torreón-GP ~lon -103.45
+      var _r4a=_ll2xy(25.64,-103.450), _r4b=_ll2xy(25.44,-103.450);
+      _svgContent+='<line x1="'+_r4a.x.toFixed(2)+'" y1="'+_r4a.y.toFixed(2)+'" x2="'+_r4b.x.toFixed(2)+'" y2="'+_r4b.y.toFixed(2)+'" stroke="#c8a96e" stroke-width=".4" opacity=".5"/>';
       // 2B — Rectángulos de zonas (con validación try/catch)
       _zDef.forEach(function(z){
         try{
@@ -7096,6 +7156,16 @@ function generarReporte(){
         _svgContent+='<circle cx="'+p.x.toFixed(2)+'" cy="'+p.y.toFixed(2)+'" r="1.2" fill="'+_ez.clr+'" stroke="#fff" stroke-width=".4" opacity=".9"/>';
         _svgContent+='<text x="'+(p.x+1.6).toFixed(2)+'" y="'+p.y.toFixed(2)+'" dominant-baseline="middle" font-size="2" fill="#0f172a" font-weight="600">'+e.lbl+'</text>';
       });
+      // Leyenda de vialidades y ferrocarril
+      _svgContent+='<g font-family="IBM Plex Mono,monospace">';
+      _svgContent+='<rect x="1" y="57.5" width="54" height="6.5" fill="#fff" opacity=".82" rx=".8"/>';
+      _svgContent+='<line x1="2.5" y1="60.3" x2="8" y2="60.3" stroke="#c8a96e" stroke-width=".5" opacity=".8"/>';
+      _svgContent+='<text x="9" y="60.8" font-size="1.6" fill="#92754a">Calles principales</text>';
+      _svgContent+='<line x1="27" y1="60.3" x2="32.5" y2="60.3" stroke="#475569" stroke-width=".5" stroke-dasharray="2,.8" opacity=".8"/>';
+      _svgContent+='<text x="33.5" y="60.8" font-size="1.6" fill="#475569">CPKC Ferrocarril</text>';
+      _svgContent+='<rect x="2.5" y="62.8" width="5" height="1.8" fill="#e8ead2" opacity=".8" rx=".3"/>';
+      _svgContent+='<text x="9" y="64.1" font-size="1.6" fill="#6b7280">Ciudad</text>';
+      _svgContent+='</g>';
       var _svgMap='<svg viewBox="0 0 100 65" preserveAspectRatio="xMidYMid meet" style="width:100%;height:auto;border:1px solid #e2e8f0;border-radius:4px;display:block">'+
         _svgContent+
         '</svg>';
