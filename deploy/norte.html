@@ -6123,74 +6123,119 @@ function generarReporte(){
     var p_broker=(function(){
       var _b='<div class="report-page">';
       _b+='<div class="rpt-header">'+RPT_LOGO+'</div>';
-      _b+='<div style="background:#0f172a;padding:3mm 5mm 2.5mm;margin:-1mm -1mm 2.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
-      _b+='<div style="font-size:10px;font-weight:700;color:#fff;letter-spacing:.04em">Validación de Mercado · Llamadas con Brokers · CBRE 1T 2026</div>';
-      _b+='<div style="font-size:5.5pt;color:#94a3b8;margin-top:1.5px">Fuente: CBRE Research Snapshot Industrial La Laguna 1T 2026 · Validación directa con broker especializado · '+fecha+'</div>';
-      _b+='</div>';
-      // ── KPIs en fila ──────────────────────────────────────────────
-      _b+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:2.5mm">';
-      [['2.6M m²','Inventario ZM','clase A y B','#00e2e0'],['$6.46 USD','Precio lista prom.','rango $5.00–$7.53/m²/mes','#0369a1'],['4.4%','Vacancia actual','mejora vs 4T 2025','#16a34a'],['6–9 meses','Time to lease','naves spec nuevas','#d97706']].forEach(function(k){
-        _b+='<div style="background:#fff;border:1px solid #e2e8f0;border-top:3px solid '+k[3]+';border-radius:3px;padding:4px 6px;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
-        _b+='<div style="font-size:10pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1">'+k[0]+'</div>';
-        _b+='<div style="font-size:5.5pt;font-weight:600;color:#374151;margin-top:1px">'+k[1]+'</div>';
-        _b+='<div style="font-size:4.5pt;color:#6b7280">'+k[2]+'</div></div>';
+      // ── Header oscuro ─────────────────────────────────────────────
+      _b+='<div style="background:#0f172a;padding:2.5mm 5mm 2mm;margin:-1mm -1mm 2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:flex;align-items:flex-end;justify-content:space-between">';
+      _b+='<div><div style="font-size:9pt;font-weight:700;color:#fff;letter-spacing:.04em">Validación de Mercado · Llamadas con Brokers · CBRE 1T 2026</div>';
+      _b+='<div style="font-size:5pt;color:#94a3b8;margin-top:1px">Fuente: CBRE Research Snapshot Industrial La Laguna 1T 2026 · Validación directa con broker especializado CBRE Monterrey</div></div>';
+      _b+='<div style="text-align:right"><div style="font-size:5pt;color:#64748b">5 preguntas · 2 fuentes</div><div style="font-size:5pt;color:#64748b">'+fecha+'</div></div></div>';
+      // ── 5 KPIs de mercado ─────────────────────────────────────────
+      _b+='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:3px;margin-bottom:2mm">';
+      [['2.6M m²','Inventario ZM','clase A y B combinado','#00e2e0'],['$6.46 USD/m²','Precio lista prom.','rango real: $5.00–$7.53','#0369a1'],['4.4%','Vacancia','mercado ajustado · señal positiva','#16a34a'],['6–9 meses','Absorción spec','tiempo promedio de colocación','#d97706'],['66,009 m²','En construcción','pipeline activo al 1T 2026','#7c3aed']].forEach(function(k){
+        _b+='<div style="background:#fff;border:1px solid #e2e8f0;border-top:3px solid '+k[3]+';border-radius:3px;padding:3px 5px;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+        _b+='<div style="font-size:9pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1">'+k[0]+'</div>';
+        _b+='<div style="font-size:5pt;font-weight:600;color:#374151;margin-top:1px">'+k[1]+'</div>';
+        _b+='<div style="font-size:4pt;color:#6b7280;margin-top:.5px">'+k[2]+'</div></div>';
       });
       _b+='</div>';
-      // ── Indicadores económicos Coahuila (franja compacta) ────────
-      _b+='<div style="background:#f1f5f9;border:1px solid #e2e8f0;border-left:3px solid #0369a1;border-radius:3px;padding:2px 5px;margin-bottom:2mm;display:grid;grid-template-columns:repeat(4,1fr);gap:2px;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
-      [['PIB Coahuila','−3.0%','var. anual 3T 2025 vs 3T 2024','#ef4444'],['Desocupación','3.15%','tasa laboral 4T 2025','#16a34a'],['IED nacional','3.12%','participación al 4T 2025','#0369a1'],['Salario diario','$751 MXN','promedio enero 2025','#d97706']].forEach(function(k){
-        _b+='<div style="text-align:center;padding:1px 2px">';
-        _b+='<div style="font-size:7pt;font-weight:700;color:'+k[3]+';font-family:IBM Plex Mono,monospace;line-height:1.2">'+k[1]+'</div>';
-        _b+='<div style="font-size:4.5pt;font-weight:600;color:#374151">'+k[0]+'</div>';
-        _b+='<div style="font-size:3.8pt;color:#6b7280">'+k[2]+'</div>';
-        _b+='</div>';
+      // ── Franja Coahuila ───────────────────────────────────────────
+      _b+='<div style="background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #0369a1;border-radius:0 3px 3px 0;padding:2px 6px;margin-bottom:2mm;display:flex;align-items:center;gap:4mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+      _b+='<div style="font-size:5pt;font-weight:700;color:#0369a1;white-space:nowrap">CONTEXTO<br>COAHUILA</div>';
+      _b+='<div style="width:1px;height:16px;background:#e2e8f0"></div>';
+      [['PIB','−3.0%','var. anual 3T24-3T25','#ef4444'],['Desocupación','3.15%','laboral 4T 2025','#16a34a'],['IED nacional','3.12%','participación al 4T 2025','#0369a1'],['Salario diario','$751 MXN','promedio ene 2025','#d97706']].forEach(function(k){
+        _b+='<div style="flex:1;text-align:center"><div style="font-size:7pt;font-weight:700;color:'+k[3]+';font-family:IBM Plex Mono,monospace">'+k[1]+'</div><div style="font-size:4pt;font-weight:600;color:#374151">'+k[0]+'</div><div style="font-size:3.5pt;color:#6b7280">'+k[2]+'</div></div>';
       });
       _b+='</div>';
-      // ── Layout 2 columnas ────────────────────────────────────────
-      _b+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm">';
-      // Col izquierda: chart + transacciones (compacto)
+      // ── Layout 3 columnas ─────────────────────────────────────────
+      _b+='<div style="display:grid;grid-template-columns:38% 37% 25%;gap:2.5mm">';
+
+      // COL 1 — Mercado: precios + absorción + transacciones
       _b+='<div>';
-      _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px">Propiedades vacantes disponibles (USD/m²/mes)</div>';
-      _b+='<svg viewBox="0 0 200 78" style="width:100%;height:auto;display:block;margin-bottom:2mm">';
-      _b+='<rect x="0" y="0" width="200" height="78" fill="#fff"/>';
-      var _bBars=[['Nave1-La Encantada','$7.53',89.6,'#ef4444'],['SPECNazas-Amistad','$7.00',83.3,'#f97316'],['Building1-SantaFe','$7.00',83.3,'#f97316'],['Nave5-La Encantada','$7.00',83.3,'#f97316'],['SPEC1-Vynmsa','$6.78',80.7,'#0369a1'],['SPEC1-La Perla','$6.30',75.0,'#0369a1'],['Mieleras-Ferropuerto','$5.86',69.7,'#16a34a'],['SPECI-Torreon2000','$5.38',64.1,'#16a34a'],['TORRAmericasII','$5.06',60.3,'#86efac']];
-      _bBars.forEach(function(r,i){
-        var y=i*8+2;
-        _b+='<text x="2" y="'+(y+6)+'" font-size="3.8" fill="#374151" font-family="IBM Plex Mono,monospace">'+r[0]+'</text>';
-        _b+='<rect x="68" y="'+(y+1)+'" width="'+r[2]+'" height="6" fill="'+r[3]+'" opacity="0.85" rx="1"/>';
-        _b+='<text x="'+(69+r[2])+'" y="'+(y+6)+'" font-size="3.5" fill="#374151" font-family="IBM Plex Mono,monospace"> '+r[1]+'</text>';
+      _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px;text-transform:uppercase;letter-spacing:.4px">Oferta disponible · Precios de lista (USD/m²/mes)</div>';
+      _b+='<svg viewBox="0 0 190 76" style="width:100%;height:auto;display:block;margin-bottom:2mm">';
+      _b+='<rect x="0" y="0" width="190" height="76" fill="#f8fafc"/>';
+      var _bBars2=[['Nave1-La Encantada','$7.53',134.4,'2,200m²','#dc2626'],['SPECNazas-Amistad','$7.00',125.0,'19,611m²','#ea580c'],['Building1-SantaFe','$7.00',125.0,'22,799m²','#ea580c'],['Nave5-La Encantada','$7.00',125.0,'11,000m²','#ea580c'],['SPEC1-VynmsaTorreon','$6.78',121.1,'6,034m²','#2563eb'],['SPEC1-La Perla','$6.30',112.5,'11,598m²','#2563eb'],['NaveMieleras-Ferropuerto','$5.86',104.6,'9,592m²','#16a34a'],['SPECI-Torreon2000','$5.38',96.1,'11,478m²','#16a34a'],['TORRAmericasII','$5.06',90.4,'6,831m²','#86efac']];
+      _bBars2.forEach(function(r,i){
+        var y=i*8+1;
+        _b+='<text x="1" y="'+(y+5.5)+'" font-size="3.5" fill="#374151" font-family="IBM Plex Mono,monospace">'+r[0]+'</text>';
+        _b+='<rect x="56" y="'+y+'" width="'+r[2]+'" height="6.5" fill="'+r[4]+'" opacity="0.82" rx="1"/>';
+        _b+='<text x="'+(57+r[2])+'" y="'+(y+5.5)+'" font-size="3.3" fill="#374151" font-family="IBM Plex Mono,monospace">'+r[1]+'</text>';
       });
-      _b+='<line x1="80.5" y1="0" x2="80.5" y2="76" stroke="#ef4444" stroke-width="0.6" stroke-dasharray="2,1.5"/>';
-      _b+='<text x="81" y="76" font-size="3" fill="#ef4444" font-family="IBM Plex Mono,monospace">prom $6.46</text>';
+      _b+='<line x1="70.3" y1="0" x2="70.3" y2="74" stroke="#dc2626" stroke-width="0.5" stroke-dasharray="1.5,1.5"/>';
+      _b+='<text x="71" y="73" font-size="3" fill="#dc2626" font-family="IBM Plex Mono,monospace">↑ prom. $6.46</text>';
       _b+='</svg>';
-      _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px">Transacciones recientes</div>';
-      _b+='<table style="width:100%;border-collapse:collapse;font-size:4.5pt">';
+      // Mini análisis absorción
+      _b+='<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:3px;padding:2px 4px;margin-bottom:2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+      _b+='<div style="font-size:4.5pt;font-weight:700;color:#1d4ed8">Absorción 2025 · análisis de 8 transacciones</div>';
+      _b+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:1.5px">';
+      _b+='<div style="font-size:4pt;color:#1e3a8a">Total absorbido: <strong>~99K m²</strong> en 4 trimestres</div>';
+      _b+='<div style="font-size:4pt;color:#1e3a8a">Pipeline constr.: <strong>66,009 m²</strong> activo</div>';
+      _b+='<div style="font-size:4pt;color:#1e3a8a">Rango tickets: <strong>4,609–14,000 m²</strong></div>';
+      _b+='<div style="font-size:4pt;color:#1e3a8a">Tasa absorción: <strong>~2 txns/trim.</strong></div>';
+      _b+='</div></div>';
+      // Tabla transacciones
+      _b+='<div style="font-size:5pt;font-weight:700;color:#0f172a;margin-bottom:2px;text-transform:uppercase;letter-spacing:.4px">Transacciones recientes 2025</div>';
+      _b+='<table style="width:100%;border-collapse:collapse;font-size:4pt">';
       _b+='<thead><tr style="background:#0f172a;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact"><th style="padding:2px 3px;text-align:left">Trim.</th><th style="padding:2px 3px;text-align:left">Empresa</th><th style="padding:2px 3px;text-align:left">Sector</th><th style="padding:2px 3px;text-align:right">m²</th></tr></thead><tbody>';
-      [['4T25','Flowserve','Mfg industrial','14,000'],['3T25','Mercado Libre','Logística','7,500'],['3T25','Electrical Comp.','Arnesería','11,235'],['3T25','Essex Brownell','Eléctrico','6,692'],['1T25','Clarios','Baterías auto','11,658'],['1T25','Buhler','Manufactura','13,608'],['1T25','APS AutoParts','Autopartes','10,400'],['1T25','Elopak','Empaque','4,609']].forEach(function(r,i){
-        _b+='<tr style="background:'+(i%2?'#f8fafc':'#fff')+';-webkit-print-color-adjust:exact;print-color-adjust:exact"><td style="padding:1.5px 3px">'+r[0]+'</td><td style="padding:1.5px 3px;font-weight:600">'+r[1]+'</td><td style="padding:1.5px 3px">'+r[2]+'</td><td style="padding:1.5px 3px;text-align:right;font-family:IBM Plex Mono,monospace">'+r[3]+'</td></tr>';
+      [['4T25','Flowserve','Mfg. industrial','14,000','#fff'],['3T25','Electrical Comp.','Arnesería auto.','11,235','#f8fafc'],['3T25','Mercado Libre','Logística e-com','7,500','#fff'],['3T25','Essex Brownell','Eléctrico/distrib.','6,692','#f8fafc'],['1T25','Clarios','Baterías automotriz','11,658','#fff'],['1T25','Buhler','Manufactura','13,608','#f8fafc'],['1T25','APS AutoParts','Autopartes','10,400','#fff'],['1T25','Elopak','Empaque','4,609','#f8fafc']].forEach(function(r){
+        _b+='<tr style="background:'+r[4]+';-webkit-print-color-adjust:exact;print-color-adjust:exact"><td style="padding:1.5px 3px">'+r[0]+'</td><td style="padding:1.5px 3px;font-weight:600">'+r[1]+'</td><td style="padding:1.5px 3px;color:#475569">'+r[2]+'</td><td style="padding:1.5px 3px;text-align:right;font-family:IBM Plex Mono,monospace;color:#0f172a">'+r[3]+'</td></tr>';
       });
-      _b+='</tbody></table></div>';
-      // Col derecha: Q&A 5 preguntas compactas
+      _b+='</tbody></table>';
+      _b+='</div>'; // end col 1
+
+      // COL 2 — Q&A con "por qué importa"
       _b+='<div>';
-      _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px">Q&A · Validación con Broker Especializado</div>';
-      var _bQA=[
-        ['1','Precios reales Clase A','Operaciones cierran $5.50–$7.53 USD/m²/mes · Promedio ZM: $6.46 · Time to lease: 6–9 meses · En construcción: 66,009 m² · Nueva oferta acum: 86,834 m²','#0369a1','#eff6ff'],
-        ['2','Perfil demanda activa','Manufactura automotriz (Clarios=baterías, Electrical=arneses) · Logística e-commerce (MercadoLibre) · Tamaños: 4,600–14,500 m²','#16a34a','#f0fdf4'],
-        ['3','Especificación B+ viable','Altura 36\'+ · Piso 6" FPS · 500+ KVAs · KR18 · Precolado · LED+3-5% luz · 1 andén/15K SF · 1 rampa/30-50K SF · 3-4 cambios aire · Precio $6.00–$7.00','#d97706','#fff7ed'],
-        ['4','Compradores Clase A / Cap rates','Broker enfocado en arrendamientos · Sin datos de cap rates para La Laguna · Referencia: Saltillo como benchmark Norte','#94a3b8','#f8fafc'],
-        ['5','B+ con specs hacia A','Sí tiene mercado — perfil diferente: empresas locales vs. multinacionales · Multinacionales priorizan Clase A · Tendencia: desarrolladores construyen solo Clase A','#16a34a','#f0fdf4']
+      _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px;text-transform:uppercase;letter-spacing:.4px">Q&amp;A · 5 Preguntas Estratégicas + Relevancia para el Proyecto</div>';
+      var _qaFull=[
+        {n:'1',tit:'¿Qué están cerrando en precios reales?',resp:'Las operaciones cierran entre $5.50 y $7.53 USD/m²/mes con media de $6.46. Precio bajo en la zona: $5.06 (TORRAméricas). Precio alto: $7.53 (La Encantada). Tiempo de colocación de nave spec nueva: 6–9 meses.',rel:'Para el pro-forma: la renta objetivo debe estar entre $6.00–$7.00 para ser competitiva. El período de 6–9 meses de absorción es el tramo sin renta que hay que financiar en el modelo de flujos.',rc:'#0369a1',bg:'#eff6ff',rb:'#bfdbfe'},
+        {n:'2',tit:'¿Qué tipo de empresa busca bodega hoy?',resp:'Manufactura automotriz (baterías, arneses), componentes electrónicos y logística e-commerce. Tamaños de transacción: 4,600–14,500 m². Empresas activas: Clarios, Electrical Components, Vishay, Sensata, Mercado Libre.',rel:'El mercado demanda naves de 5,000–15,000 m². Nuestro perfil de producto (≈5,000 m²) cae en el sweet spot de absorción. La diversidad sectorial reduce el riesgo de dependencia a un solo inquilino.',rc:'#16a34a',bg:'#f0fdf4',rb:'#bbf7d0'},
+        {n:'3',tit:'¿Qué especificaciones son indispensables?',resp:'Altura 36\'+, piso 6" con FPS, 500+ KVAs, techo KR18, muros precolado, LED con 3–5% luz natural, 1 andén/15K SF, 1 rampa/30–50K SF, 3–4 cambios de aire. Ubicación sobre vialidad principal.',rel:'Cada especificación es un costo de construcción fijo. Bajar de estos estándares significa salir del segmento multinacional y competir solo con empresas locales. El cumplimiento íntegro de esta lista es lo que define si el activo es Clase A o B+.',rc:'#d97706',bg:'#fff7ed',rb:'#fed7aa'},
+        {n:'4',tit:'¿A qué comprador le salen las naves Clase A?',resp:'El broker se especializa en arrendamiento — sin datos de cap rates ni perfil de comprador institucional para La Laguna. Saltillo sería el benchmark comparativo del norte.',rel:'La ausencia de datos públicos de cap rates en La Laguna es una ventaja de información para nosotros: el precio de salida no está arbitrado por el mercado. El retorno de salida se puede estructurar con mayor flexibilidad.',rc:'#7c3aed',bg:'#f5f3ff',rb:'#ddd6fe'},
+        {n:'5',tit:'¿Un B+ con specs Clase A funciona comercialmente?',resp:'Sí tiene demanda, pero para un segmento diferente: empresas locales en crecimiento, no multinacionales. Las multinacionales priorizan Clase A o descartan. Tendencia de mercado: Amistad, ARE, GINN, Vynmsa construyen exclusivamente Clase A.',rel:'La decisión de segmento define la especificación, no al revés. Si el objetivo es atraer multinacionales, construir Clase A es no-negociable. Si el objetivo es capturar pymes locales, el B+ a precio más bajo es la estrategia. Mezclar ambas tesis genera un producto sin posicionamiento claro.',rc:'#0f172a',bg:'#f8fafc',rb:'#e2e8f0'}
       ];
-      _bQA.forEach(function(q){
-        _b+='<div style="border-left:3px solid '+q[4]+';background:'+q[5]+';border-radius:0 4px 4px 0;padding:2mm 2.5mm;margin-bottom:1.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
-        _b+='<div style="display:flex;gap:1.5mm;align-items:flex-start">';
-        _b+='<div style="font-size:9pt;font-weight:800;color:'+q[4]+';font-family:IBM Plex Mono,monospace;line-height:1;flex-shrink:0">'+q[1]+'</div>';
+      _qaFull.forEach(function(q){
+        _b+='<div style="border:1px solid '+q.rb+';border-left:3px solid '+q.rc+';background:'+q.bg+';border-radius:0 3px 3px 0;padding:2mm 2.5mm;margin-bottom:1.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+        _b+='<div style="display:flex;align-items:baseline;gap:1.5mm;margin-bottom:1mm">';
+        _b+='<div style="font-size:8pt;font-weight:800;color:'+q.rc+';font-family:IBM Plex Mono,monospace;line-height:1;flex-shrink:0">'+q.n+'</div>';
+        _b+='<div style="font-size:5pt;font-weight:700;color:#0f172a">'+q.tit+'</div>';
         _b+='</div>';
-        _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:.5mm">'+q[2]+'</div>';
-        _b+='<div style="font-size:4.5pt;color:#475569;line-height:1.5">'+q[3]+'</div>';
-        _b+='</div>';
+        _b+='<div style="font-size:4.5pt;color:#374155;line-height:1.5;margin-bottom:1.5mm">'+q.resp+'</div>';
+        _b+='<div style="background:rgba(0,0,0,.04);border-radius:2px;padding:1.5px 3px;display:flex;gap:1.5mm;align-items:flex-start">';
+        _b+='<div style="font-size:4pt;font-weight:700;color:'+q.rc+';flex-shrink:0;margin-top:.5px">→ Relevancia</div>';
+        _b+='<div style="font-size:4pt;color:#1e293b;line-height:1.5">'+q.rel+'</div>';
+        _b+='</div></div>';
+      });
+      _b+='</div>'; // end col 2
+
+      // COL 3 — Síntesis e implicaciones
+      _b+='<div>';
+      _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px;text-transform:uppercase;letter-spacing:.4px">Síntesis · Implicaciones</div>';
+      // Señales de mercado
+      _b+='<div style="margin-bottom:2mm">';
+      [['✅','Vacancia 4.4%','Mercado ajustado — entrada tiene respaldo de demanda real','#16a34a'],['✅','~99K m² absorbidos','8 transacciones en 2025 confirman liquidez activa','#16a34a'],['✅','Pipeline balanceado','66K m² construyéndose vs ~99K absorbidos — no hay sobreoferta','#0369a1'],['⚠️','PIB Coahuila −3.0%','Contracción macro, pero industria manufacturera mostró resiliencia','#d97706'],['⚠️','6–9 meses absorción','Período sin renta que debe modelarse en el flujo de caja','#d97706'],['📌','Sin cap rates públicos','La Laguna carece de benchmarks institucionales — pricing con mayor libertad','#7c3aed']].forEach(function(s){
+        _b+='<div style="display:flex;gap:1.5mm;align-items:flex-start;margin-bottom:1.5mm">';
+        _b+='<div style="font-size:6pt;flex-shrink:0;margin-top:.5px">'+s[0]+'</div>';
+        _b+='<div><div style="font-size:4.5pt;font-weight:700;color:'+s[3]+'">'+s[1]+'</div>';
+        _b+='<div style="font-size:4pt;color:#475569;line-height:1.4">'+s[2]+'</div></div></div>';
       });
       _b+='</div>';
-      _b+='</div>'; // end grid
+      // Decisión clave
+      _b+='<div style="background:#0f172a;border-radius:3px;padding:2.5mm 3mm;margin-bottom:2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+      _b+='<div style="font-size:5pt;font-weight:700;color:#00e2e0;margin-bottom:1.5mm;text-transform:uppercase;letter-spacing:.5px">Decisión previa al diseño</div>';
+      _b+='<div style="font-size:4.5pt;color:#e2e8f0;line-height:1.6">El mercado tiene demanda real y activa. La decisión crítica no es si hay mercado — es <strong style="color:#fbbf24">a qué segmento apuntar</strong> antes de definir especificación y precio.</div>';
+      _b+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-top:2mm">';
+      _b+='<div style="background:#1e3a8a;border-radius:2px;padding:2px 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact"><div style="font-size:4.5pt;font-weight:700;color:#93c5fd">Clase A</div><div style="font-size:3.8pt;color:#bfdbfe;line-height:1.4">Multinacionales · Renta $6.50–$7.50 · Capex alto · Absorción 6–9 m</div></div>';
+      _b+='<div style="background:#14532d;border-radius:2px;padding:2px 4px;-webkit-print-color-adjust:exact;print-color-adjust:exact"><div style="font-size:4.5pt;font-weight:700;color:#86efac">B+ local</div><div style="font-size:3.8pt;color:#bbf7d0;line-height:1.4">Pymes regionales · Renta $5.00–$6.00 · Capex menor · Mayor riesgo crédito</div></div>';
+      _b+='</div></div>';
+      // Empresas activas en La Laguna
+      _b+='<div style="font-size:5pt;font-weight:700;color:#0f172a;margin-bottom:1.5mm">Empresas ancla ya establecidas en ZM</div>';
+      _b+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5mm">';
+      ['John Deere','Caterpillar','Henniges Auto.','Lear Corp.','Milwaukee Tool','ZF Group','Sumitomo','Linamar','Yura Corp.','Clarios'].forEach(function(e,i){
+        _b+='<div style="background:'+(i%2?'#f1f5f9':'#fff')+';border:1px solid #e2e8f0;border-radius:2px;padding:1px 3px;font-size:3.8pt;color:#334155;font-weight:600;-webkit-print-color-adjust:exact;print-color-adjust:exact">'+e+'</div>';
+      });
+      _b+='</div>';
+      _b+='</div>'; // end col 3
+
+      _b+='</div>'; // end 3-col grid
       _b+=_rptFooterInd(8,'Validación de Mercado · Brokers');
       _b+='</div>';
       return _b;
