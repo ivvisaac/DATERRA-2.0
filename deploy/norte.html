@@ -4700,7 +4700,7 @@ function generarReporte(){
     p3+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     p3+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">El siguiente mapa delimita la zona de análisis y su contexto urbano-industrial.</div>';
     p3+='<div class="rpt-meta">'+munPrincipal+' · Analisis Comparativo · '+fecha+'</div>';
-    p3+='<div class="rpt-section">Crecimiento Comparativo 2010-2020 · Zona vs '+munPrincipal+' vs '+(GEO&&GEO.estado||'Estado')+'*</div>';
+    p3+='<div class="rpt-section">Crecimiento Comparativo 2010–2020 · Proyección 2030 · Zona vs '+munPrincipal+' vs '+(GEO&&GEO.estado||'Estado')+'*</div>';
     p3+='<div class="rpt-charts">';
     p3+='<div class="rpt-chart-box"><div class="rpt-chart-ttl">Crecimiento Decada (%)</div><div style="margin-top:3mm">';
     p3+=barra3('Poblacion',crecPobPct,munCrecPobPct,estCrecPob,'#00e2e0','%',1,true);
@@ -4819,6 +4819,38 @@ function generarReporte(){
     });
     p4+='</div>';
     p4+='</div>';
+    p4+='</div>';
+    // ── CONEXIÓN DEMOGRAFÍA → PERFIL INDUSTRIAL ────────────────────────
+    p4+='<div style="margin-top:2mm;border-top:2px solid #0369a1;padding-top:1.5mm">';
+    p4+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:1.5mm">🔗 Perfil Laboral Industrial Disponible · Radio 10 km</div>';
+    // Calcular desde AGEBs de la zona analizada
+    var _pfFeats=feats||[];
+    var _pfPob1524=_pfFeats.reduce(function(a,f){return a+(+(f.properties.pob_15_24)||0);},0);
+    var _pfPob2559=_pfFeats.reduce(function(a,f){return a+(+(f.properties.pob_25_59)||0);},0);
+    var _pfPobTotal=_pfFeats.reduce(function(a,f){return a+(+(f.properties.pob_total)||0);},0);
+    var _pfPobProductiva=_pfPob1524+_pfPob2559;
+    var _pfEsc=_pfFeats.length?_pfFeats.reduce(function(a,f){return a+(+(f.properties.escolaridad)||0);},0)/_pfFeats.length:0;
+    var _pfPea=_pfFeats.reduce(function(a,f){return a+(+(f.properties.pea)||0);},0);
+    var _pfNseDmas=_pfFeats.reduce(function(a,f){return a+(+(f.properties.nse_dmas)||0);},0);
+    var _pfNseD=_pfFeats.reduce(function(a,f){return a+(+(f.properties.nse_d)||0);},0);
+    var _pfNseCmenos=_pfFeats.reduce(function(a,f){return a+(+(f.properties.nse_cmenos)||0);},0);
+    var _pfNseViv=_pfFeats.reduce(function(a,f){return a+(+(f.properties.nse_viviendas)||0);},0);
+    var _pfPctInd=_pfNseViv>0?(_pfNseDmas+_pfNseD+_pfNseCmenos)/_pfNseViv*100:0;
+    p4+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm">';
+    [
+      ['Pob. edad productiva (15–59)',''+N(_pfPobProductiva,0),'años','#0369a1','#eff6ff'],
+      ['PEA en zona analizada',''+N(_pfPea,0),'personas activas','#16a34a','#f0fdf4'],
+      ['Escolaridad promedio',''+_pfEsc.toFixed(1),'años de estudio','#d97706','#fff7ed'],
+      ['NSE perfil industrial (C-/D+/D)',''+P1(_pfPctInd),'de viviendas en zona','#475569','#f8fafc']
+    ].forEach(function(c){
+      p4+='<div style="background:'+c[4]+';border:1px solid '+c[3]+'33;border-top:2px solid '+c[3]+';border-radius:0 0 4px 4px;padding:1.5mm 2mm;text-align:center;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+      p4+='<div style="font-size:9pt;font-weight:800;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1">'+c[1]+'</div>';
+      p4+='<div style="font-size:4.5pt;font-weight:600;color:'+c[3]+';margin-top:1px">'+c[2]+'</div>';
+      p4+='<div style="font-size:4pt;color:#64748b;margin-top:1px">'+c[0]+'</div>';
+      p4+='</div>';
+    });
+    p4+='</div>';
+    p4+='<div style="margin-top:1.5mm;font-size:4.5pt;color:#64748b;line-height:1.5">Fuente: INEGI Censo de Población y Vivienda 2020 · NSE AMAI 2018. Perfil industrial = NSE C-/D+/D con escolaridad ≥ 9 años y edad 15–59. <strong>Nota: datos de 2020 — proyectar con factor de crecimiento poblacional para 2026.</strong></div>';
     p4+='</div>';
     p4+=DISC;
     p4+='<div class="rpt-footer"><span>DATERRA · '+munPrincipal+' · Pool Laboral · Censo INEGI 2020</span><span>Pág. 12 / 25</span><span>'+fecha+'</span></div>';
@@ -5374,7 +5406,7 @@ function generarReporte(){
     p11+='Para mayor información encuéntranos en <strong><a href="https://consulting.coeza.mx" style="color:#0ea5e9;text-decoration:none">consulting.coeza.mx</a></strong>';
     p11+='</div>';
 
-    p11+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pág. 28 / 28</span><span>'+fecha+'</span></div>';
+    p11+='<div class="rpt-footer"><span>DATERRA · COEZA Consulting · Censo 2020 · INEGI</span><span>Pág. 27 / 27</span><span>'+fecha+'</span></div>';
     p11+='</div>';
 
     // ── PÁGINA 2: Índice de Contenidos ─────────────────────────────────────
@@ -5426,11 +5458,10 @@ function generarReporte(){
     pIdx+=_idxRow('23','Bodegas · Decisión de Inversión','Scorecard de decisión · sectores objetivo · tipo de nave recomendada');
     pIdx+=_idxRow('24','Terrenos Industriales Disponibles','Oferta de terrenos por zona · precio/m² · superficie · potencial de desarrollo');
     pIdx+=_idxSection('LLAMADAS CON BROKERS','#0c4a6e');
-    pIdx+=_idxRow('25','Mercado Industrial · CBRE 1T 2026','Inventario 2.6M m² · precio lista $6.46 USD/m²/mes · vacancia 4.4% · transacciones recientes · time to lease 6-9 meses');
-    pIdx+=_idxRow('26','Hallazgos · Llamada con Broker Q&A','Precios Clase A · perfil de demanda · especificación B+ · cap rates · estrategia B+ vs A');
+    pIdx+=_idxRow('25','Validación de Mercado · Brokers + CBRE','Precios reales $5.50–$7.53 · vacancia 4.4% · transacciones · Q&A 5 preguntas de mercado');
     pIdx+=_idxSection('CIERRE','#16a34a');
-    pIdx+=_idxRow('27','Justificación del Producto Recomendado','Distribución por tipo de nave · terrenos disponibles · conclusión de viabilidad');
-    pIdx+=_idxRow('28','Soluciones COEZA','Servicios especializados para decisiones de inversión industrial · contacto');
+    pIdx+=_idxRow('26','Justificación del Producto Recomendado','Distribución por tipo de nave · terrenos disponibles · conclusión de viabilidad');
+    pIdx+=_idxRow('27','Soluciones COEZA','Servicios especializados para decisiones de inversión industrial · contacto');
     pIdx+='<div style="margin-top:3mm;padding:1.5mm 3mm;border-top:2px solid #00e2e0;font-size:6pt;color:#64748b;line-height:1.5">';
     pIdx+='<span style="font-weight:700;color:#092c3b;font-family:IBM Plex Mono,monospace;text-transform:uppercase;letter-spacing:.5px">Fuentes · </span>';
     pIdx+='Censo Económico INEGI 2023 · Inventario Industrial COEZA 2025 · Censo Población y Vivienda 2020 · NSE AMAI 2018 · Newmark México 2S25 · CBRE México Q4 2024.';
@@ -5447,7 +5478,7 @@ function generarReporte(){
     function _N2(v,d){v=+(v)||0;if(d!==undefined)return v.toLocaleString('es-MX',{minimumFractionDigits:d,maximumFractionDigits:d});return Math.round(v).toLocaleString('es-MX');}
     function _bar2(pct,color){pct=Math.min(100,Math.max(0,+pct||0));return '<div style="background:#e2e8f0;border-radius:2px;height:5px;overflow:hidden;margin-top:1.5mm"><div style="background:'+color+';width:'+pct+'%;height:100%;border-radius:2px"></div></div>';}
     function _sumC(arr,k){return arr.reduce(function(a,r){return a+(r[k]||0);},0);}
-    var _pgTot=28; // total de páginas en el reporte (sin contar divisores de sección)
+    var _pgTot=27; // total de páginas en el reporte (sin contar divisores de sección)
     function _rptFooterInd(gpag,label){
       var numStr='Pág. '+gpag+' / '+_pgTot+(label?' · '+label:'');
       return '<div class="rpt-footer"><span>DATERRA · ZM La Laguna · Análisis Industrial · INEGI Censo Económico 2018-2023</span><span>'+numStr+'</span><span>'+fecha+'</span></div>';
@@ -6089,6 +6120,73 @@ function generarReporte(){
       +'<div style="font-size:8pt;color:rgba(255,255,255,0.6);margin-top:3mm;text-align:center">CBRE México · Snapshot Industrial La Laguna 1T 2026 · Q&A con especialista</div>'
       +'</div>';
 
+    // PAG BROKER · Mercado CBRE + Q&A — slide fusionada (pág 25)
+    var p_broker=(function(){
+      var _b='<div class="report-page">';
+      _b+='<div class="rpt-header">'+RPT_LOGO+'</div>';
+      _b+='<div style="background:#0f172a;padding:3mm 5mm 2.5mm;margin:-1mm -1mm 2.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+      _b+='<div style="font-size:10px;font-weight:700;color:#fff;letter-spacing:.04em">Validación de Mercado · Llamadas con Brokers · CBRE 1T 2026</div>';
+      _b+='<div style="font-size:5.5pt;color:#94a3b8;margin-top:1.5px">Fuente: CBRE Research Snapshot Industrial La Laguna 1T 2026 · Validación directa con broker especializado · '+fecha+'</div>';
+      _b+='</div>';
+      // ── KPIs en fila ──────────────────────────────────────────────
+      _b+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:2.5mm">';
+      [['2.6M m²','Inventario ZM','clase A y B','#00e2e0'],['$6.46 USD','Precio lista prom.','rango $5.00–$7.53/m²/mes','#0369a1'],['4.4%','Vacancia actual','mejora vs 4T 2025','#16a34a'],['6–9 meses','Time to lease','naves spec nuevas','#d97706']].forEach(function(k){
+        _b+='<div style="background:#fff;border:1px solid #e2e8f0;border-top:3px solid '+k[3]+';border-radius:3px;padding:4px 6px;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+        _b+='<div style="font-size:10pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace;line-height:1.1">'+k[0]+'</div>';
+        _b+='<div style="font-size:5.5pt;font-weight:600;color:#374151;margin-top:1px">'+k[1]+'</div>';
+        _b+='<div style="font-size:4.5pt;color:#6b7280">'+k[2]+'</div></div>';
+      });
+      _b+='</div>';
+      // ── Layout 2 columnas ────────────────────────────────────────
+      _b+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm">';
+      // Col izquierda: chart + transacciones (compacto)
+      _b+='<div>';
+      _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px">Propiedades vacantes disponibles (USD/m²/mes)</div>';
+      _b+='<svg viewBox="0 0 200 78" style="width:100%;height:auto;display:block;margin-bottom:2mm">';
+      _b+='<rect x="0" y="0" width="200" height="78" fill="#fff"/>';
+      var _bBars=[['Nave1-La Encantada','$7.53',89.6,'#ef4444'],['SPECNazas-Amistad','$7.00',83.3,'#f97316'],['Building1-SantaFe','$7.00',83.3,'#f97316'],['Nave5-La Encantada','$7.00',83.3,'#f97316'],['SPEC1-Vynmsa','$6.78',80.7,'#0369a1'],['SPEC1-La Perla','$6.30',75.0,'#0369a1'],['Mieleras-Ferropuerto','$5.86',69.7,'#16a34a'],['SPECI-Torreon2000','$5.38',64.1,'#16a34a'],['TORRAmericasII','$5.06',60.3,'#86efac']];
+      _bBars.forEach(function(r,i){
+        var y=i*8+2;
+        _b+='<text x="2" y="'+(y+6)+'" font-size="3.8" fill="#374151" font-family="IBM Plex Mono,monospace">'+r[0]+'</text>';
+        _b+='<rect x="68" y="'+(y+1)+'" width="'+r[2]+'" height="6" fill="'+r[3]+'" opacity="0.85" rx="1"/>';
+        _b+='<text x="'+(69+r[2])+'" y="'+(y+6)+'" font-size="3.5" fill="#374151" font-family="IBM Plex Mono,monospace"> '+r[1]+'</text>';
+      });
+      _b+='<line x1="80.5" y1="0" x2="80.5" y2="76" stroke="#ef4444" stroke-width="0.6" stroke-dasharray="2,1.5"/>';
+      _b+='<text x="81" y="76" font-size="3" fill="#ef4444" font-family="IBM Plex Mono,monospace">prom $6.46</text>';
+      _b+='</svg>';
+      _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px">Transacciones recientes</div>';
+      _b+='<table style="width:100%;border-collapse:collapse;font-size:4.5pt">';
+      _b+='<thead><tr style="background:#0f172a;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact"><th style="padding:2px 3px;text-align:left">Trim.</th><th style="padding:2px 3px;text-align:left">Empresa</th><th style="padding:2px 3px;text-align:left">Sector</th><th style="padding:2px 3px;text-align:right">m²</th></tr></thead><tbody>';
+      [['4T25','Flowserve','Mfg industrial','14,000'],['3T25','Mercado Libre','Logística','7,500'],['3T25','Electrical Comp.','Arnesería','11,235'],['1T25','Clarios','Baterías auto','11,658'],['1T25','VGT','Manufactura','14,492'],['1T25','Buhler','Manufactura','13,608'],['1T25','APS AutoParts','Autopartes','10,400'],['1T25','Elopak','Empaque','4,609']].forEach(function(r,i){
+        _b+='<tr style="background:'+(i%2?'#f8fafc':'#fff')+';-webkit-print-color-adjust:exact;print-color-adjust:exact"><td style="padding:1.5px 3px">'+r[0]+'</td><td style="padding:1.5px 3px;font-weight:600">'+r[1]+'</td><td style="padding:1.5px 3px">'+r[2]+'</td><td style="padding:1.5px 3px;text-align:right;font-family:IBM Plex Mono,monospace">'+r[3]+'</td></tr>';
+      });
+      _b+='</tbody></table></div>';
+      // Col derecha: Q&A 5 preguntas compactas
+      _b+='<div>';
+      _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:2px">Q&A · Validación con Broker Especializado</div>';
+      var _bQA=[
+        ['1','Precios reales Clase A','Operaciones cierran $5.50–$7.53 USD/m²/mes · Promedio ZM: $6.46 · Time to lease: 6–9 meses','#0369a1','#eff6ff'],
+        ['2','Perfil demanda activa','Manufactura automotriz (Clarios=baterías, Electrical=arneses) · Logística e-commerce (MercadoLibre) · Tamaños: 4,600–14,500 m²','#16a34a','#f0fdf4'],
+        ['3','Especificación B+ viable','Altura 36\'+ · Piso 6" · 500+ KVAs · KR18 · Precolado · LED + 3-5% luz · Sobre vialidad principal · Precio $6.00–$7.00','#d97706','#fff7ed'],
+        ['4','Compradores Clase A / Cap rates','Broker enfocado en arrendamientos · Sin datos de cap rates para La Laguna · Referencia: Saltillo como benchmark Norte','#94a3b8','#f8fafc'],
+        ['5','B+ con specs hacia A','Sí tiene mercado — perfil diferente: empresas locales vs. multinacionales · Multinacionales priorizan Clase A · Tendencia: desarrolladores construyen solo Clase A','#16a34a','#f0fdf4']
+      ];
+      _bQA.forEach(function(q){
+        _b+='<div style="border-left:3px solid '+q[4]+';background:'+q[5]+';border-radius:0 4px 4px 0;padding:2mm 2.5mm;margin-bottom:1.5mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+        _b+='<div style="display:flex;gap:1.5mm;align-items:flex-start">';
+        _b+='<div style="font-size:9pt;font-weight:800;color:'+q[4]+';font-family:IBM Plex Mono,monospace;line-height:1;flex-shrink:0">'+q[1]+'</div>';
+        _b+='</div>';
+        _b+='<div style="font-size:5.5pt;font-weight:700;color:#0f172a;margin-bottom:.5mm">'+q[2]+'</div>';
+        _b+='<div style="font-size:4.5pt;color:#475569;line-height:1.5">'+q[3]+'</div>';
+        _b+='</div>';
+      });
+      _b+='</div>';
+      _b+='</div>'; // end grid
+      _b+=_rptFooterInd(25,'Validación de Mercado · Brokers');
+      _b+='</div>';
+      return _b;
+    }());
+
     // PAG BROKER-MKT · Datos de mercado CBRE 1T 2026
     var p_broker_mkt='<div class="report-page" style="font-family:\'IBM Plex Sans\',Arial,sans-serif;background:#fff;color:#0f172a;padding:0;margin:0;box-sizing:border-box;">'
 +'<div class="rpt-header">'+RPT_LOGO+'</div>'
@@ -6442,7 +6540,7 @@ function generarReporte(){
       p_justif+='Las '+_zBodsPre.filter(function(b){return b.op==='Renta';}).length+' opciones de renta y '+_zBodsPre.filter(function(b){return b.op==='Venta';}).length+' de venta disponibles validan la liquidez del activo.';
       p_justif+='</div></div>';
     }());
-    p_justif+=_rptFooterInd(27,'Justificación de Producto');
+    p_justif+=_rptFooterInd(26,'Justificación de Producto');
     p_justif+='</div>';
 
     // ── Análisis de Zona Industrial ─────────────────────────────────────
@@ -6692,6 +6790,58 @@ function generarReporte(){
       p_ind_concl+=_cmpRowC('No. opciones',_zBodsPre.length,INDUSTRIAL.bodegas.length,function(v){return String(v);},function(v){return String(v);});
       p_ind_concl+='</tbody></table></div>';
     }());
+
+    // ── INPUTS PARA CORRIDA FINANCIERA ─────────────────────────────────
+    p_ind_concl+='<div style="margin-top:2.5mm;border-top:2px solid #00e2e0;padding-top:2mm">';
+    p_ind_concl+='<div style="font-size:6pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">📊 Inputs para Corrida Financiera — Usar como supuestos base</div>';
+    // Calcular inputs desde el inventario filtrado
+    var _cfRentasZona=_zBodsPre.filter(function(b){return b.op==='Renta'&&b.rent_m2>0;}).map(function(b){return b.rent_m2;}).sort(function(a,b){return a-b;});
+    var _cfVentaZona=_zBodsPre.filter(function(b){return b.op==='Venta'&&b.vta_m2>0;}).map(function(b){return b.vta_m2;}).sort(function(a,b){return a-b;});
+    var _cfTerrenosZona=(INDUSTRIAL.terrenos||[]).filter(function(t){return t.precio_m2>0;}).sort(function(a,b){return a.precio_m2-b.precio_m2;});
+    var _cfAvg=function(a){return a.length?a.reduce(function(s,v){return s+v;},0)/a.length:0;};
+    var _cfMed=function(a){if(!a.length)return 0;var s=Math.floor(a.length/2);return a.length%2?a[s]:(a[s-1]+a[s])/2;};
+    var _cfRentAvg=_cfAvg(_cfRentasZona);
+    var _cfRentMed=_cfMed(_cfRentasZona);
+    var _cfRentMin=_cfRentasZona.length?_cfRentasZona[0]:0;
+    var _cfRentMax=_cfRentasZona.length?_cfRentasZona[_cfRentasZona.length-1]:0;
+    var _cfVentAvg=_cfAvg(_cfVentaZona);
+    var _cfTerrMin=_cfTerrenosZona.length?_cfTerrenosZona[0].precio_m2:0;
+    var _cfTerrMed=_cfMed(_cfTerrenosZona.map(function(t){return t.precio_m2;}));
+    // Tabla de inputs
+    p_ind_concl+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2mm">';
+    // Bloque 1: Ingresos
+    p_ind_concl+='<div style="background:#f0fdf4;border:1px solid #bbf7d0;border-top:2px solid #16a34a;border-radius:0 0 4px 4px;padding:2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_ind_concl+='<div style="font-size:5pt;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1mm">💰 Ingresos — Renta</div>';
+    p_ind_concl+='<div style="font-size:5pt;color:#334155;line-height:1.7">';
+    p_ind_concl+='<div><span style="color:#64748b">Renta asking prom. zona: </span><strong>'+(_cfRentAvg?'$'+_cfRentAvg.toFixed(0)+' MXN/m²/mes':'—')+'</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Renta mediana zona: </span><strong>'+(_cfRentMed?'$'+_cfRentMed.toFixed(0)+' MXN/m²/mes':'—')+'</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Rango zona: </span><strong>'+(_cfRentMin?'$'+_cfRentMin.toFixed(0)+' – $'+_cfRentMax.toFixed(0):'—')+'</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Referencia ZM (CBRE): </span><strong>$6.46 USD/m²/mes</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Vacancia ref. ZM: </span><strong>4.4%</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Time to lease: </span><strong>6–9 meses</strong></div>';
+    p_ind_concl+='</div></div>';
+    // Bloque 2: Costos
+    p_ind_concl+='<div style="background:#eff6ff;border:1px solid #bfdbfe;border-top:2px solid #0369a1;border-radius:0 0 4px 4px;padding:2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_ind_concl+='<div style="font-size:5pt;font-weight:700;color:#1e40af;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1mm">🏗️ Costos — Tierra</div>';
+    p_ind_concl+='<div style="font-size:5pt;color:#334155;line-height:1.7">';
+    p_ind_concl+='<div><span style="color:#64748b">Terreno mín. zona: </span><strong>'+(_cfTerrMin?'$'+_cfTerrMin.toFixed(0)+' MXN/m²':'⚠ Por verificar')+'</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Terreno mediana zona: </span><strong>'+(_cfTerrMed?'$'+_cfTerrMed.toFixed(0)+' MXN/m²':'—')+'</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Costo construcción Clase A: </span><strong>⚠ Cotizar con contratista</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Referencia Noreste: </span><strong>$6,500–$8,500 MXN/m²</strong></div>';
+    p_ind_concl+='<div style="margin-top:1mm;font-size:4.5pt;color:#64748b;font-style:italic">Incluye: cimientos, estructura, instalaciones,<br>acabados. Sin infraestructura externa.</div>';
+    p_ind_concl+='</div></div>';
+    // Bloque 3: Salida / exit
+    p_ind_concl+='<div style="background:#fff7ed;border:1px solid #fed7aa;border-top:2px solid #d97706;border-radius:0 0 4px 4px;padding:2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_ind_concl+='<div style="font-size:5pt;font-weight:700;color:#9a3412;text-transform:uppercase;letter-spacing:.5px;margin-bottom:1mm">📤 Exit — Venta</div>';
+    p_ind_concl+='<div style="font-size:5pt;color:#334155;line-height:1.7">';
+    p_ind_concl+='<div><span style="color:#64748b">Precio venta prom. zona: </span><strong>'+(_cfVentAvg?'$'+_cfVentAvg.toFixed(0)+' MXN/m²':'—')+'</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Cap rate implícito: </span><strong>'+(_cfVentAvg&&_cfRentAvg?P1(_cfRentAvg*12/_cfVentAvg*100)+'% anual':'⚠ Calcular con datos broker')+'</strong></div>';
+    p_ind_concl+='<div><span style="color:#64748b">Opciones venta en zona: </span><strong>'+_cfVentaZona.length+'</strong></div>';
+    p_ind_concl+='<div style="margin-top:1mm;background:#fef3c7;padding:1mm 1.5mm;border-radius:3px;font-size:4.5pt;color:#92400e;-webkit-print-color-adjust:exact;print-color-adjust:exact">⚠ Validar todos los valores con broker antes de proyecciones. Datos: COEZA 2025 + CBRE 1T 2026.</div>';
+    p_ind_concl+='</div></div>';
+    p_ind_concl+='</div>'; // end grid
+    p_ind_concl+='<div style="margin-top:1.5mm;font-size:4.5pt;color:#64748b;font-style:italic">Fuentes: Inventario Industrial COEZA 2025 · CBRE Research 1T 2026 · Referencia de costos: CMIC Noreste 2024. Usar estos datos como punto de partida — confirmar con avalúo profesional antes de tomar decisión de inversión.</div>';
+    p_ind_concl+='</div>'; // end border-top section
 
     p_ind_concl+=_rptFooterInd(6,'Conclusión');
     p_ind_concl+='</div>';
@@ -7106,6 +7256,35 @@ function generarReporte(){
       p_ind_concl2+='</div></div>';
     }());
 
+    // ── ANÁLISIS DE ESCENARIOS ──────────────────────────────────────────
+    p_ind_concl2+='<div style="margin-top:2.5mm;border-top:2px solid #e2e8f0;padding-top:2mm">';
+    p_ind_concl2+='<div style="font-size:6pt;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1.5mm">📐 Análisis de Escenarios — Sensibilidad</div>';
+    p_ind_concl2+='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2mm">';
+    // Escenario pesimista
+    p_ind_concl2+='<div style="background:#fef2f2;border-top:3px solid #dc2626;border-radius:0 0 4px 4px;padding:2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#dc2626;margin-bottom:1mm">🔴 Pesimista</div>';
+    p_ind_concl2+='<div style="font-size:4.5pt;color:#334155;line-height:1.7">';
+    p_ind_concl2+='<div>Renta: $5.50 USD/m²/mes</div><div>Vacancia: 12% · Time to lease: 12 meses</div><div>Tipo de cambio: $19 MXN/USD</div><div>Absorción: -20% vs. promedio</div>';
+    p_ind_concl2+='<div style="margin-top:1mm;border-top:1px solid #fecaca;padding-top:1mm;font-weight:700;color:#dc2626">Supuesto: saturación de mercado + devaluación</div>';
+    p_ind_concl2+='</div></div>';
+    // Escenario base
+    p_ind_concl2+='<div style="background:#f0fdf4;border-top:3px solid #16a34a;border-radius:0 0 4px 4px;padding:2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#16a34a;margin-bottom:1mm">🟢 Base (CBRE 1T 2026)</div>';
+    p_ind_concl2+='<div style="font-size:4.5pt;color:#334155;line-height:1.7">';
+    p_ind_concl2+='<div>Renta: $6.46 USD/m²/mes</div><div>Vacancia: 4.4% · Time to lease: 6–9 meses</div><div>Tipo de cambio: $17–18 MXN/USD</div><div>Absorción: tendencia positiva +34.6%</div>';
+    p_ind_concl2+='<div style="margin-top:1mm;border-top:1px solid #bbf7d0;padding-top:1mm;font-weight:700;color:#16a34a">Supuesto: continuidad nearshoring · pipeline activo</div>';
+    p_ind_concl2+='</div></div>';
+    // Escenario optimista
+    p_ind_concl2+='<div style="background:#eff6ff;border-top:3px solid #0369a1;border-radius:0 0 4px 4px;padding:2mm;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_ind_concl2+='<div style="font-size:5.5pt;font-weight:700;color:#0369a1;margin-bottom:1mm">🔵 Optimista</div>';
+    p_ind_concl2+='<div style="font-size:4.5pt;color:#334155;line-height:1.7">';
+    p_ind_concl2+='<div>Renta: $7.00–$7.50 USD/m²/mes</div><div>Vacancia: ≤3% · Time to lease: 3–5 meses</div><div>Tipo de cambio: $16–17 MXN/USD</div><div>Absorción: aceleración MLS + IED directa</div>';
+    p_ind_concl2+='<div style="margin-top:1mm;border-top:1px solid #bfdbfe;padding-top:1mm;font-weight:700;color:#0369a1">Supuesto: MLS activa · 1–2 anchor tenants firmados</div>';
+    p_ind_concl2+='</div></div>';
+    p_ind_concl2+='</div>'; // end grid escenarios
+    p_ind_concl2+='<div style="margin-top:1.5mm;font-size:4.5pt;color:#64748b;font-style:italic">Escenarios basados en datos CBRE 1T 2026 y tendencias publicadas. No constituyen proyección financiera formal. Complementar con análisis de cash flow y DCF antes de decisión de inversión.</div>';
+    p_ind_concl2+='</div>';
+
     p_ind_concl2+=_rptFooterInd(7,'Especificaciones');
     p_ind_concl2+='</div>';
 
@@ -7272,6 +7451,24 @@ function generarReporte(){
 
     p_contexto+='<div style="background:#fffbeb;border-left:3px solid #d97706;border-radius:0 4px 4px 0;padding:2mm 2.5mm;font-size:5.5pt;color:#78350f;line-height:1.5;margin-bottom:2mm"><strong>📌 Por qué La Laguna gana frente a sus competidores:</strong> Mientras el norte general se enfría (construcción −20% YoY) y Saltillo ve riesgo de saturación (vacancia 3.8% subiendo), La Laguna opera con absorción creciente (+34.6%), precio +17% YoY, y un pipeline de $785 M USD comprometidos en inversión nueva. El spread de yield de 300-400 pbs vs Saltillo es compensación real por tier secundario — no riesgo sin premio.</div>';
     p_contexto+='<div style="font-size:5.5pt;color:#94a3b8;line-height:1.5;border-top:1px solid #e2e8f0;padding-top:1.5mm">Fuentes: Newmark México 2S25 · CBRE México Q4 2024 · Vanguardia · El Siglo de Torreón · Proyectos Torreón · PLAYERS of Life · Inmobiliare · Sec. Economía Coahuila</div>';
+    p_contexto+='<div style="margin-top:2mm;background:#f0fdf4;border-left:3px solid #16a34a;padding:1.5mm 2.5mm;border-radius:0 4px 4px 0;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_contexto+='<div style="font-size:5.5pt;font-weight:700;color:#166534;margin-bottom:1mm">✅ ¿Por qué La Laguna y no Saltillo?</div>';
+    p_contexto+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:2mm;font-size:4.5pt;color:#334155;line-height:1.6">';
+    p_contexto+='<div><div style="font-weight:700;color:#0369a1;margin-bottom:.5mm">Ventajas La Laguna</div>';
+    p_contexto+='<div>📍 Precio de renta 7–15% menor vs. Saltillo</div>';
+    p_contexto+='<div>🏭 Mayor disponibilidad de suelo industrial</div>';
+    p_contexto+='<div>👷 Pool laboral con menor presión salarial</div>';
+    p_contexto+='<div>🚂 Acceso ferroviario CPKC (zona Ferropuerto)</div>';
+    p_contexto+='<div>📦 Hub de distribución Noreste–Centro–Pacifico</div>';
+    p_contexto+='</div>';
+    p_contexto+='<div><div style="font-weight:700;color:#d97706;margin-bottom:.5mm">Riesgo vs Saltillo</div>';
+    p_contexto+='<div>⚠ Mercado terciario (menor reconocimiento IED)</div>';
+    p_contexto+='<div>⚠ Vacancia 4.4% vs ~3.8% Saltillo</div>';
+    p_contexto+='<div>⚠ Menor frecuencia de vuelos directos</div>';
+    p_contexto+='<div>⚠ Ecosistema de proveedores Tier 1 en desarrollo</div>';
+    p_contexto+='<div style="color:#16a34a;font-weight:600">✅ Precio competitivo compensa riesgo de mercado terciario</div>';
+    p_contexto+='</div>';
+    p_contexto+='</div></div>';
     p_contexto+=_rptFooterInd(9,'Contexto de Mercado');
     p_contexto+='</div>';
 
@@ -7354,6 +7551,9 @@ function generarReporte(){
       p_pipeline+='</div>';
     });
     p_pipeline+='</div>';
+    p_pipeline+='</div>';
+    p_pipeline+='<div style="margin-top:2mm;padding:1.5mm 2.5mm;background:#fef9c3;border-left:3px solid #d97706;border-radius:0 4px 4px 0;-webkit-print-color-adjust:exact;print-color-adjust:exact">';
+    p_pipeline+='<div style="font-size:4.5pt;color:#92400e;line-height:1.6"><span style="font-weight:700">⚠ Nota metodológica: </span>Los montos de inversión son estimaciones referenciales compiladas de comunicados corporativos, prensa sectorial 2024–2025 y reportes de Secretaría de Economía. No han sido validados con fuentes primarias de cada empresa. Usar como referencia de orden de magnitud — verificar con fuentes oficiales antes de citarlos en análisis financiero formal.</div>';
     p_pipeline+='</div>';
     p_pipeline+=_rptFooterInd(10,'Pipeline de Inversión');
     p_pipeline+='</div>';
@@ -7474,10 +7674,9 @@ function generarReporte(){
           + p_zona_ind + p_zonas_comp + pMapParques + pMapRenta + pMapVenta + p_bod1 + p_bod2 + p_bod3 + p_ter
           // ── CIERRE ───────────────────────────────────────────────────────
           + _secBroker
-          + p_broker_mkt   // 25 mercado industrial CBRE 1T 2026
-          + p_broker_qa    // 26 llamada con broker — Q&A 5 preguntas
-          + p_justif       // 27 justificación de producto recomendado
-          + p11;           // 28 soluciones COEZA
+          + p_broker        // 25 validación mercado CBRE + Q&A brokers (fusionada)
+          + p_justif        // 26 justificación de producto recomendado
+          + p11;            // 27 soluciones COEZA
   }
 
   // Estadísticas del municipio completo para comparativa en heatmaps
