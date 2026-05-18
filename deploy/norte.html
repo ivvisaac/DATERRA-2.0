@@ -6654,6 +6654,14 @@ function generarReporte(){
     var _zD=_zonaDetected||{nom:munPrincipal,color:'#0f172a',empresas:'—',s251:0,top_sector:'—',top_sector2:'—',parques:[],nota:'',mun:munPrincipal};
     var _zDK=_zonaDetectedKey;
     var _zDS=_zDK&&_zonaStats[_zDK]?_zonaStats[_zDK]:{bods:[],medRenta:null,medVenta:null,medTer:null,oport:'—',pct251:0,nBods:0};
+    // Si el bbox de _zonaStats devolvió 0 bods pero _zBodsPre sí tiene datos (fallback municipal), reconstruir _zDS
+    if(_zDK&&_zDS.nBods===0&&_zBodsPre.length>0){
+      var _fbRents=_zBodsPre.filter(function(b){return b.rent_m2>0;}).map(function(b){return b.rent_m2;});
+      var _fbVentas=_zBodsPre.filter(function(b){return b.vta_m2>0;}).map(function(b){return b.vta_m2;});
+      var _fbOport=_zBodsPre.length<5?'Alta':_zBodsPre.length<12?'Media-Alta':_zBodsPre.length<20?'Media':'Consolidado';
+      _zDS={bods:_zBodsPre,medRenta:_medZ(_fbRents),medVenta:_medZ(_fbVentas),medTer:_zDS.medTer,oport:_fbOport,pct251:_zDS.pct251,nBods:_zBodsPre.length};
+      _zonaStats[_zDK]=_zDS;
+    }
     var _zClase=_zDK?(_claseNavesMap[_zDK]||_clasePred):_clasePred;
     var _zRentaRange=_zDK?(_rentaRef[_zDK]||(_medRenta2?'$'+_medRenta2.toFixed(0):'—')):(_medRenta2?'$'+_medRenta2.toFixed(0):'—');
     // Cap rate zona-específico: calcular desde mediana renta/venta de la zona detectada
