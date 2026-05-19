@@ -5525,13 +5525,15 @@ function generarReporte(){
     var _allM2all=INDUSTRIAL.bodegas.filter(function(b){return b.m2>0;}).map(function(b){return b.m2;});
     var _medGM2=_medArr(_allM2all)||1710;
     var _bandaDat=[{l:'Pequeña (<1,000 m²)',mn:0,mx:999},{l:'Mediana (1,000–5,000 m²)',mn:1000,mx:4999},{l:'Grande (>5,000 m²)',mn:5000,mx:9e9}].map(function(b){var bs=_bodsRentaZona.filter(function(x){return x.m2>=b.mn&&x.m2<=b.mx;});return{l:b.l,n:bs.length,med:_medArr(bs.map(function(x){return x.rent_m2;})),m2med:_medArr(bs.map(function(x){return x.m2;}))};});
-    // Cap rate: zona primero, fallback ZM si <2 muestras
-    var _capArr=_bodsZona.filter(function(b){return b.rent_m2>0&&b.vta_m2>0;}).map(function(b){var noi=b.rent_m2*12*0.92*0.80;return{cap:noi/b.vta_m2*100,cls:b.cls,m2:b.m2,rent_m2:b.rent_m2,vta_m2:b.vta_m2};});
-    if(_capArr.length<2){_capArr=INDUSTRIAL.bodegas.filter(function(b){return b.rent_m2>0&&b.vta_m2>0;}).map(function(b){var noi=b.rent_m2*12*0.92*0.80;return{cap:noi/b.vta_m2*100,cls:b.cls,m2:b.m2,rent_m2:b.rent_m2,vta_m2:b.vta_m2};});}
+    // Cap rate: solo bodegas con precio de venta realista (≥$6,000 MXN/m²) — valores menores son terreno o error
+    // NOI = renta × 12 meses × 92% ocupación × 80% margen operativo
+    var _CAP_VTA_MIN=6000; // precio mínimo para ser considerado precio de bodega construida (no terreno)
+    var _capArr=_bodsZona.filter(function(b){return b.rent_m2>0&&b.vta_m2>=_CAP_VTA_MIN;}).map(function(b){var noi=b.rent_m2*12*0.92*0.80;var cap=noi/b.vta_m2*100;return{cap:cap,cls:b.cls,m2:b.m2,rent_m2:b.rent_m2,vta_m2:b.vta_m2};}).filter(function(c){return c.cap>=4&&c.cap<=14;});
+    if(_capArr.length<2){_capArr=INDUSTRIAL.bodegas.filter(function(b){return b.rent_m2>0&&b.vta_m2>=_CAP_VTA_MIN;}).map(function(b){var noi=b.rent_m2*12*0.92*0.80;var cap=noi/b.vta_m2*100;return{cap:cap,cls:b.cls,m2:b.m2,rent_m2:b.rent_m2,vta_m2:b.vta_m2};}).filter(function(c){return c.cap>=4&&c.cap<=14;});}
     var _capMed=_medArr(_capArr.map(function(c){return c.cap;}));
     var _capMin=_capArr.length?Math.min.apply(null,_capArr.map(function(c){return c.cap;})):null;
     var _capMax=_capArr.length?Math.max.apply(null,_capArr.map(function(c){return c.cap;})):null;
-    if(!_capMed){_capMed=(_medRenta2||_medGR)*12*0.92*0.80/(_nseScore>=6?12000:_nseScore>=4?7500:5000)*100;}
+    // Sin fallback NSE — cuando no hay data real, _capMed queda null y _capDispZ usa benchmarks de mercado (~7–8.5%)
     // ── _zonaDetected ya computado arriba ──
     var _actSubs=[].concat(_cM,_cC,_cT).filter(function(r){return r.e23>0;}).sort(function(a,b){return b.e23-a.e23;});
     // ── Terrenos: sort por distancia al centroide de zona ──
@@ -6729,7 +6731,12 @@ function generarReporte(){
     var _zRentaRange=_zDK?(_rentaRef[_zDK]||(_medRenta2?'$'+_medRenta2.toFixed(0):'—')):(_medRenta2?'$'+_medRenta2.toFixed(0):'—');
     // Cap rate zona-específico: calcular desde mediana renta/venta de la zona detectada
     var _zCapRate=null;
-    if(_zDS.medRenta&&_zDS.medVenta&&_zDS.medVenta>0){_zCapRate=(_zDS.medRenta*12*0.92*0.80/_zDS.medVenta)*100;}
+    // Solo calcular si el precio de venta median es ≥ $6,000 MXN/m² (no mezclar con precio de terreno)
+    // y el cap rate resultante está en rango razonable 4–13%
+    if(_zDS.medRenta&&_zDS.medVenta&&_zDS.medVenta>=6000){
+      var _zCapTmp=(_zDS.medRenta*12*0.92*0.80/_zDS.medVenta)*100;
+      if(_zCapTmp>=4&&_zCapTmp<=13){_zCapRate=_zCapTmp;}
+    }
     var _capDispZ=_zCapRate?_zCapRate.toFixed(1)+'%':(_capMed?_capMed.toFixed(1)+'%':(_zonaOport==='Alta'?'~8.5%':_zonaOport==='Media-Alta'?'~8.0%':_zonaOport==='Media'?'~7.5%':'~7.0%'));
 
     // ZM benchmarks (median across 5 zones)
