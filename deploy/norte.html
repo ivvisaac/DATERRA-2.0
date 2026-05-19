@@ -4752,6 +4752,8 @@ function generarReporte(){
     var _munNseAltoBDisp=(_munNseAltoB===0||isNaN(_munNseAltoB))?'n/d':P1(_munNseAltoB);
     var _munDesocPct=(mun.desocupados||0)/(mun.pea||1)*100;
     var _munDesocDisp=(_munDesocPct===0||isNaN(_munDesocPct))?'n/d':P1(_munDesocPct);
+    // tasa de desocupación de la zona (desocupados/PEA) — diferente de _pctDes que es vacancia habitacional
+    var _pctDesocZona=totPea>0?totDesoc/totPea*100:0;
     var p4='<div class="report-page">';
     p4+='<div class="rpt-header">'+RPT_LOGO+'</div>';
     p4+='<div style="font-size:8px;color:#64748b;font-style:italic;margin-bottom:12px;padding:0 2px">Analizados los datos de demanda a nivel ZM La Laguna, enfocamos ahora en el recurso humano disponible <strong>dentro de la zona analizada</strong> — el pool de trabajadores que operaría una nave industrial aquí.</div>';
@@ -4781,7 +4783,7 @@ function generarReporte(){
     p4+=_benchRow('% PEA activa',P1(pctPea),P1(munPctPea||0),_zmPctPea+'','%',true);
     p4+=_benchRow('Escolaridad prom.',N(avgEsc,1),N(munAvgEsc||0,1),_zmAvgEsc,'a',true);
     p4+=_benchRow('% NSE AB+C+ (alta capac.)',P1(pNseAlto),_munNseAltoBDisp,_zmPctAlto+'','%',true);
-    p4+=_benchRow('% desocupados/PEA',(_pctDes>0?P1(_pctDes):'n/d'),_munDesocDisp,'4.2','%',false);
+    p4+=_benchRow('% desocupados/PEA',(_pctDesocZona>0?P1(_pctDesocZona):'n/d'),_munDesocDisp,'4.2','%',false);
     p4+='</div>';
     // --- columna derecha: estructura de edad + implicación industrial ---
     p4+='<div>';
@@ -5951,8 +5953,10 @@ function generarReporte(){
     p_bod3+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2mm;margin-bottom:2.5mm">';
     var _claseZonaDisp=_zonaDetectedKey?({cgpark:'B+/A',cdtorreon:'B/B+',ferropuerto:'A/A-',lajat:'B/B+',pigp:'B/A-'}[_zonaDetectedKey]||_clasePred):_clasePred;
     p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #0f172a;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#0f172a;font-family:IBM Plex Mono,monospace">'+_claseZonaDisp+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">Clase típica zona</div></div>';
-    p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #16a34a;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace">'+(_capMed?_capMed.toFixed(1)+'%':'~11%')+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">Cap rate estimado</div></div>';
-    p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #0369a1;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+_precioRec+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">Renta mediana zona</div></div>';
+    var _capBod3Disp=_capMed?_capMed.toFixed(1)+'%':(_oportunidad==='Alta'?'~8.5%':_oportunidad==='Media'?'~7.5%':'~7.0%');
+    p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #16a34a;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#16a34a;font-family:IBM Plex Mono,monospace">'+_capBod3Disp+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">Cap rate estimado</div></div>';
+    var _rentaMedBod3=_medRenta2?'$'+_medRenta2.toFixed(0)+'/m²':_precioRec;
+    p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #0369a1;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#0369a1;font-family:IBM Plex Mono,monospace">'+_rentaMedBod3+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">'+(_medRenta2?'Renta mediana zona':'Renta recomendada')+'</div></div>';
     p_bod3+='<div style="border:1px solid #e2e8f0;border-top:3px solid #d97706;border-radius:0 0 5px 5px;padding:2mm 2.5mm;background:#f8fafc;text-align:center"><div style="font-size:11pt;font-weight:700;color:#d97706;font-family:IBM Plex Mono,monospace">'+_bodsZona.length+'</div><div style="font-size:5pt;color:#64748b;text-transform:uppercase;letter-spacing:.4px;margin-top:.5mm">Bodegas en zona</div></div>';
     p_bod3+='</div>';
     p_bod3+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-bottom:2.5mm">';
